@@ -1,46 +1,21 @@
 ﻿using System.Net.Sockets;
+using ChatServer.Models;
+using ChatServer.DTO;
+using ChatServer.Data;
+using Newtonsoft.Json;
 using System.Net;
+using System.Text;
+using ChatServer.Services;
 
 namespace ChatServer
 {
-    internal class Program
+    public class Program
     {
         static async Task Main(string[] args)
         {
-            var listener = new TcpListener(IPAddress.Any, 8888);
-            listener.Start();
-            Console.WriteLine("Сервер запущен. Ожидание подключений...");
+            Server server = new(8888);
+            await server.Start();
 
-            while (true)
-            {
-                TcpClient client = await listener.AcceptTcpClientAsync();
-                Console.WriteLine($"Новое подключение: {client.Client.RemoteEndPoint}");
-                _ = Task.Run(() => HandleClientAsync(client));
-
-            }
-
-            async Task HandleClientAsync(TcpClient client)
-            {
-                try
-                {
-                    using var stream = client.GetStream();
-                    using var reader = new StreamReader(stream);
-                    using var writer = new StreamWriter(stream);
-
-                    while (client.Connected)
-                    {
-                        var json = await reader.ReadLineAsync();
-                        if (string.IsNullOrEmpty(json)) continue;
-
-                        Console.WriteLine($"Получено: {json}");
-                        await writer.WriteLineAsync("Сообщение получено!");
-                    }
-                }
-                catch (Exception ex)
-                {
-                    Console.WriteLine($"Ошибка: {ex.Message}");
-                }
-            }
         }
     }
 }
