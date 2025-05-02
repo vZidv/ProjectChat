@@ -58,17 +58,33 @@ namespace ChatServer.Services
                     {
                         //Обработка логина
                         case RequestType.Login:
-                            var loginDTO = JsonConvert.DeserializeObject<ClientLoginDTO>(request);
+                            {
+                                var loginDTO = JsonConvert.DeserializeObject<ClientLoginDTO>(request);
 
-                            HandleLogin handleLogin = new HandleLogin(new Data.ProjectChatContext());
-                            bool result = await handleLogin.HandleLoginAsync(loginDTO);
+                                HandleLogin handleLogin = new HandleLogin(new Data.ProjectChatContext());
+                                bool result = await handleLogin.HandleLoginAsync(loginDTO);
 
-                            var response = JsonConvert.SerializeObject(result);
-                            var bytes = Encoding.UTF8.GetBytes(response + "\n");
-                            await stream.WriteAsync(bytes);
+                                var response = JsonConvert.SerializeObject(result);
+                                var bytes = Encoding.UTF8.GetBytes(response + "\n");
+                                await stream.WriteAsync(bytes);
 
-                            Console.WriteLine($"Результат авторизации отправлен пользователю: {client.Client.RemoteEndPoint}");
+                                Console.WriteLine($"Результат авторизации отправлен пользователю: {client.Client.RemoteEndPoint}");
+                            }
 
+                            break;
+
+                        case RequestType.Register:
+                            {
+                                var registerDTO = JsonConvert.DeserializeObject<ClientSignUpDTO>(request);
+
+                                var handleSingUp = new HandleSignUp(new Data.ProjectChatContext());
+                                bool result = await handleSingUp.HandleSignUpAsync(registerDTO);
+
+                                var bytes = Encoding.UTF8.GetBytes(result.ToString() + "\n");
+                                await stream.WriteAsync(bytes);
+
+                                Console.WriteLine($"Результат авторизации отправлен пользователю: {client.Client.RemoteEndPoint}");
+                            }
                             break;
                         default:
                             Console.WriteLine("Неизвестный тип запроса");

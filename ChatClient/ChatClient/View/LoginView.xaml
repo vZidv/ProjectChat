@@ -45,19 +45,32 @@
                     HorizontalAlignment="Center"
                     VerticalAlignment="Center">
 
-                        <TextBlock Text="Welcome" 
+                        <TextBlock Text="Welcome"
+                                   HorizontalAlignment="Center"
                                Style="{StaticResource HeaderTextBlockStyle}"
                                FontSize="30" Margin="0,15"/>
                         
                         <TextBox Text="{Binding Username, UpdateSourceTrigger=PropertyChanged}" 
                             ui:ControlHelper.PlaceholderText="Login" Margin="0,3"/>
                         <customcontrols:BindablePasswordBox Password="{Binding Password,Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Margin="0,3"/>
-                        <Button Content="Log in" 
+                        <StackPanel 
+                            Orientation="Horizontal">
+                            <Button Content="Log in" 
                                 Command="{Binding LoginCommand}"
                                 HorizontalAlignment="Center" 
                                 Margin="6" 
                                 FontSize="10"
-                                MinWidth="90"/>
+                                MinWidth="90"
+                                    Style="{StaticResource AccentButtonStyle}"/>                            
+                            <Button Content="Sign up" 
+                                Command="{Binding SignUpCommand}"
+                                HorizontalAlignment="Center" 
+                                Margin="6" 
+                                FontSize="10"
+                                MinWidth="40"
+                                    Style="{StaticResource AccentButtonStyle}"/>
+                        </StackPanel>
+
                     </ui:SimpleStackPanel>
                 </Grid>
             </Viewbox>

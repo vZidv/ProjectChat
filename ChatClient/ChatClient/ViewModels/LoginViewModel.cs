@@ -60,6 +60,7 @@ namespace ChatClient.ViewModels
 
         //-> Commands
         public ICommand LoginCommand { get; }
+        public ICommand SignUpCommand { get; }
         public ICommand RecoverPasswordCommand { get; }
         public ICommand ShowPasswordCommand { get; }
         public ICommand RememberPasswordCommand { get; }
@@ -70,6 +71,13 @@ namespace ChatClient.ViewModels
         {
             LoginCommand = new ViewModelCommand(ExecuteLoginCommand, CanExecuteLoginCommand);
             RecoverPasswordCommand = new ViewModelCommand(p => ExecuteRecoverPasswordCommand(""));
+            SignUpCommand = new ViewModelCommand(p => ExecuteSignUpCommand());
+        }
+
+        private void ExecuteSignUpCommand()
+        {
+            var signUpView = new View.SignUpView();
+            Services.NavigationService.MainFrame.Content = signUpView;
         }
 
         private bool CanExecuteLoginCommand(object? obj)
