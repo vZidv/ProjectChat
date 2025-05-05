@@ -69,6 +69,13 @@
                                 FontSize="10"
                                 MinWidth="40"
                                     Style="{StaticResource AccentButtonStyle}"/>
+                            <Button Content="Test" 
+                                Command="{Binding TestCommand}"
+                                HorizontalAlignment="Center" 
+                                Margin="6" 
+                                FontSize="10"
+                                MinWidth="40"
+                                    Style="{StaticResource AccentButtonStyle}"/>
                         </StackPanel>
 
                     </ui:SimpleStackPanel>

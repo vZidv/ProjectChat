@@ -24,7 +24,7 @@ namespace ChatServer.Handlers
             if(clientSignUpDTO == null)
                 return false;
             var findUser = await _context.Clients.Where(p => p.Login == clientSignUpDTO.Login || p.Email == clientSignUpDTO.Email).FirstOrDefaultAsync();
-            if (findUser == null)
+            if (findUser != null)
                 return false;
 
             

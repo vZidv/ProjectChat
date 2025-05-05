@@ -9,6 +9,8 @@ using System.Threading.Tasks;
 using System.IO;
 using ChatServer.DTO;
 using ChatServer.Handlers;
+using System.Text.Json.Nodes;
+using Newtonsoft.Json.Linq;
 
 namespace ChatServer.Services
 {
@@ -51,10 +53,12 @@ namespace ChatServer.Services
                         requestString.Add(Convert.ToByte(bytesRead));
 
                     var request = Encoding.UTF8.GetString(requestString.ToArray());
-                    RequestDTO requestDTO = JsonConvert.DeserializeObject<RequestDTO>(request);
 
-                    Console.WriteLine($"Получен запрос: {requestDTO.Type}");
-                    switch (requestDTO.Type)
+                    RequestType type = JObject.Parse(request).GetValue("RequestType").ToObject<RequestType>();
+                    //RequestDTO requestDTO = JsonConvert.DeserializeObject<RequestDTO>(request);
+
+                    Console.WriteLine($"Получен запрос: {type}");
+                    switch (type)
                     {
                         //Обработка логина
                         case RequestType.Login:
@@ -80,7 +84,8 @@ namespace ChatServer.Services
                                 var handleSingUp = new HandleSignUp(new Data.ProjectChatContext());
                                 bool result = await handleSingUp.HandleSignUpAsync(registerDTO);
 
-                                var bytes = Encoding.UTF8.GetBytes(result.ToString() + "\n");
+                                var json = JsonConvert.SerializeObject(result);
+                                var bytes = Encoding.UTF8.GetBytes(json + "\n");
                                 await stream.WriteAsync(bytes);
 
                                 Console.WriteLine($"Результат авторизации отправлен пользователю: {client.Client.RemoteEndPoint}");

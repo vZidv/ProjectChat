@@ -67,7 +67,7 @@ namespace ChatClient.ViewModels
             await service.ConnectAsync();
             await service.SendAsync<ClientSignUpDTO>(newClient);
             bool result = await service.ResponseAsync<bool>();
-
+            
             if (result)
                 GoBackCommand.Execute(null);
 

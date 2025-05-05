@@ -1,4 +1,5 @@
-﻿using ChatClient.Services;
+﻿using ChatClient.CustomControls;
+using ChatClient.Services;
 using ChatServer.DTO;
 using System;
 using System.Collections.Generic;
@@ -72,6 +73,12 @@ namespace ChatClient.ViewModels
             LoginCommand = new ViewModelCommand(ExecuteLoginCommand, CanExecuteLoginCommand);
             RecoverPasswordCommand = new ViewModelCommand(p => ExecuteRecoverPasswordCommand(""));
             SignUpCommand = new ViewModelCommand(p => ExecuteSignUpCommand());
+            TestCommand = new ViewModelCommand(p => ExecuteTestCommand());
+        }
+
+        private void ExecuteTestCommand()
+        {
+            MessageBox.Show("Это прикол", "Это тайтал", MessageBoxButton.YesNo, MessageBoxType.Question);
         }
 
         private void ExecuteSignUpCommand()
@@ -85,7 +92,9 @@ namespace ChatClient.ViewModels
             bool validData = true;
             if (string.IsNullOrWhiteSpace(Username) || Username.Length < 3 ||
                Password == null || Password.Length < 3)
+            {
                 validData = false;
+            }
 
             return validData;
         }
@@ -104,13 +113,12 @@ namespace ChatClient.ViewModels
             await service.SendAsync<ClientLoginDTO>(client);
             bool response = await service.ResponseAsync<bool>();
 
-            if(response)
+            if (response)
             {
                 var mainViewModel = new ViewModels.MainViewModel(client);
                 var mainView = new View.MainView();
                 mainView.DataContext = mainViewModel;
                 Services.NavigationService.MainFrame.Content = mainView;
-
             }
         }
 
