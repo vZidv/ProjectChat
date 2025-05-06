@@ -139,23 +139,10 @@ namespace ChatClient.CustomControls
             NoCommand = new ViewModelCommand(ExecuteNoCommand, CanExecuteNoCommand);
         }
 
-        private bool CanExecuteNoCommand(object? obj)
-        {
-            if (Buttons == MessageBoxButton.YesNo)
-            {
-                return true;
-            }
-            return false;
-        }
+        private bool CanExecuteNoCommand(object? obj) => Buttons == MessageBoxButton.YesNo;
+        private bool CanExecuteYesCommand(object? obj) => Buttons == MessageBoxButton.YesNo;
+        private bool CanExecuteOkCommand(object? obj) => Buttons == MessageBoxButton.OK;
 
-        private bool CanExecuteYesCommand(object? obj)
-        {
-            if (Buttons == MessageBoxButton.YesNo)
-            {
-                return true;
-            }
-            return false;
-        }
 
         private void ExecuteNoCommand(object? obj)
         {
@@ -169,14 +156,6 @@ namespace ChatClient.CustomControls
             RequestClose?.Invoke();
         }
 
-        private bool CanExecuteOkCommand(object? obj)
-        {
-            if (Buttons == MessageBoxButton.OK)
-            {
-                return true;
-            }
-            return false;
-        }
 
         private void ExecuteOkCommand(object? obj)
         {

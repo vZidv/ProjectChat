@@ -78,7 +78,10 @@ namespace ChatClient.ViewModels
 
         private void ExecuteTestCommand()
         {
-            MessageBox.Show("Это прикол", "Это тайтал", MessageBoxButton.YesNo, MessageBoxType.Question);
+            if (MessageBox.Show("Пивка?", "Не хочешь?", MessageBoxButton.YesNo, MessageBoxType.Question))
+                MessageBox.Show("Для рывка");
+            else
+                MessageBox.Show("А я буду");
         }
 
         private void ExecuteSignUpCommand()

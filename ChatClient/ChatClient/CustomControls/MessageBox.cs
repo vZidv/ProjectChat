@@ -15,6 +15,7 @@ namespace ChatClient.CustomControls
             var msViewModel = new MessageBoxViewModel("Внимание", message, MessageBoxButton.OK, MessageBoxType.Information);
 
             msView.DataContext = msViewModel;
+            msViewModel.RequestClose += () => { msView.Close(); };
 
             SystemSounds.Exclamation.Play();
             msView.ShowDialog();
@@ -26,6 +27,7 @@ namespace ChatClient.CustomControls
             var msViewModel = new MessageBoxViewModel(title, message, MessageBoxButton.OK, MessageBoxType.Information);
 
             msView.DataContext = msViewModel;
+            msViewModel.RequestClose += () => { msView.Close(); };
 
             SystemSounds.Exclamation.Play();
             msView.ShowDialog();
