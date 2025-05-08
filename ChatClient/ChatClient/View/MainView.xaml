@@ -9,11 +9,11 @@
       mc:Ignorable="d" 
       d:DesignHeight="750" d:DesignWidth="1100"
       Title="MainView">
-    
+
     <Page.DataContext>
         <vm:MainViewModel/>
     </Page.DataContext>
-    
+
     <Grid Background="{StaticResource WindowBorder}">
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="0.2*" MinWidth="200"/>
@@ -58,51 +58,60 @@
                         />
                     </StackPanel>
                 </Viewbox>
-                <StackPanel
+
+                <Viewbox
+                    Stretch="Uniform"
+                    StretchDirection="Both"
+                    Grid.Row="1"
+                    VerticalAlignment="Top">
+                    <StackPanel
                     HorizontalAlignment="Center"
-                    Grid.Row="1">
-                    <Button FontSize="20"
+                    >
+                        <Button FontSize="20"
                         Command="{Binding CreatRoomCommand}"
                         Content="Создать комнату"/>
-                    <ListBox 
+
+                        <ListBox 
                         Background="Transparent"
-                        Margin="0,15">
-                        <ListBox.ItemTemplate>
-                            
-                            <DataTemplate
+                        Margin="0,15"
+                        ItemsSource="{Binding ChatRooms, UpdateSourceTrigger=PropertyChanged}">
+                            <ListBox.ItemTemplate>
+
+                                <DataTemplate
                                 >
-                                <StackPanel 
+                                    <StackPanel 
                                     Background="Transparent" 
                                     Orientation="Horizontal">
-                                    
-                                    <Border
+
+                                        <Border
                                     Background="SkyBlue"
                                     MinHeight="40"
                                     MinWidth="40"
                                     CornerRadius="40"
                                     Margin="0,0,10,0"
                                     />
-                                    
-                                    <TextBlock
+
+                                        <TextBlock
                                         FontSize="15"
                                         VerticalAlignment="Center"
                                         Text="{Binding Name}"
                                         Style="{StaticResource BaseTextBlockStyle}"/>
-                                </StackPanel>
-                            </DataTemplate>
-                            
-                        </ListBox.ItemTemplate>
+                                    </StackPanel>
+                                </DataTemplate>
 
-                        <d:ListBox.ItemsSource>
-                            <x:Array Type="{x:Type dto:ChatRoomDTO}">
-                                <dto:ChatRoomDTO Name="TestRoom"/>
-                            </x:Array>
-                        </d:ListBox.ItemsSource>
-                       
-                    </ListBox>
+                            </ListBox.ItemTemplate>
 
-                </StackPanel>
-                
+                            <d:ListBox.ItemsSource>
+                                <x:Array Type="{x:Type dto:ChatRoomDTO}">
+                                    <dto:ChatRoomDTO Name="TestRoom"/>
+                                </x:Array>
+                            </d:ListBox.ItemsSource>
+
+                        </ListBox>
+
+                    </StackPanel>
+                </Viewbox>
+
                 <Button
                         Command="{Binding LogoutCommand}"
                         HorizontalAlignment="Center"
@@ -111,6 +120,7 @@
                         Grid.Row="2" 
                         Style="{StaticResource AccentButtonStyle }"
                         />
+
 
             </Grid>
         </Border>

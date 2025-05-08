@@ -1,11 +1,11 @@
 ﻿using ChatClient.DTO;
 using Newtonsoft.Json;
+using ChatClient.CustomControls;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using System.Windows;
 using System.Windows.Input;
 using System.Windows.Media.Media3D;
 
@@ -61,6 +61,9 @@ namespace ChatClient.ViewModels
             LogoutCommand = new ViewModelCommand(ExecuteLogoutCommand);
             CreatRoomCommand = new ViewModelCommand(ExecuteCreatRoomCommand);
             LoadChatRoomsCommand = new ViewModelCommand(ExecuteLoadChatRoomsCommand);
+
+            LoadChatRoomsCommand.Execute(null);
+
         }
 
         private async void ExecuteLoadChatRoomsCommand(object? obj)
@@ -69,17 +72,16 @@ namespace ChatClient.ViewModels
             {
                 ClientId = ClientDTO.Id
             };
-            var json = JsonConvert.SerializeObject(request);
-            var bites = Encoding.UTF8.GetBytes(json + "\n");
 
             var networkService = new Services.NetworkService();
             await networkService.ConnectAsync();
-            await networkService.SendAsync(bites);
+            await networkService.SendAsync(request);
             var response = await networkService.ResponseAsync<ChatRoomDTO[]>();
 
             if (response != null)
             {
                 ChatRooms = response;
+                MessageBox.Show("Комнаты точно загружены");
             }
             else
             {

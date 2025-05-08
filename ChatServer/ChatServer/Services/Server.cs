@@ -103,6 +103,20 @@ namespace ChatServer.Services
                                 Console.WriteLine($"Результат создания комнаты отправлен пользователю: {client.Client.RemoteEndPoint}");
                             }
                             break;
+                        case RequestType.GetChatRooms:
+                            {
+                                var getRoomsDTO = JsonConvert.DeserializeObject<GetChatRoomsDTO>(request);
+
+                                var handleGetRooms = new HandlerRoom(new Data.ProjectChatContext());
+                                ChatRoomDTO[] roomsDTO = await handleGetRooms.GetRoomsForClientAsync(getRoomsDTO.ClientId);
+
+                                var json = JsonConvert.SerializeObject(roomsDTO);
+                                var bytes = Encoding.UTF8.GetBytes(json + "\n");
+
+                                await stream.WriteAsync(bytes);
+                                Console.WriteLine($"Результат на список доступны комнат отправлен пользователю: {client.Client.RemoteEndPoint}");
+                            }
+                            break;
                         default:
                             Console.WriteLine("Неизвестный тип запроса");
                             break;

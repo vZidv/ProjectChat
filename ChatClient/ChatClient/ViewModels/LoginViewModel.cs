@@ -1,6 +1,6 @@
 ﻿using ChatClient.CustomControls;
 using ChatClient.Services;
-using ChatServer.DTO;
+using ChatClient.DTO;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -120,11 +120,13 @@ namespace ChatClient.ViewModels
                 var mainView = new View.MainView();
                 mainView.DataContext = mainViewModel;
                 Services.NavigationService.MainFrame.Content = mainView;
+                
             }
             else
             {
                 MessageBox.Show("Неверный логин или пароль", "Ошибка", MessageBoxButton.OK, MessageBoxType.Error);
             }
+            service.Dispose();
         }
 
         private void ExecuteRecoverPasswordCommand(string username)
