@@ -5,10 +5,12 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace ChatServer.DTO
+namespace ChatClient.DTO
 {
     public class ClientLoginDTO : IRequestData
     {
+        public int Id { get; set; }
+
         public string Login { get; set; } = null!;
 
         public string PasswordHash { get; set; } = null!;

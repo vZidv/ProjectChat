@@ -10,7 +10,9 @@ namespace ChatServer.DTO
     {
         Login,
         Register,
-        SendMessage
+        SendMessage,
+        CreatRoom,
+        GetChatRooms
         //..
     }
 }

@@ -78,10 +78,7 @@ namespace ChatClient.ViewModels
 
         private void ExecuteTestCommand()
         {
-            if (MessageBox.Show("Пивка?", "Не хочешь?", MessageBoxButton.YesNo, MessageBoxType.Question))
-                MessageBox.Show("Для рывка");
-            else
-                MessageBox.Show("А я буду");
+
         }
 
         private void ExecuteSignUpCommand()
@@ -114,14 +111,19 @@ namespace ChatClient.ViewModels
             };
 
             await service.SendAsync<ClientLoginDTO>(client);
-            bool response = await service.ResponseAsync<bool>();
+            int response = await service.ResponseAsync<int>();
 
-            if (response)
+            if (response != -1)
             {
+                client.Id = response;
                 var mainViewModel = new ViewModels.MainViewModel(client);
                 var mainView = new View.MainView();
                 mainView.DataContext = mainViewModel;
                 Services.NavigationService.MainFrame.Content = mainView;
+            }
+            else
+            {
+                MessageBox.Show("Неверный логин или пароль", "Ошибка", MessageBoxButton.OK, MessageBoxType.Error);
             }
         }
 

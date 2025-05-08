@@ -18,12 +18,14 @@ namespace ChatServer.Handlers
             _context = context;
         }
 
-        public async Task<bool> HandleLoginAsync(ClientLoginDTO loginDTO)
+        public async Task<int> HandleLoginAsync(ClientLoginDTO loginDTO)
         {
-            var user = await _context.Clients.Where(p => p.Login == loginDTO.Login && p.PasswordHash == loginDTO.PasswordHash).FirstOrDefaultAsync();
-            if (user != null) return true;
+            var user = await _context.Clients.Where(p => p.Login == loginDTO.Login).FirstOrDefaultAsync();
+            if (user != null)
+                if (HandlerPassword.VerifyPassword(loginDTO.PasswordHash, user.PasswordHash))
+                    return user.Id;
 
-            return false;
+            return -1;
         }
     }
 }

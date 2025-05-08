@@ -66,7 +66,7 @@ namespace ChatServer.Services
                                 var loginDTO = JsonConvert.DeserializeObject<ClientLoginDTO>(request);
 
                                 HandleLogin handleLogin = new HandleLogin(new Data.ProjectChatContext());
-                                bool result = await handleLogin.HandleLoginAsync(loginDTO);
+                                int result = await handleLogin.HandleLoginAsync(loginDTO);
 
                                 var response = JsonConvert.SerializeObject(result);
                                 var bytes = Encoding.UTF8.GetBytes(response + "\n");
@@ -89,6 +89,18 @@ namespace ChatServer.Services
                                 await stream.WriteAsync(bytes);
 
                                 Console.WriteLine($"Результат авторизации отправлен пользователю: {client.Client.RemoteEndPoint}");
+                            }
+                            break;
+                        case RequestType.CreatRoom:
+                            {
+                                var createRoomDTO = JsonConvert.DeserializeObject<ChatRoomDTO>(request);
+                                var handleCreateRoom = new HandlerRoom(new Data.ProjectChatContext());
+                                bool result = await handleCreateRoom.CreatRoomAsync(createRoomDTO);
+
+                                var json = JsonConvert.SerializeObject(result);
+                                var bytes = Encoding.UTF8.GetBytes(json + "\n");
+                                await stream.WriteAsync(bytes);
+                                Console.WriteLine($"Результат создания комнаты отправлен пользователю: {client.Client.RemoteEndPoint}");
                             }
                             break;
                         default:

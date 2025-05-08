@@ -8,6 +8,8 @@ namespace ChatServer.DTO
 {
     public class ClientLoginDTO
     {
+        public int Id { get; set; }
+
         public string Login { get; set; } = null!;
 
         public string PasswordHash { get; set; } = null!;
