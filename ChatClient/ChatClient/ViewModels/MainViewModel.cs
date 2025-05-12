@@ -1,4 +1,5 @@
 ﻿using ChatClient.DTO;
+using ChatClient.View;
 using Newtonsoft.Json;
 using ChatClient.CustomControls;
 using System;
@@ -8,15 +9,19 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Input;
 using System.Windows.Media.Media3D;
+using System.Windows.Controls;
 
 namespace ChatClient.ViewModels
 {
     public class MainViewModel : BaseViewModel
     {
         //Fields
-        ClientLoginDTO _clientDTO; //DTO for the logged-in user
+        private ClientLoginDTO _clientDTO; //DTO for the logged-in user
 
-        ChatRoomDTO[] _chatRooms; // List of chat rooms
+        private ChatRoomDTO _selectedChatRoom; // Selected chat room
+        private ChatRoomDTO[] _chatRooms; // List of chat rooms
+
+        private Page _currentPage; // Current page in the main frame
 
         //Properties
         public ClientLoginDTO ClientDTO
@@ -32,6 +37,20 @@ namespace ChatClient.ViewModels
             }
         }
 
+        public ChatRoomDTO SelectedChatRoom
+        {
+            get
+            {
+                return _selectedChatRoom;
+            }
+            set
+            {
+                _selectedChatRoom = value;
+                OnPropertyChanged(nameof(SelectedChatRoom));
+                OpenSelectedChatRoom();
+            }
+        }
+
         public ChatRoomDTO[] ChatRooms
         {
             get
@@ -42,6 +61,19 @@ namespace ChatClient.ViewModels
             {
                 _chatRooms = value;
                 OnPropertyChanged(nameof(ChatRooms));
+            }
+        }
+
+        public Page CurrentPage
+        {
+            get
+            {
+                return _currentPage;
+            }
+            set
+            {
+                _currentPage = value;
+                OnPropertyChanged(nameof(CurrentPage));
             }
         }
 
@@ -63,8 +95,8 @@ namespace ChatClient.ViewModels
             LoadChatRoomsCommand = new ViewModelCommand(ExecuteLoadChatRoomsCommand);
 
             LoadChatRoomsCommand.Execute(null);
-
         }
+
 
         private async void ExecuteLoadChatRoomsCommand(object? obj)
         {
@@ -81,7 +113,6 @@ namespace ChatClient.ViewModels
             if (response != null)
             {
                 ChatRooms = response;
-                MessageBox.Show("Комнаты точно загружены");
             }
             else
             {
@@ -102,6 +133,16 @@ namespace ChatClient.ViewModels
         private void ExecuteLogoutCommand(object? obj)
         {
             Services.NavigationService.MainFrame.Content = new View.LoginView();
+        }
+
+        private void OpenSelectedChatRoom()
+        {
+            if (SelectedChatRoom == null) return;
+
+            var chatRoomView = new ChatView();
+            var chatViewModel = new ChatViewModel(SelectedChatRoom);
+            chatRoomView.DataContext = chatViewModel;
+            CurrentPage = chatRoomView;
         }
     }
 }

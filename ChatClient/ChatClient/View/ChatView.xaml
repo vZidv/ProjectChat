@@ -1,0 +1,59 @@
+﻿<Page x:Class="ChatClient.View.ChatView"
+      xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+      xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+      xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+      xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+      xmlns:ui="http://schemas.modernwpf.com/2019" 
+      xmlns:local="clr-namespace:ChatClient.View"
+      xmlns:vm="clr-namespace:ChatClient.ViewModels"
+      mc:Ignorable="d" 
+      d:DesignHeight="450" d:DesignWidth="600"
+      Title="ChatView">
+
+    <Page.DataContext>
+        <vm:ChatViewModel/>
+    </Page.DataContext>
+
+    <Grid Margin="2,0,0,0">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="0.15*"/>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="0.15*"/>
+        </Grid.RowDefinitions>
+
+        <Grid
+            Background="{StaticResource WindowBorderInactive}"
+            Grid.Row="0">
+            <StackPanel
+                Orientation="Horizontal"
+                VerticalAlignment="Center">
+                <TextBlock 
+                    Text="{Binding ChatRoomDTO.Name}"
+                    Margin="20,0"
+                    FontSize="20"
+                    d:Text="ChatRoomName"
+                    Style="{StaticResource BaseTextBlockStyle}"/>
+            </StackPanel>
+        </Grid>
+
+        <Grid
+             Background="{StaticResource WindowBorderInactive}"
+            Grid.Row="2">
+            <StackPanel 
+                Orientation="Horizontal"
+                VerticalAlignment="Center"
+                HorizontalAlignment="Center">
+                <TextBox 
+                    Height="30"
+                    MinWidth="250"
+                    ui:ControlHelper.CornerRadius="12"
+                    />
+                <Button 
+                    Content="Отправить"
+                    Margin="15,0"
+                    Style="{StaticResource DefaultButtonStyle}"
+                    />
+            </StackPanel>
+        </Grid>
+    </Grid>
+</Page>

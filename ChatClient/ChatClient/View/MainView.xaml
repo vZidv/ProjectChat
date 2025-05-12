@@ -74,7 +74,8 @@
                         <ListBox 
                         Background="Transparent"
                         Margin="0,15"
-                        ItemsSource="{Binding ChatRooms, UpdateSourceTrigger=PropertyChanged}">
+                        ItemsSource="{Binding ChatRooms, UpdateSourceTrigger=PropertyChanged}"
+                        SelectionChanged="ListBox_SelectionChanged">
                             <ListBox.ItemTemplate>
 
                                 <DataTemplate
@@ -131,7 +132,8 @@
             HorizontalAlignment="Center"
             />
         <Frame 
-            Grid.Column="1"
+            Content="{Binding CurrentPage}"
+            Grid.Column="2"
             NavigationUIVisibility="Hidden"/>
     </Grid>
 </Page>
