@@ -56,20 +56,18 @@ namespace ChatServer.Services
 
                     RequestType type = JObject.Parse(request).GetValue("Type").ToObject<RequestType>();
                     Console.WriteLine($"Получен запрос: {type}");
+
                     switch (type)
                     {
                         //Обработка логина
                         case RequestType.Login:
                             {
-                                //var loginDTO = JsonConvert.DeserializeObject<ClientLoginDTO>(request);
                                 var loginDTO = JsonConvert.DeserializeObject<RequestDTO<ClientLoginDTO>>(request).Data;
 
                                 HandleLogin handleLogin = new HandleLogin(new Data.ProjectChatContext());
                                 int result = await handleLogin.HandleLoginAsync(loginDTO);
 
-                                var response = JsonConvert.SerializeObject(result);
-                                var bytes = Encoding.UTF8.GetBytes(response + "\n");
-                                await stream.WriteAsync(bytes);
+                                await SendResponseAsync(stream, result);
 
                                 Console.WriteLine($"Результат авторизации отправлен пользователю: {client.Client.RemoteEndPoint}");
                             }
@@ -83,9 +81,7 @@ namespace ChatServer.Services
                                 var handleSingUp = new HandleSignUp(new Data.ProjectChatContext());
                                 bool result = await handleSingUp.HandleSignUpAsync(registerDTO);
 
-                                var json = JsonConvert.SerializeObject(result);
-                                var bytes = Encoding.UTF8.GetBytes(json + "\n");
-                                await stream.WriteAsync(bytes);
+                                await SendResponseAsync(stream, result);
 
                                 Console.WriteLine($"Результат авторизации отправлен пользователю: {client.Client.RemoteEndPoint}");
                             }
@@ -96,9 +92,8 @@ namespace ChatServer.Services
                                 var handleCreateRoom = new HandlerRoom(new Data.ProjectChatContext());
                                 bool result = await handleCreateRoom.CreatRoomAsync(createRoomDTO);
 
-                                var json = JsonConvert.SerializeObject(result);
-                                var bytes = Encoding.UTF8.GetBytes(json + "\n");
-                                await stream.WriteAsync(bytes);
+                                await SendResponseAsync(stream, result);
+
                                 Console.WriteLine($"Результат создания комнаты отправлен пользователю: {client.Client.RemoteEndPoint}");
                             }
                             break;
@@ -109,9 +104,8 @@ namespace ChatServer.Services
                                 var handleGetRooms = new HandlerRoom(new Data.ProjectChatContext());
                                 ChatRoomDTO[] roomsDTO = await handleGetRooms.GetRoomsForClientAsync(getRoomsDTO.ClientId);
 
-                                var json = JsonConvert.SerializeObject(roomsDTO);
-                                var bytes = Encoding.UTF8.GetBytes(json + "\n");
-                                await stream.WriteAsync(bytes);
+                                await SendResponseAsync(stream, roomsDTO);
+
                                 Console.WriteLine($"Результат на список доступны комнат отправлен пользователю: {client.Client.RemoteEndPoint}");
                             }
                             break;
@@ -134,6 +128,19 @@ namespace ChatServer.Services
             catch (Exception ex)
             {
                 Console.WriteLine($"Ошибка: {ex.Message}");
+            }
+        }
+        private async Task SendResponseAsync<T>(Stream stream, T response)
+        {
+            try
+            {
+                var json = JsonConvert.SerializeObject(response);
+                var bytes = Encoding.UTF8.GetBytes(json + "\n");
+                await stream.WriteAsync(bytes);
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Ошибка при отправке ответа: {ex.Message}");
             }
         }
 
