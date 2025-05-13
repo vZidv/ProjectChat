@@ -6,8 +6,9 @@
       xmlns:ui="http://schemas.modernwpf.com/2019" 
       xmlns:local="clr-namespace:ChatClient.View"
       xmlns:vm="clr-namespace:ChatClient.ViewModels"
+      xmlns:dto="clr-namespace:ChatClient.DTO"
       mc:Ignorable="d" 
-      d:DesignHeight="450" d:DesignWidth="600"
+      d:DesignHeight="450" d:DesignWidth="800"
       Title="ChatView">
 
     <Page.DataContext>
@@ -24,36 +25,75 @@
         <Grid
             Background="{StaticResource WindowBorderInactive}"
             Grid.Row="0">
-            <StackPanel
+            <Viewbox
+                HorizontalAlignment="Left">
+                <StackPanel
                 Orientation="Horizontal"
-                VerticalAlignment="Center">
-                <TextBlock 
+                VerticalAlignment="Center"
+                >
+                    <TextBlock 
                     Text="{Binding ChatRoomDTO.Name}"
                     Margin="20,0"
                     FontSize="20"
                     d:Text="ChatRoomName"
                     Style="{StaticResource BaseTextBlockStyle}"/>
-            </StackPanel>
+                </StackPanel>
+            </Viewbox>
+        </Grid>
+        <Grid
+            Grid.Row="1">
+            <ListBox
+                Background="Transparent"
+                ScrollViewer.VerticalScrollBarVisibility="Auto"
+                ItemsSource="{Binding ChatMessages, UpdateSourceTrigger=PropertyChanged}"
+                >
+                <ListBox.ItemTemplate>
+                    <DataTemplate>
+                        <Border
+                            CornerRadius="5"
+                            Background="GreenYellow">
+                            <StackPanel>
+                                <TextBlock 
+                                    Text="{Binding Text}"
+                                    FontWeight="DemiBold"
+                                    TextWrapping="Wrap"
+                                    FontSize="20"/>
+                            </StackPanel>
+                        </Border>
+                    </DataTemplate>
+                </ListBox.ItemTemplate>
+
+                <d:ListBox.ItemsSource>
+                    <x:Array Type="{x:Type dto:ChatMessageDTO}">
+                        <dto:ChatMessageDTO Text="Hello wordl !"/>
+                        <dto:ChatMessageDTO Text="Hi"/>
+                    </x:Array>
+                </d:ListBox.ItemsSource>
+            </ListBox>
         </Grid>
 
         <Grid
+                Grid.Row="2"
              Background="{StaticResource WindowBorderInactive}"
-            Grid.Row="2">
-            <StackPanel 
-                Orientation="Horizontal"
-                VerticalAlignment="Center"
-                HorizontalAlignment="Center">
-                <TextBox 
-                    Height="30"
-                    MinWidth="250"
-                    ui:ControlHelper.CornerRadius="12"
-                    />
-                <Button 
-                    Content="Отправить"
-                    Margin="15,0"
-                    Style="{StaticResource DefaultButtonStyle}"
-                    />
-            </StackPanel>
+            >
+
+            <Viewbox Stretch="Uniform" StretchDirection="Both" Grid.Row="2" VerticalAlignment="Top">
+                <StackPanel Orientation="Horizontal" VerticalAlignment="Center" HorizontalAlignment="Center">
+                    <TextBox
+                        Text="{Binding NewMessageText, Mode=TwoWay}"
+            MinWidth="250"
+            Height="30"
+            Margin="30,5"
+            ui:ControlHelper.CornerRadius="12"/>
+                    <Button 
+            Command="{Binding SendMessageCommand}"
+            Content="Отправить"
+            Margin="15,0"
+            Style="{StaticResource DefaultButtonStyle}"/>
+                </StackPanel>
+            </Viewbox>
+
         </Grid>
+
     </Grid>
 </Page>

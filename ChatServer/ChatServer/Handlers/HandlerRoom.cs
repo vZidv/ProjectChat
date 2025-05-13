@@ -44,6 +44,7 @@ namespace ChatServer.Handlers
             {
                 roomDTOs[i] = new ChatRoomDTO()
                 {
+                    Id = rooms[i].Id,
                     Name = rooms[i].Name,
                     OwnerId = rooms[i].OwnerId
                 };

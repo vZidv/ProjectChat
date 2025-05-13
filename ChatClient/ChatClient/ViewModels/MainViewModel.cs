@@ -140,7 +140,7 @@ namespace ChatClient.ViewModels
             if (SelectedChatRoom == null) return;
 
             var chatRoomView = new ChatView();
-            var chatViewModel = new ChatViewModel(SelectedChatRoom);
+            var chatViewModel = new ChatViewModel(SelectedChatRoom, ClientDTO);
             chatRoomView.DataContext = chatViewModel;
             CurrentPage = chatRoomView;
         }

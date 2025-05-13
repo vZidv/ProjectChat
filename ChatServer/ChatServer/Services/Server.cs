@@ -55,7 +55,6 @@ namespace ChatServer.Services
                     var request = Encoding.UTF8.GetString(requestString.ToArray());
 
                     RequestType type = JObject.Parse(request).GetValue("RequestType").ToObject<RequestType>();
-                    //RequestDTO requestDTO = JsonConvert.DeserializeObject<RequestDTO>(request);
 
                     Console.WriteLine($"Получен запрос: {type}");
                     switch (type)
@@ -115,6 +114,16 @@ namespace ChatServer.Services
 
                                 await stream.WriteAsync(bytes);
                                 Console.WriteLine($"Результат на список доступны комнат отправлен пользователю: {client.Client.RemoteEndPoint}");
+                            }
+                            break;
+
+                        case RequestType.SendMessage:
+                            {
+                                var sendMessageDTO = JsonConvert.DeserializeObject<SendMessageDTO>(request);
+                                var json = JsonConvert.SerializeObject("Сообщение отправлено");
+                                var bytes = Encoding.UTF8.GetBytes(json + "\n");
+                                await stream.WriteAsync(bytes);
+                                Console.WriteLine($"Результат отправки сообщения пользователю: {client.Client.RemoteEndPoint}");
                             }
                             break;
                         default:

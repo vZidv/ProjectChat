@@ -10,6 +10,7 @@
                 <ui:ThemeResources />
                 <ui:XamlControlsResources />
                 <ui:IntellisenseResources Source="/ModernWpf;component/DesignTime/DesignTimeResources.xaml" />
+                <ResourceDictionary Source="/Styles/UIColors.xaml"/>
             </ResourceDictionary.MergedDictionaries>
         </ResourceDictionary>
     </Application.Resources>

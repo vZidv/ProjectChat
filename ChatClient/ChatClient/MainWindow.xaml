@@ -14,7 +14,9 @@
         MinHeight="450"
         MinWidth="800"
         WindowStartupLocation="CenterScreen"
-        WindowState="Maximized">
+        WindowState="Maximized"
+        WindowStyle="None"
+        MouseDown="Window_MouseDown">
     <Window.DataContext>
         <vm:MainWindowViewModel/>
     </Window.DataContext>
