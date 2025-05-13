@@ -4,11 +4,11 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace ChatServer.DTO
+namespace ChatShared.DTO
 {
-    public class RequestDTO
+    public class RequestDTO <T>
     {
         public RequestType Type { get; set; }
-        public object Data { get; set; }
+        public T? Data { get; set; }
     }
 }

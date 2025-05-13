@@ -1,6 +1,6 @@
 ﻿using System.Net.Sockets;
 using ChatServer.Models;
-using ChatServer.DTO;
+using ChatShared.DTO;
 using ChatServer.Data;
 using Newtonsoft.Json;
 using System.Net;
@@ -15,7 +15,6 @@ namespace ChatServer
         {
             Server server = new(8888);
             await server.Start();
-
         }
     }
 }

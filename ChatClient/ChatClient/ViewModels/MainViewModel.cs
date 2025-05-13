@@ -1,5 +1,4 @@
-﻿using ChatClient.DTO;
-using ChatClient.View;
+﻿using ChatClient.View;
 using Newtonsoft.Json;
 using ChatClient.CustomControls;
 using System;
@@ -10,6 +9,7 @@ using System.Threading.Tasks;
 using System.Windows.Input;
 using System.Windows.Media.Media3D;
 using System.Windows.Controls;
+using ChatShared.DTO;
 
 namespace ChatClient.ViewModels
 {
@@ -107,7 +107,7 @@ namespace ChatClient.ViewModels
 
             var networkService = new Services.NetworkService();
             await networkService.ConnectAsync();
-            await networkService.SendAsync(request);
+            await networkService.SendAsync(request, ChatShared.DTO.RequestType.GetChatRooms);
             var response = await networkService.ResponseAsync<ChatRoomDTO[]>();
 
             if (response != null)

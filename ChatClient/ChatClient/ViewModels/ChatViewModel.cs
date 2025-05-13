@@ -1,11 +1,11 @@
-﻿using ChatClient.DTO;
-using ChatClient.Services;
+﻿using ChatClient.Services;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Input;
+using ChatShared.DTO;
 
 namespace ChatClient.ViewModels
 {
@@ -63,17 +63,17 @@ namespace ChatClient.ViewModels
 
         private async void ExecuteSendMessageCommand(object? obj)
         {
-            var message = new ChatMessageDTO
-            {
-                Text = NewMessageText,
-                ClientId = _clientLoginDTO.Id,
-                RoomId = _chatRoomDTO.Id
-            };
+            //var message = new ChatMessageDTO
+            //{
+            //    Text = NewMessageText,
+            //    ClientId = _clientLoginDTO.Id,
+            //    RoomId = _chatRoomDTO.Id
+            //};
 
-            var service = new NetworkService();
-            await service.ConnectAsync();
-            await service.SendAsync(message);
-            ChatMessageDTOs = await service.ResponseAsync<ChatMessageDTO[]>();
+            //var service = new NetworkService();
+            //await service.ConnectAsync();
+            //await service.SendAsync(message);
+            //ChatMessageDTOs = await service.ResponseAsync<ChatMessageDTO[]>();
         }
     }
 }

@@ -1,6 +1,6 @@
 ﻿using ChatClient.CustomControls;
 using ChatClient.Services;
-using ChatClient.DTO;
+using ChatShared.DTO;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -110,7 +110,7 @@ namespace ChatClient.ViewModels
                 PasswordHash = Password
             };
 
-            await service.SendAsync<ClientLoginDTO>(client);
+            await service.SendAsync<ClientLoginDTO>(client, RequestType.Login);
             int response = await service.ResponseAsync<int>();
 
             if (response != -1)

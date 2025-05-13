@@ -20,4 +20,10 @@
     <PackageReference Include="Serilog.Sinks.File" Version="6.0.0" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Reference Include="ChatShared">
+      <HintPath>..\..\ChatShared\ChatShared\bin\Debug\net8.0\ChatShared.dll</HintPath>
+    </Reference>
+  </ItemGroup>
+
 </Project>

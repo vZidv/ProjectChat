@@ -1,5 +1,4 @@
-﻿using ChatClient.DTO;
-using Newtonsoft.Json;
+﻿using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -7,6 +6,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Input;
 using ChatClient.CustomControls;
+using ChatShared.DTO;
 
 namespace ChatClient.ViewModels
 {
@@ -59,7 +59,7 @@ namespace ChatClient.ViewModels
             
             var networkService = new Services.NetworkService();
             await networkService.ConnectAsync();
-            await networkService.SendAsync(newRoom);
+            await networkService.SendAsync(newRoom,ChatShared.DTO.RequestType.Register);
             bool result = await networkService.ResponseAsync<bool>();
 
             if (result)

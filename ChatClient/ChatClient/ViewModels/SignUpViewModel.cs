@@ -1,11 +1,11 @@
-﻿using ChatClient.DTO;
-using ChatClient.Services;
+﻿using ChatClient.Services;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Input;
+using ChatShared.DTO;
 
 namespace ChatClient.ViewModels
 {
@@ -57,7 +57,7 @@ namespace ChatClient.ViewModels
 
         private async void ExecuteSignUpCommand(object? obj)
         {
-            var newClient = new DTO.ClientSignUpDTO
+            var newClient = new ClientSignUpDTO
             {
                 Login = Login,
                 PasswordHash = Password,
@@ -65,7 +65,7 @@ namespace ChatClient.ViewModels
             };
             var service = new NetworkService();
             await service.ConnectAsync();
-            await service.SendAsync<ClientSignUpDTO>(newClient);
+            await service.SendAsync<ClientSignUpDTO>(newClient, ChatShared.DTO.RequestType.Register);
             bool result = await service.ResponseAsync<bool>();
             
             if (result)

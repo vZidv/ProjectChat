@@ -1,13 +1,13 @@
-﻿using ChatClient.DTO;
+﻿using ChatShared.DTO;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace ChatClient.DTO
+namespace ChatShared.DTO
 {
-    public class ClientLoginDTO : IRequestData
+    public class ClientLoginDTO 
     {
         public int Id { get; set; }
 
@@ -15,6 +15,5 @@ namespace ChatClient.DTO
 
         public string PasswordHash { get; set; } = null!;
 
-        public RequestType RequestType => RequestType.Login;
     }
 }

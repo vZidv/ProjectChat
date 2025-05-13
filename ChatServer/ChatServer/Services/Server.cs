@@ -7,10 +7,10 @@ using Newtonsoft.Json;
 using System.Text;
 using System.Threading.Tasks;
 using System.IO;
-using ChatServer.DTO;
 using ChatServer.Handlers;
 using System.Text.Json.Nodes;
 using Newtonsoft.Json.Linq;
+using ChatShared.DTO;
 
 namespace ChatServer.Services
 {
@@ -54,15 +54,15 @@ namespace ChatServer.Services
 
                     var request = Encoding.UTF8.GetString(requestString.ToArray());
 
-                    RequestType type = JObject.Parse(request).GetValue("RequestType").ToObject<RequestType>();
-
+                    RequestType type = JObject.Parse(request).GetValue("Type").ToObject<RequestType>();
                     Console.WriteLine($"Получен запрос: {type}");
                     switch (type)
                     {
                         //Обработка логина
                         case RequestType.Login:
                             {
-                                var loginDTO = JsonConvert.DeserializeObject<ClientLoginDTO>(request);
+                                //var loginDTO = JsonConvert.DeserializeObject<ClientLoginDTO>(request);
+                                var loginDTO = JsonConvert.DeserializeObject<RequestDTO<ClientLoginDTO>>(request).Data;
 
                                 HandleLogin handleLogin = new HandleLogin(new Data.ProjectChatContext());
                                 int result = await handleLogin.HandleLoginAsync(loginDTO);
@@ -78,7 +78,7 @@ namespace ChatServer.Services
 
                         case RequestType.Register:
                             {
-                                var registerDTO = JsonConvert.DeserializeObject<ClientSignUpDTO>(request);
+                                var registerDTO = JsonConvert.DeserializeObject<RequestDTO<ClientSignUpDTO>>(request).Data;
 
                                 var handleSingUp = new HandleSignUp(new Data.ProjectChatContext());
                                 bool result = await handleSingUp.HandleSignUpAsync(registerDTO);
@@ -92,7 +92,7 @@ namespace ChatServer.Services
                             break;
                         case RequestType.CreatRoom:
                             {
-                                var createRoomDTO = JsonConvert.DeserializeObject<ChatRoomDTO>(request);
+                                var createRoomDTO = JsonConvert.DeserializeObject<RequestDTO<ChatRoomDTO>>(request).Data;
                                 var handleCreateRoom = new HandlerRoom(new Data.ProjectChatContext());
                                 bool result = await handleCreateRoom.CreatRoomAsync(createRoomDTO);
 
@@ -104,14 +104,13 @@ namespace ChatServer.Services
                             break;
                         case RequestType.GetChatRooms:
                             {
-                                var getRoomsDTO = JsonConvert.DeserializeObject<GetChatRoomsDTO>(request);
+                                var getRoomsDTO = JsonConvert.DeserializeObject<RequestDTO<GetChatRoomsDTO>>(request).Data;
 
                                 var handleGetRooms = new HandlerRoom(new Data.ProjectChatContext());
                                 ChatRoomDTO[] roomsDTO = await handleGetRooms.GetRoomsForClientAsync(getRoomsDTO.ClientId);
 
                                 var json = JsonConvert.SerializeObject(roomsDTO);
                                 var bytes = Encoding.UTF8.GetBytes(json + "\n");
-
                                 await stream.WriteAsync(bytes);
                                 Console.WriteLine($"Результат на список доступны комнат отправлен пользователю: {client.Client.RemoteEndPoint}");
                             }
@@ -119,11 +118,11 @@ namespace ChatServer.Services
 
                         case RequestType.SendMessage:
                             {
-                                var sendMessageDTO = JsonConvert.DeserializeObject<SendMessageDTO>(request);
-                                var json = JsonConvert.SerializeObject("Сообщение отправлено");
-                                var bytes = Encoding.UTF8.GetBytes(json + "\n");
-                                await stream.WriteAsync(bytes);
-                                Console.WriteLine($"Результат отправки сообщения пользователю: {client.Client.RemoteEndPoint}");
+                                //var sendMessageDTO = JsonConvert.DeserializeObject<SendMessageDTO>(request);
+                                //var json = JsonConvert.SerializeObject("Сообщение отправлено");
+                                //var bytes = Encoding.UTF8.GetBytes(json + "\n");
+                                //await stream.WriteAsync(bytes);
+                                //Console.WriteLine($"Результат отправки сообщения пользователю: {client.Client.RemoteEndPoint}");
                             }
                             break;
                         default:

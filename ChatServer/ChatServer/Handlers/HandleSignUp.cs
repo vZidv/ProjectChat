@@ -1,5 +1,5 @@
 ﻿using ChatServer.Data;
-using ChatServer.DTO;
+using ChatShared.DTO;
 using ChatServer.Models;
 using Microsoft.EntityFrameworkCore;
 using System;

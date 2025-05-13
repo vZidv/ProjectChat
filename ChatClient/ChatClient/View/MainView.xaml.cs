@@ -13,7 +13,7 @@ using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
 using ChatClient.CustomControls;
-using ChatClient.DTO;
+using ChatShared.DTO;
 
 namespace ChatClient.View
 {

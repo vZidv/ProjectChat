@@ -1,6 +1,6 @@
 ﻿using ChatServer.Data;
 using ChatServer.Models;
-using ChatServer.DTO;
+using ChatShared.DTO;
 using System;
 using System.Collections.Generic;
 using System.Linq;

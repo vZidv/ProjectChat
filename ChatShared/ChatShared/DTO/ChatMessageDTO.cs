@@ -4,12 +4,12 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace ChatClient.DTO
+namespace ChatShared.DTO
 {
-    class GetChatRoomsDTO : IRequestData
+    public class ChatMessageDTO
     {
+        public string Text { get; set; }
         public int ClientId { get; set; }
-
-        public RequestType RequestType => RequestType.GetChatRooms;
+        public int RoomId { get; set; }
     }
 }

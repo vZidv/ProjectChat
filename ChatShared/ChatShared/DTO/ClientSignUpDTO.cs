@@ -4,14 +4,15 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace ChatServer.DTO
+namespace ChatShared.DTO
 {
-    public class ClientLoginDTO
+    public class ClientSignUpDTO
     {
-        public int Id { get; set; }
-
         public string Login { get; set; } = null!;
 
         public string PasswordHash { get; set; } = null!;
+
+        public string Email { get; set; } = null!;
+
     }
 }

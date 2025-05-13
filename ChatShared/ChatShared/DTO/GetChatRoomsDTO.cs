@@ -4,10 +4,10 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace ChatClient.DTO
+namespace ChatShared.DTO
 {
-    public interface IRequestData
+    public class GetChatRoomsDTO
     {
-        RequestType RequestType { get; }
+        public int ClientId { get; set; }
     }
 }

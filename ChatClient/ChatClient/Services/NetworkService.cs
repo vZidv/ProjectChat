@@ -8,6 +8,7 @@ using System.Text.Json;
 using System.Text.Json.Serialization;
 using System.Threading.Tasks;
 using System.Windows;
+using ChatShared.DTO;
 using Newtonsoft.Json;
 
 namespace ChatClient.Services
@@ -52,11 +53,16 @@ namespace ChatClient.Services
         }
 
         //Отправка сообщения
-        public async Task SendAsync<T>(T data)
+        public async Task SendAsync<T>(T data, RequestType type)
         {
             try
             {
-                var json = JsonConvert.SerializeObject(data);
+                var request = new RequestDTO<T>
+                {
+                    Type = type,
+                    Data = data
+                };
+                var json = JsonConvert.SerializeObject(request);
                 var bytes = Encoding.UTF8.GetBytes(json + "\n");
                 await _stream.WriteAsync(bytes);
             }
