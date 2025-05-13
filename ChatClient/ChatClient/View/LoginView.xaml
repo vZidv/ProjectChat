@@ -28,8 +28,8 @@
         </Grid.RowDefinitions>
         <Border
             Grid.Column="1" Grid.Row="1"
-            Background="{StaticResource AcrylicBackgroundFillColorBaseBrush}"
-            CornerRadius="25">
+            Background="{StaticResource BgColor4}"
+            CornerRadius="10">
             <Border.Effect>
                 <DropShadowEffect Direction="-90" Opacity="0.4" ShadowDepth="13" BlurRadius="10"/>
             </Border.Effect>
@@ -48,12 +48,17 @@
 
                         <TextBlock Text="Welcome"
                                    HorizontalAlignment="Center"
+                               Foreground="{StaticResource ClearWhite}"
                                Style="{StaticResource HeaderTextBlockStyle}"
                                FontSize="30" Margin="0,15"/>
                         
-                        <TextBox Text="{Binding Username, UpdateSourceTrigger=PropertyChanged}" 
+                        <TextBox 
+                            Foreground="{StaticResource ClearWhite}"
+                            Text="{Binding Username, UpdateSourceTrigger=PropertyChanged}" 
                             ui:ControlHelper.PlaceholderText="Login" Margin="0,3"/>
-                        <customcontrols:BindablePasswordBox Password="{Binding Password,Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Margin="0,3"/>
+                        <customcontrols:BindablePasswordBox 
+                            Foreground="{StaticResource ClearWhite}"
+                            Password="{Binding Password,Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Margin="0,3"/>
                         <StackPanel 
                             Orientation="Horizontal">
                             <Button Content="Log in" 

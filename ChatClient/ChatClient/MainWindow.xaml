@@ -5,8 +5,6 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:ChatClient"
         xmlns:vm="clr-namespace:ChatClient.ViewModels"
-        xmlns:ui="http://schemas.modernwpf.com/2019"
-        ui:WindowHelper.UseModernWindowStyle="True"
         mc:Ignorable="d"
         Title="MainWindow" 
         Height="450"
@@ -14,13 +12,157 @@
         MinHeight="450"
         MinWidth="800"
         WindowStartupLocation="CenterScreen"
-        WindowState="Maximized"
+        WindowState="Normal"
         WindowStyle="None"
         MouseDown="Window_MouseDown">
+    <Window.Resources>
+        <Style x:Key="CloseButtonStyle" TargetType="Button" BasedOn="{StaticResource {x:Type Button}}">
+            <Setter Property="Background" Value="{StaticResource BgColor4}"/>
+            <Setter Property="Foreground" Value="{StaticResource Second}"/>
+            <Setter Property="FontFamily" Value="Segoe MDL2 Assets"/>
+            <Setter Property="BorderThickness" Value="0"/>
+            <Style.Triggers>
+                <Trigger Property="IsMouseOver" Value="True">
+                    <Setter Property="Background" Value="{StaticResource RedLight}"/>
+                    <Setter Property="Foreground" Value="{StaticResource ClearWhite}"/>
+                </Trigger>
+            </Style.Triggers>
+        </Style>
+    </Window.Resources>
+
     <Window.DataContext>
         <vm:MainWindowViewModel/>
     </Window.DataContext>
-    <Grid>
-            <Frame x:Name="MainFrame" Content="{Binding CurrentPage}" NavigationUIVisibility="Hidden"/>
+    <Grid Background="{StaticResource BgColor1}">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="30"/>
+            <RowDefinition/>
+        </Grid.RowDefinitions>
+        <Grid Background="{StaticResource BgColor4}">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition/>
+                <ColumnDefinition Width="45"/>
+                <ColumnDefinition Width="45"/>
+                <ColumnDefinition Width="50"/>
+                <ColumnDefinition Width="5"/>
+            </Grid.ColumnDefinitions>
+
+            <Button x:Name="btnMinimize"
+                    Grid.Column="1"
+                    BorderThickness="0"
+                    FontFamily="Segoe MDL2 Assets"
+                    Click="btnMinimize_Click"
+                   
+                    Foreground="{StaticResource Second}">
+
+                <Button.Style>
+                    <Style TargetType="Button">
+                        <Setter Property="Background" Value="{StaticResource BgColor4}"/>
+                        <Setter Property="Foreground" Value="{StaticResource Second}"/>
+                        <Style.Triggers>
+                            <Trigger Property="IsMouseOver" Value="True">
+                                <Setter Property="Background" Value="{StaticResource BgColor3}"/>
+                                <Setter Property="Foreground" Value="{StaticResource ClearWhite}"/>
+                            </Trigger>
+                        </Style.Triggers>
+                    </Style>
+                </Button.Style>
+                <Button.Template>
+                    <ControlTemplate TargetType="Button">
+                        <Border
+                            Background="{TemplateBinding Background}">
+                            <Grid>
+                                <TextBlock
+                                    Foreground="{TemplateBinding Foreground}"
+                            FontFamily="Segoe MDL2 Assets"
+                            Text="&#xE921;"
+                            FontSize="20"
+                            TextAlignment="Center"
+                            VerticalAlignment="Bottom"
+                            HorizontalAlignment="Center"/>
+                            </Grid>
+                        </Border>
+                    </ControlTemplate>
+                </Button.Template>
+            </Button>
+
+            <Button x:Name="btnMaximize"
+                    Grid.Column="2"
+                    BorderThickness="0"
+                    FontFamily="Segoe MDL2 Assets"
+                    Click="btnMaximize_Click"
+                   
+                    Foreground="{StaticResource Second}">
+
+                <Button.Style>
+                    <Style TargetType="Button">
+                        <Setter Property="Background" Value="{StaticResource BgColor4}"/>
+                        <Setter Property="Foreground" Value="{StaticResource Second}"/>
+                        <Style.Triggers>
+                            <Trigger Property="IsMouseOver" Value="True">
+                                <Setter Property="Background" Value="{StaticResource BgColor3}"/>
+                                <Setter Property="Foreground" Value="{StaticResource ClearWhite}"/>
+                            </Trigger>
+                        </Style.Triggers>
+                    </Style>
+                </Button.Style>
+                <Button.Template>
+                    <ControlTemplate TargetType="Button">
+                        <Border
+                            Background="{TemplateBinding Background}">
+                            <Grid>
+                                <TextBlock
+                                    Foreground="{TemplateBinding Foreground}"
+                            FontFamily="Segoe MDL2 Assets"
+                            Text="&#xE923;"
+                            FontSize="15"
+                            TextAlignment="Center"
+                            VerticalAlignment="Center"
+                            HorizontalAlignment="Center"/>
+                            </Grid>
+                        </Border>
+                    </ControlTemplate>
+                </Button.Template>
+            </Button>
+
+            <Button x:Name="btnClose"
+                    Grid.Column="3"
+                    BorderThickness="0"
+
+                    Click="btnClose_Click">
+                <Button.Style>
+                    <Style TargetType="Button">
+                        <Setter Property="Background" Value="{StaticResource BgColor4}"/>
+                        <Setter Property="Foreground" Value="{StaticResource Second}"/>
+                        <Style.Triggers>
+                            <Trigger Property="IsMouseOver" Value="True">
+                                <Setter Property="Background" Value="{StaticResource RedLight}"/>
+                                <Setter Property="Foreground" Value="{StaticResource ClearWhite}"/>
+                            </Trigger>
+                        </Style.Triggers>
+                    </Style>
+                </Button.Style>
+                <Button.Template>
+                    <ControlTemplate TargetType="Button">
+                        <Border
+                            Background="{TemplateBinding Background}">
+                            <Grid>
+                                <TextBlock
+                                    Foreground="{TemplateBinding Foreground}"
+                            FontFamily="Segoe MDL2 Assets"
+                            Text="&#xEDAE;"
+                            FontSize="18"
+                            TextAlignment="Center"
+                            VerticalAlignment="Center"
+                            HorizontalAlignment="Center"/>
+                            </Grid>
+                        </Border>
+                    </ControlTemplate>
+                </Button.Template>
+            </Button>
+        </Grid>
+        <Grid Grid.Row="1">
+            <Frame  x:Name="MainFrame" Content="{Binding CurrentPage}" NavigationUIVisibility="Hidden"/>
+        </Grid>
     </Grid>
 </Window>
