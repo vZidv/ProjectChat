@@ -129,16 +129,17 @@ namespace ChatClient.ViewModels
             dataContext.CloseAction = () => win.Close();
 
             win.ShowDialog();
+            LoadChatRoomsCommand.Execute(null);
         }
 
         private void ExecuteLogoutCommand(object? obj)
         {
             Services.NavigationService.MainFrame.Content = new View.LoginView();
             NetworkSession.Dispose();
-            
+
         }
 
-        private void OpenSelectedChatRoom()
+        private async void OpenSelectedChatRoom()
         {
             if (SelectedChatRoom == null) return;
 
@@ -146,6 +147,14 @@ namespace ChatClient.ViewModels
             var chatViewModel = new ChatViewModel(SelectedChatRoom, ClientDTO);
             chatRoomView.DataContext = chatViewModel;
             CurrentPage = chatRoomView;
+
+            try
+            {
+                var session = NetworkSession.Session;
+                await session.SendAsync(SelectedChatRoom, RequestType.UpdateCurrentRoom);
+            }
+            catch (Exception ex) { }
+
         }
     }
 }

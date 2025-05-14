@@ -58,7 +58,7 @@ namespace ChatClient.ViewModels
                 OwnerId = this.OwnerId
             };
             var session = NetworkSession.Session;
-            await session.SendAsync(newRoom,ChatShared.DTO.RequestType.Register);
+            await session.SendAsync(newRoom,ChatShared.DTO.RequestType.CreatRoom);
             bool result = await session.ResponseAsync<bool>();
 
             if (result)

@@ -24,7 +24,7 @@
         <Border 
                Width="Auto" 
                Height="Auto" 
-               Background="{StaticResource WindowBorderInactive}"
+               Background="{StaticResource BgColor3}"
                CornerRadius="0,0,0,0"
               >
             <Grid>
@@ -94,6 +94,7 @@
 
                                         <TextBlock
                                         FontSize="15"
+                                        Foreground="{StaticResource ClearWhite}"
                                         VerticalAlignment="Center"
                                         Text="{Binding Name}"
                                         Style="{StaticResource BaseTextBlockStyle}"/>

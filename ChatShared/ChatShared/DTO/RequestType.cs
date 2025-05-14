@@ -12,7 +12,8 @@ namespace ChatShared.DTO
         Register,
         SendMessage,
         CreatRoom,
-        GetChatRooms
+        GetChatRooms,
+        UpdateCurrentRoom
         //..
     }
 }

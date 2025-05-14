@@ -131,7 +131,18 @@ namespace ChatServer.Services
                                 Console.WriteLine($"Результат на список доступны комнат отправлен пользователю: {client.Client.RemoteEndPoint}");
                             }
                             break;
+                        case RequestType.UpdateCurrentRoom:
+                            {
+                                var requestDTO = JsonConvert.DeserializeObject<RequestDTO<ChatRoomDTO>>(request);
+                                if (!TokenCheck(requestDTO.Token))
+                                    break;
 
+                                _sessions.TryGetValue(requestDTO.Token, out var session);
+                                session.CurrentRoomId = requestDTO.Data.Id;
+
+                                Console.WriteLine($"Пользователь: {client.Client.RemoteEndPoint} зашел в комнату: Name:{requestDTO.Data.Name}; Id:{requestDTO.Data.Id}");
+                            }
+                            break;
                         case RequestType.SendMessage:
                             {
                                 //var sendMessageDTO = JsonConvert.DeserializeObject<SendMessageDTO>(request);

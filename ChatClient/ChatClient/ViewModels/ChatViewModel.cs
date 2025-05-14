@@ -63,17 +63,16 @@ namespace ChatClient.ViewModels
 
         private async void ExecuteSendMessageCommand(object? obj)
         {
-            //var message = new ChatMessageDTO
-            //{
-            //    Text = NewMessageText,
-            //    ClientId = _clientLoginDTO.Id,
-            //    RoomId = _chatRoomDTO.Id
-            //};
+            var messageDTO = new ChatMessageDTO()
+            {
+                Token = NetworkSession.Token,
+                RoomId = _chatRoomDTO.Id,
+                Text = NewMessageText
+            };
 
-            //var service = new NetworkService();
-            //await service.ConnectAsync();
-            //await service.SendAsync(message);
-            //ChatMessageDTOs = await service.ResponseAsync<ChatMessageDTO[]>();
+            var session = NetworkSession.Session;
+            await session.SendAsync(messageDTO, RequestType.SendMessage);
+
         }
     }
 }

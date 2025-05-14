@@ -10,6 +10,6 @@ namespace ChatServer.Models
     {
         public int ClientId { get; set; }
         public string Token { get; set; }
-        public int CurrentRoomId { get; set; }
+        public int CurrentRoomId { get; set; } = -1;
     }
 }

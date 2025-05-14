@@ -9,7 +9,7 @@ namespace ChatShared.DTO
     public class ChatMessageDTO
     {
         public string Text { get; set; }
-        public int ClientId { get; set; }
         public int RoomId { get; set; }
+        public string Token { get; set; } 
     }
 }
