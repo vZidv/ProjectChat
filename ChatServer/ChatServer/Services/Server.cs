@@ -11,12 +11,15 @@ using ChatServer.Handlers;
 using System.Text.Json.Nodes;
 using Newtonsoft.Json.Linq;
 using ChatShared.DTO;
+using ChatServer.Models;
+using System.Collections.Concurrent;
 
 namespace ChatServer.Services
 {
     public class Server
     {
         private readonly TcpListener _listener;
+        private static readonly ConcurrentDictionary<string, ClientSession> _sessions = new();
 
         public Server(int port)
         {
@@ -37,6 +40,7 @@ namespace ChatServer.Services
 
         private async Task HandleClientAsync(TcpClient client)
         {
+            string? currentToken = null;
             try
             {
                 using var stream = client.GetStream();
@@ -68,6 +72,16 @@ namespace ChatServer.Services
                                 HandleLogin handleLogin = new HandleLogin(new Data.ProjectChatContext());
                                 LoginResultDTO result = await handleLogin.HandleLoginAsync(loginDTO);
 
+                                if (result.Success)
+                                {
+                                    var session = new ClientSession()
+                                    {
+                                        ClientId = result.ClientId,
+                                        Token = result.Token,
+                                        CurrentRoomId = -1
+                                    };
+                                    _sessions.TryAdd(result.Token, session);
+                                }
                                 await SendResponseAsync(stream, result);
 
                                 Console.WriteLine($"Результат авторизации отправлен пользователю: {client.Client.RemoteEndPoint}");
@@ -89,7 +103,11 @@ namespace ChatServer.Services
                             break;
                         case RequestType.CreatRoom:
                             {
-                                var createRoomDTO = JsonConvert.DeserializeObject<RequestDTO<ChatRoomDTO>>(request).Data;
+                                var requestDTO = JsonConvert.DeserializeObject<RequestDTO<ChatRoomDTO>>(request);
+                                if (!TokenCheck(requestDTO.Token))
+                                    break;
+
+                                var createRoomDTO = requestDTO.Data;
                                 var handleCreateRoom = new HandlerRoom(new Data.ProjectChatContext());
                                 bool result = await handleCreateRoom.CreatRoomAsync(createRoomDTO);
 
@@ -100,8 +118,11 @@ namespace ChatServer.Services
                             break;
                         case RequestType.GetChatRooms:
                             {
-                                var getRoomsDTO = JsonConvert.DeserializeObject<RequestDTO<GetChatRoomsDTO>>(request).Data;
+                                var requestDTO = JsonConvert.DeserializeObject<RequestDTO<GetChatRoomsDTO>>(request);
+                                if (!TokenCheck(requestDTO.Token))
+                                    break;
 
+                                var getRoomsDTO = requestDTO.Data;
                                 var handleGetRooms = new HandlerRoom(new Data.ProjectChatContext());
                                 ChatRoomDTO[] roomsDTO = await handleGetRooms.GetRoomsForClientAsync(getRoomsDTO.ClientId);
 
@@ -130,6 +151,11 @@ namespace ChatServer.Services
             {
                 Console.WriteLine($"Ошибка: {ex.Message}");
             }
+            finally
+            {
+                if (!string.IsNullOrEmpty(currentToken))
+                    _sessions.TryRemove(currentToken, out _);
+            }
         }
         private async Task SendResponseAsync<T>(Stream stream, T response)
         {
@@ -144,6 +170,19 @@ namespace ChatServer.Services
                 Console.WriteLine($"Ошибка при отправке ответа: {ex.Message}");
             }
         }
-
+        /// <summary>
+        ///  True - token is valid, false - token is not valid
+        /// </summary>
+        /// <param name="token">Client token</param>
+        /// <returns></returns>
+        private bool TokenCheck(string token)
+        {
+            if (!_sessions.TryGetValue(token, out var session))
+            {
+                Console.WriteLine($"Не удалось найти сессию для токена: {token}");
+                return false;
+            }
+            return true;
+        }
     }
 }

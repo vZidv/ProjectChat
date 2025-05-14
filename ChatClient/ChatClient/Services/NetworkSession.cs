@@ -11,6 +11,7 @@ namespace ChatClient.Services
     {
         public static ClientLoginDTO? Client { get; set; }
         public static NetworkService? Session { get; set; }
+        public static string? Token { get; set; }
 
         public static void Dispose()
         {

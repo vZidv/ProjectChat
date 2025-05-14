@@ -118,11 +118,14 @@ namespace ChatClient.ViewModels
             if (response.Success)
             {
                 client.Id = response.ClientId;
+
                 NetworkSession.Client = client;
-                MessageBox.Show($"{response.Token}", "Успех Вот токен", MessageBoxButton.OK, MessageBoxType.Information);
+                NetworkSession.Token = response.Token;
+
                 var mainViewModel = new ViewModels.MainViewModel(client);
                 var mainView = new View.MainView();
                 mainView.DataContext = mainViewModel;
+
                 Services.NavigationService.MainFrame.Content = mainView;
             }
             else

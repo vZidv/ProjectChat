@@ -60,7 +60,8 @@ namespace ChatClient.Services
                 var request = new RequestDTO<T>
                 {
                     Type = type,
-                    Data = data
+                    Data = data,
+                    Token = NetworkSession.Token
                 };
                 var json = JsonConvert.SerializeObject(request);
                 var bytes = Encoding.UTF8.GetBytes(json + "\n");

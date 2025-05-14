@@ -108,7 +108,7 @@ namespace ChatClient.ViewModels
             };
 
             var session = NetworkSession.Session;
-            await session.SendAsync(request, ChatShared.DTO.RequestType.GetChatRooms);
+            await session.SendAsync(request, RequestType.GetChatRooms);
             var response = await session.ResponseAsync<ChatRoomDTO[]>();
 
             if (response != null)

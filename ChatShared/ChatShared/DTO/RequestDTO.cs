@@ -8,6 +8,7 @@ namespace ChatShared.DTO
 {
     public class RequestDTO <T>
     {
+        public string Token { get; set; } = string.Empty;
         public RequestType Type { get; set; }
         public T? Data { get; set; }
     }
