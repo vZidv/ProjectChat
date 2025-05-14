@@ -131,9 +131,13 @@
             Background="Transparent"
             HorizontalAlignment="Center"
             />
-        <Frame 
+        <Grid 
+            Background="{StaticResource BgColor1}"
+            Grid.Column="2">
+            <Frame 
             Content="{Binding CurrentPage}"
-            Grid.Column="2"
             NavigationUIVisibility="Hidden"/>
+        </Grid>
+
     </Grid>
 </Page>

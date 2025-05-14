@@ -96,6 +96,7 @@ namespace ChatClient.ViewModels
             LoadChatRoomsCommand = new ViewModelCommand(ExecuteLoadChatRoomsCommand);
 
             LoadChatRoomsCommand.Execute(null);
+            CurrentPage = new View.EmptyChatView();
         }
 
 
