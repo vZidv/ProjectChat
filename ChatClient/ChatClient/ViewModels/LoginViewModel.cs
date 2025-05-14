@@ -101,8 +101,11 @@ namespace ChatClient.ViewModels
 
         private async void ExecuteLoginCommand(object? obj)
         {
-            var service = new NetworkService();
-            await service.ConnectAsync();
+            NetworkSession.Session = new NetworkService();
+            await NetworkSession.Session.ConnectAsync();
+
+            var session = NetworkSession.Session;
+
 
             var client = new ClientLoginDTO()
             {
@@ -110,23 +113,23 @@ namespace ChatClient.ViewModels
                 PasswordHash = Password
             };
 
-            await service.SendAsync<ClientLoginDTO>(client, RequestType.Login);
-            int response = await service.ResponseAsync<int>();
+            await session.SendAsync<ClientLoginDTO>(client, RequestType.Login);
+            int response = await session.ResponseAsync<int>();
 
             if (response != -1)
             {
                 client.Id = response;
+                NetworkSession.Client = client;
+
                 var mainViewModel = new ViewModels.MainViewModel(client);
                 var mainView = new View.MainView();
                 mainView.DataContext = mainViewModel;
                 Services.NavigationService.MainFrame.Content = mainView;
-                
             }
             else
             {
                 MessageBox.Show("Неверный логин или пароль", "Ошибка", MessageBoxButton.OK, MessageBoxType.Error);
             }
-            service.Dispose();
         }
 
         private void ExecuteRecoverPasswordCommand(string username)

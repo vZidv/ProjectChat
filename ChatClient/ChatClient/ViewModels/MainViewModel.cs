@@ -10,6 +10,7 @@ using System.Windows.Input;
 using System.Windows.Media.Media3D;
 using System.Windows.Controls;
 using ChatShared.DTO;
+using ChatClient.Services;
 
 namespace ChatClient.ViewModels
 {
@@ -105,10 +106,9 @@ namespace ChatClient.ViewModels
                 ClientId = ClientDTO.Id
             };
 
-            var networkService = new Services.NetworkService();
-            await networkService.ConnectAsync();
-            await networkService.SendAsync(request, ChatShared.DTO.RequestType.GetChatRooms);
-            var response = await networkService.ResponseAsync<ChatRoomDTO[]>();
+            var session = NetworkSession.Session;
+            await session.SendAsync(request, ChatShared.DTO.RequestType.GetChatRooms);
+            var response = await session.ResponseAsync<ChatRoomDTO[]>();
 
             if (response != null)
             {
@@ -133,6 +133,8 @@ namespace ChatClient.ViewModels
         private void ExecuteLogoutCommand(object? obj)
         {
             Services.NavigationService.MainFrame.Content = new View.LoginView();
+            NetworkSession.Dispose();
+            
         }
 
         private void OpenSelectedChatRoom()

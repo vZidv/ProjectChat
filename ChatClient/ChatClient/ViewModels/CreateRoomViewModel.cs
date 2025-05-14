@@ -7,6 +7,7 @@ using System.Threading.Tasks;
 using System.Windows.Input;
 using ChatClient.CustomControls;
 using ChatShared.DTO;
+using ChatClient.Services;
 
 namespace ChatClient.ViewModels
 {
@@ -56,11 +57,9 @@ namespace ChatClient.ViewModels
                 Name = RoomName,
                 OwnerId = this.OwnerId
             };
-            
-            var networkService = new Services.NetworkService();
-            await networkService.ConnectAsync();
-            await networkService.SendAsync(newRoom,ChatShared.DTO.RequestType.Register);
-            bool result = await networkService.ResponseAsync<bool>();
+            var session = NetworkSession.Session;
+            await session.SendAsync(newRoom,ChatShared.DTO.RequestType.Register);
+            bool result = await session.ResponseAsync<bool>();
 
             if (result)
             {

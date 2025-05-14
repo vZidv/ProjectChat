@@ -63,10 +63,9 @@ namespace ChatClient.ViewModels
                 PasswordHash = Password,
                 Email = Email
             };
-            var service = new NetworkService();
-            await service.ConnectAsync();
-            await service.SendAsync<ClientSignUpDTO>(newClient, ChatShared.DTO.RequestType.Register);
-            bool result = await service.ResponseAsync<bool>();
+            var session = NetworkSession.Session;
+            await session.SendAsync<ClientSignUpDTO>(newClient, ChatShared.DTO.RequestType.Register);
+            bool result = await session.ResponseAsync<bool>();
             
             if (result)
                 GoBackCommand.Execute(null);

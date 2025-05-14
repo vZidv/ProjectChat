@@ -53,6 +53,7 @@ namespace ChatServer.Services
                         requestString.Add(Convert.ToByte(bytesRead));
 
                     var request = Encoding.UTF8.GetString(requestString.ToArray());
+                    requestString.Clear();
 
                     RequestType type = JObject.Parse(request).GetValue("Type").ToObject<RequestType>();
                     Console.WriteLine($"Получен запрос: {type}");

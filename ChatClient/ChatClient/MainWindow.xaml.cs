@@ -1,4 +1,5 @@
-﻿using System;
+﻿using ChatClient.Services;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -35,8 +36,11 @@ namespace ChatClient
         private void btnMinimize_Click(object sender, RoutedEventArgs e) => WindowState = WindowState.Minimized;
 
 
-        private void btnClose_Click(object sender, RoutedEventArgs e) => Application.Current.Shutdown();
-
+        private void btnClose_Click(object sender, RoutedEventArgs e)
+        {
+            NetworkSession.Dispose();
+            Application.Current.Shutdown();
+        }
 
         private void btnMaximize_Click(object sender, RoutedEventArgs e)
         {
