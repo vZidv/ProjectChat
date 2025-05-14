@@ -106,7 +106,6 @@ namespace ChatClient.ViewModels
 
             var session = NetworkSession.Session;
 
-
             var client = new ClientLoginDTO()
             {
                 Login = Username,
@@ -114,13 +113,13 @@ namespace ChatClient.ViewModels
             };
 
             await session.SendAsync<ClientLoginDTO>(client, RequestType.Login);
-            int response = await session.ResponseAsync<int>();
+            LoginResultDTO response = await session.ResponseAsync<LoginResultDTO>();
 
-            if (response != -1)
+            if (response.Success)
             {
-                client.Id = response;
+                client.Id = response.ClientId;
                 NetworkSession.Client = client;
-
+                MessageBox.Show($"{response.Token}", "Успех Вот токен", MessageBoxButton.OK, MessageBoxType.Information);
                 var mainViewModel = new ViewModels.MainViewModel(client);
                 var mainView = new View.MainView();
                 mainView.DataContext = mainViewModel;
@@ -128,7 +127,7 @@ namespace ChatClient.ViewModels
             }
             else
             {
-                MessageBox.Show("Неверный логин или пароль", "Ошибка", MessageBoxButton.OK, MessageBoxType.Error);
+                MessageBox.Show(response.ErrorMessage, "Ошибка", MessageBoxButton.OK, MessageBoxType.Error);
             }
         }
 

@@ -66,7 +66,7 @@ namespace ChatServer.Services
                                 var loginDTO = JsonConvert.DeserializeObject<RequestDTO<ClientLoginDTO>>(request).Data;
 
                                 HandleLogin handleLogin = new HandleLogin(new Data.ProjectChatContext());
-                                int result = await handleLogin.HandleLoginAsync(loginDTO);
+                                LoginResultDTO result = await handleLogin.HandleLoginAsync(loginDTO);
 
                                 await SendResponseAsync(stream, result);
 

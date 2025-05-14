@@ -18,14 +18,26 @@ namespace ChatServer.Handlers
             _context = context;
         }
 
-        public async Task<int> HandleLoginAsync(ClientLoginDTO loginDTO)
+        public async Task<LoginResultDTO> HandleLoginAsync(ClientLoginDTO loginDTO)
         {
             var user = await _context.Clients.Where(p => p.Login == loginDTO.Login).FirstOrDefaultAsync();
-            if (user != null)
-                if (HandlerPassword.VerifyPassword(loginDTO.PasswordHash, user.PasswordHash))
-                    return user.Id;
 
-            return -1;
+            if (user != null && HandlerPassword.VerifyPassword(loginDTO.PasswordHash, user.PasswordHash))
+                return new LoginResultDTO()
+                {
+                    Success = true,
+                    ClientId = user.Id,
+                    Token = Guid.NewGuid().ToString(),
+                    ErrorMessage = null,
+                };
+
+            return new LoginResultDTO()
+            {
+                Success = false,
+                ClientId = -1,
+                Token = null,
+                ErrorMessage = "Неверный логин или пароль",
+            };
         }
     }
 }
