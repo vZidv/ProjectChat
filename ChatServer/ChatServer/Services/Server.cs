@@ -145,11 +145,17 @@ namespace ChatServer.Services
                             break;
                         case RequestType.SendMessage:
                             {
-                                //var sendMessageDTO = JsonConvert.DeserializeObject<SendMessageDTO>(request);
-                                //var json = JsonConvert.SerializeObject("Сообщение отправлено");
-                                //var bytes = Encoding.UTF8.GetBytes(json + "\n");
-                                //await stream.WriteAsync(bytes);
-                                //Console.WriteLine($"Результат отправки сообщения пользователю: {client.Client.RemoteEndPoint}");
+                                var requestDTO = JsonConvert.DeserializeObject<RequestDTO<ChatMessageDTO>>(request);
+                                if (!TokenCheck(requestDTO.Token))
+                                    break;
+
+                                ChatMessageDTO messageDTO = requestDTO.Data;
+                                _sessions.TryGetValue(requestDTO.Token, out var session);
+
+                                var handlerMessage = new HandlerMessage(new Data.ProjectChatContext());
+                                await handlerMessage.WritingMessageAsync(messageDTO, session.ClientId);
+
+                                Console.WriteLine($"Сообщение {messageDTO.Text} в комнате {messageDTO.RoomId} записано");
                             }
                             break;
                         default:

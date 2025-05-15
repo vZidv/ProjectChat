@@ -73,6 +73,15 @@ namespace ChatClient.Services
             }
         }
 
+        public async Task<ChatMessageDTO> ListenMessageAsync(Action<ChatMessageDTO> onMessageReceived)
+        {
+            while (true)
+            {
+               var message =  await ResponseAsync<ChatMessageDTO>();
+                onMessageReceived?.Invoke(message);
+            }
+        }
+
         public async Task<T> ResponseAsync<T>()
         {
             try

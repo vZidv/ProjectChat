@@ -43,7 +43,7 @@ namespace ChatClient.ViewModels
                 OnPropertyChanged(nameof(NewMessageText));
             }
         }
-        
+
         //Command
         public ICommand SendMessageCommand { get; }
 
@@ -52,10 +52,11 @@ namespace ChatClient.ViewModels
         public ChatViewModel(ChatRoomDTO chatRoomDTO, ClientLoginDTO client)
         {
             _chatRoomDTO = chatRoomDTO;
-
             _clientLoginDTO = client;
 
             SendMessageCommand = new ViewModelCommand(ExecuteSendMessageCommand, CanExecuteSendMessageCommand);
+
+            //StartListeningMessagesAsync();
         }
 
         private bool CanExecuteSendMessageCommand(object? obj) => (NewMessageText != string.Empty);
@@ -63,15 +64,28 @@ namespace ChatClient.ViewModels
 
         private async void ExecuteSendMessageCommand(object? obj)
         {
-            var messageDTO = new ChatMessageDTO()
+            var message = new ChatMessageDTO()
             {
-                Token = NetworkSession.Token,
-                RoomId = _chatRoomDTO.Id,
-                Text = NewMessageText
+                Text = NewMessageText,
+                RoomId = ChatRoomDTO.Id
             };
-
             var session = NetworkSession.Session;
-            await session.SendAsync(messageDTO, RequestType.SendMessage);
+            session.SendAsync(message, RequestType.SendMessage);
+
+            NewMessageText = string.Empty;
+        }
+
+        private async Task StartListeningMessagesAsync()
+        {
+            try
+            {
+                await NetworkSession.Session.ListenMessageAsync(OnNewMessage);
+            }
+            catch (Exception ex){}
+        }
+
+        private void OnNewMessage(ChatMessageDTO message)
+        {
 
         }
     }

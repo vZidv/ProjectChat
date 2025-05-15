@@ -134,7 +134,7 @@ namespace ChatClient.ViewModels
 
         private void ExecuteLogoutCommand(object? obj)
         {
-            Services.NavigationService.MainFrame.Content = new View.LoginView();
+            NavigationService.MainFrame.Content = new View.LoginView();
             NetworkSession.Dispose();
 
         }
