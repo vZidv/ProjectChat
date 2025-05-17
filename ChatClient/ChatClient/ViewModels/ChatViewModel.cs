@@ -6,6 +6,8 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Input;
 using ChatShared.DTO;
+using ChatShared.Events;
+using System.Windows;
 
 namespace ChatClient.ViewModels
 {
@@ -56,7 +58,7 @@ namespace ChatClient.ViewModels
 
             SendMessageCommand = new ViewModelCommand(ExecuteSendMessageCommand, CanExecuteSendMessageCommand);
 
-            //StartListeningMessagesAsync();
+            App.EventAggregator.Subscribe<ChatMessageEvent>(OnNewMessageReceived);
         }
 
         private bool CanExecuteSendMessageCommand(object? obj) => (NewMessageText != string.Empty);
@@ -75,18 +77,11 @@ namespace ChatClient.ViewModels
             NewMessageText = string.Empty;
         }
 
-        private async Task StartListeningMessagesAsync()
-        {
-            try
-            {
-                await NetworkSession.Session.ListenMessageAsync(OnNewMessage);
-            }
-            catch (Exception ex){}
-        }
 
-        private void OnNewMessage(ChatMessageDTO message)
-        {
 
+        private void OnNewMessageReceived(ChatMessageEvent chatEvent)
+        {
+            
         }
     }
 }

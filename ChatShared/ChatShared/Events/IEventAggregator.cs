@@ -9,6 +9,6 @@ namespace ChatShared.Events
     public interface IEventAggregator
     {
         void Subscribe<T>(Action<T> handler) where T : ChatEvent;
-        void Publish(ChatEvent @event);
+        void Publish(ChatEvent chatEvent);
     }
 }

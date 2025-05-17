@@ -7,9 +7,10 @@ using System.Text;
 using System.Text.Json;
 using System.Text.Json.Serialization;
 using System.Threading.Tasks;
-using System.Windows;
 using ChatShared.DTO;
+using ChatShared.Events;
 using Newtonsoft.Json;
+using ChatClient.CustomControls;
 
 namespace ChatClient.Services
 {
@@ -24,12 +25,18 @@ namespace ChatClient.Services
         private StreamReader _reader;
         private StreamWriter _writer;
 
+        private readonly IEventAggregator _eventAggregator;
+
         //..
 
         public NetworkService(string host = "127.0.0.1", int port = 8888)
         {
             _host = host;
             _port = port;
+        }
+        public NetworkService(IEventAggregator eventAggregator) :base()
+        {
+            _eventAggregator = eventAggregator;
         }
 
         //Подключение и инициализация потока
@@ -73,12 +80,32 @@ namespace ChatClient.Services
             }
         }
 
-        public async Task<ChatMessageDTO> ListenMessageAsync(Action<ChatMessageDTO> onMessageReceived)
+        public async Task ListenMessageAsync()
         {
             while (true)
             {
-               var message =  await ResponseAsync<ChatMessageDTO>();
-                onMessageReceived?.Invoke(message);
+                try
+                {
+                    var bytesRead = 10;
+                    var response = new List<byte>();
+
+                    while ((bytesRead = _stream.ReadByte()) != '\n')
+                        response.Add(Convert.ToByte(bytesRead));
+
+                    var type = Deserialize<ResponseDTO<Object>>(response.ToArray()).Type;
+
+                    switch (type)
+                    {
+                        case ResponseType.Message:
+                            var messageDTO = Deserialize<ResponseDTO<ChatMessageDTO>>(response.ToArray()).Data;
+                            _eventAggregator.Publish(new ChatMessageEvent(messageDTO));
+                            break;
+                    }
+                }
+                catch (Exception ex)
+                {
+                    MessageBox.Show($"Ошибка сети {ex.Message}", "Ошибка сети",MessageBoxButton.OK,MessageBoxType.Error);
+                }
             }
         }
 
