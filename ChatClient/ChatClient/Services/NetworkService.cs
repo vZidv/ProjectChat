@@ -84,6 +84,7 @@ namespace ChatClient.Services
 
         public async Task<T> ResponseAsync<T>()
         {
+            ResponseDTO<T> responseDTO;
             try
             {
                 var bytesRead = 10;
@@ -92,7 +93,8 @@ namespace ChatClient.Services
                 while ((bytesRead = _stream.ReadByte()) != '\n')
                     response.Add(Convert.ToByte(bytesRead));
 
-                return Deserialize<T>(response.ToArray());
+                responseDTO = Deserialize<ResponseDTO<T>>(response.ToArray());
+                return responseDTO.Data;
             }
             catch (Exception ex)
             {

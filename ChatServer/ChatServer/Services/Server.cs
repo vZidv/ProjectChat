@@ -82,7 +82,7 @@ namespace ChatServer.Services
                                     };
                                     _sessions.TryAdd(result.Token, session);
                                 }
-                                await SendResponseAsync(stream, result);
+                                await SendResponseAsync(stream, result, ResponseType.LoginResult);
 
                                 Console.WriteLine($"Результат авторизации отправлен пользователю: {client.Client.RemoteEndPoint}");
                             }
@@ -96,7 +96,7 @@ namespace ChatServer.Services
                                 var handleSingUp = new HandleSignUp(new Data.ProjectChatContext());
                                 bool result = await handleSingUp.HandleSignUpAsync(registerDTO);
 
-                                await SendResponseAsync(stream, result);
+                                await SendResponseAsync(stream, result, ResponseType.SignUpResult);
 
                                 Console.WriteLine($"Результат авторизации отправлен пользователю: {client.Client.RemoteEndPoint}");
                             }
@@ -111,7 +111,7 @@ namespace ChatServer.Services
                                 var handleCreateRoom = new HandlerRoom(new Data.ProjectChatContext());
                                 bool result = await handleCreateRoom.CreatRoomAsync(createRoomDTO);
 
-                                await SendResponseAsync(stream, result);
+                                await SendResponseAsync(stream, result, ResponseType.CreatRoomResult);
 
                                 Console.WriteLine($"Результат создания комнаты отправлен пользователю: {client.Client.RemoteEndPoint}");
                             }
@@ -126,7 +126,7 @@ namespace ChatServer.Services
                                 var handleGetRooms = new HandlerRoom(new Data.ProjectChatContext());
                                 ChatRoomDTO[] roomsDTO = await handleGetRooms.GetRoomsForClientAsync(getRoomsDTO.ClientId);
 
-                                await SendResponseAsync(stream, roomsDTO);
+                                await SendResponseAsync(stream, roomsDTO, ResponseType.GetChatRooms);
 
                                 Console.WriteLine($"Результат на список доступны комнат отправлен пользователю: {client.Client.RemoteEndPoint}");
                             }
@@ -174,11 +174,18 @@ namespace ChatServer.Services
                     _sessions.TryRemove(currentToken, out _);
             }
         }
-        private async Task SendResponseAsync<T>(Stream stream, T response)
+        private async Task SendResponseAsync<T>(Stream stream, T response, ResponseType type, string? message = null)
         {
             try
             {
-                var json = JsonConvert.SerializeObject(response);
+                var responseDTO = new ResponseDTO<T>()
+                {
+                    Data = response,
+                    Message = message,
+                    Type = type
+                };
+
+                var json = JsonConvert.SerializeObject(responseDTO);
                 var bytes = Encoding.UTF8.GetBytes(json + "\n");
                 await stream.WriteAsync(bytes);
             }
