@@ -95,8 +95,9 @@ namespace ChatClient.ViewModels
             CreatRoomCommand = new ViewModelCommand(ExecuteCreatRoomCommand);
             LoadChatRoomsCommand = new ViewModelCommand(ExecuteLoadChatRoomsCommand);
 
-            LoadChatRoomsCommand.Execute(null);
             CurrentPage = new View.EmptyChatView();
+
+            LoadChatRoomsCommand.Execute(null);
         }
 
 
@@ -119,6 +120,7 @@ namespace ChatClient.ViewModels
             {
                 MessageBox.Show("Не удалось загрузить комнаты");
             }
+            await NetworkSession.Session.ListenAsync();
         }
 
         private void ExecuteCreatRoomCommand(object? obj)

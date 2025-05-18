@@ -80,26 +80,34 @@ namespace ChatClient.Services
             }
         }
 
-        public async Task ListenMessageAsync()
+        public async Task ListenAsync()
         {
             while (true)
             {
                 try
                 {
-                    var bytesRead = 10;
-                    var response = new List<byte>();
+                    var json = await _reader.ReadLineAsync();
+                    if (string.IsNullOrEmpty(json)) continue;
 
-                    while ((bytesRead = _stream.ReadByte()) != '\n')
-                        response.Add(Convert.ToByte(bytesRead));
+                    var type = JsonConvert.DeserializeObject<ResponseDTO<object>>(json).Type;
+                    //var bytesRead = 10;
+                    //var response = new List<byte>();
 
-                    var type = Deserialize<ResponseDTO<Object>>(response.ToArray()).Type;
+                    //while ((bytesRead = _stream.ReadByte()) != '\n')
+                    //    response.Add(Convert.ToByte(bytesRead));
+                    //var json = response.ToArray();
+                    //var type = Deserialize<ResponseDTO<Object>>(json).Type;
 
                     switch (type)
                     {
                         case ResponseType.Message:
-                            var messageDTO = Deserialize<ResponseDTO<ChatMessageDTO>>(response.ToArray()).Data;
+                            var messageDTO = JsonConvert.DeserializeObject<ResponseDTO<ChatMessageDTO>>(json).Data;
                             _eventAggregator.Publish(new ChatMessageEvent(messageDTO));
-                            break;
+                            break;                       
+                        //case ResponseType.Message:
+                        //    var messageDTO = Deserialize<ResponseDTO<ChatMessageDTO>>(json).Data;
+                        //    _eventAggregator.Publish(new ChatMessageEvent(messageDTO));
+                        //    break;
                     }
                 }
                 catch (Exception ex)

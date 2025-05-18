@@ -15,7 +15,7 @@ namespace ChatClient.ViewModels
     {
         private ChatRoomDTO _chatRoomDTO;
 
-        private ChatMessageDTO[] _chatMessageDTOs;
+        private List<ChatMessageDTO> _chatMessageDTOs;
 
         private ClientLoginDTO _clientLoginDTO;
 
@@ -26,7 +26,7 @@ namespace ChatClient.ViewModels
             get { return _chatRoomDTO; }
         }
 
-        public ChatMessageDTO[] ChatMessageDTOs
+        public List<ChatMessageDTO> ChatMessageDTOs
         {
             get { return _chatMessageDTOs; }
             set
@@ -81,7 +81,7 @@ namespace ChatClient.ViewModels
 
         private void OnNewMessageReceived(ChatMessageEvent chatEvent)
         {
-            
+            ChatMessageDTOs.Add(chatEvent.Message);
         }
     }
 }
