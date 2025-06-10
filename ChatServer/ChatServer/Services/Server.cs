@@ -75,7 +75,7 @@ namespace ChatServer.Services
 
                                 if (result.Success)
                                     _handlerClient.AddClient(result);
-                                
+
                                 await SendResponseAsync(stream, result, ResponseType.LoginResult);
 
                                 Console.WriteLine($"Результат авторизации отправлен пользователю: {client.Client.RemoteEndPoint}");
@@ -132,7 +132,7 @@ namespace ChatServer.Services
                                     break;
 
                                 ClientSession session = _handlerClient.TryGetSession(requestDTO.Token);
-                                _handlerClient.ClientInRoom(session, requestDTO.Data);                           
+                                _handlerClient.ClientInRoom(session, requestDTO.Data);
 
                                 Console.WriteLine($"Пользователь: {client.Client.RemoteEndPoint} зашел в комнату: Name:{requestDTO.Data.Name}; Id:{requestDTO.Data.Id}");
                             }
@@ -150,6 +150,25 @@ namespace ChatServer.Services
                                 await handlerMessage.WritingMessageAsync(messageDTO, session.ClientId);
 
                                 Console.WriteLine($"Сообщение {messageDTO.Text} в комнате {messageDTO.RoomId} записано");
+                            }
+                            break;
+                        case RequestType.GetHistoryRoom:
+                            {
+                                var requestDTO = JsonConvert.DeserializeObject<RequestDTO<GetRoomHistoryDTO>>(request);
+                                if (_handlerClient.TryGetSession(requestDTO.Token) == null)
+                                    break;
+
+                                var roomHandler = new HandlerRoom(new Data.ProjectChatContext());
+                                ChatMessageDTO[] messageDTO = await roomHandler.GetHistoryRoomAsync(requestDTO.Data.RoomId);
+
+                                var result = new RoomHistoryDTO()
+                                {
+                                    MessageDTOs = messageDTO,
+                                    RoomId = requestDTO.Data.RoomId
+                                };
+
+                                await SendResponseAsync(stream, result, ResponseType.GetHistoryRoom);
+                                Console.WriteLine($"Пользователю: {client.Client.RemoteEndPoint} отправлена история комнаты: {requestDTO.Data.RoomId}");
                             }
                             break;
                         default:

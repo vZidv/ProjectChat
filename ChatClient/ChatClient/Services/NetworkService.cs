@@ -29,13 +29,10 @@ namespace ChatClient.Services
 
         //..
 
-        public NetworkService(string host = "127.0.0.1", int port = 8888)
+        public NetworkService(IEventAggregator eventAggregator, string host = "127.0.0.1", int port = 8888)
         {
             _host = host;
             _port = port;
-        }
-        public NetworkService(IEventAggregator eventAggregator) :base()
-        {
             _eventAggregator = eventAggregator;
         }
 
@@ -101,18 +98,26 @@ namespace ChatClient.Services
                     switch (type)
                     {
                         case ResponseType.Message:
-                            var messageDTO = JsonConvert.DeserializeObject<ResponseDTO<ChatMessageDTO>>(json).Data;
-                            _eventAggregator.Publish(new ChatMessageEvent(messageDTO));
-                            break;                       
-                        //case ResponseType.Message:
-                        //    var messageDTO = Deserialize<ResponseDTO<ChatMessageDTO>>(json).Data;
-                        //    _eventAggregator.Publish(new ChatMessageEvent(messageDTO));
-                        //    break;
+                            {
+                                var messageDTO = JsonConvert.DeserializeObject<ResponseDTO<ChatMessageDTO>>(json).Data;
+                                _eventAggregator.Publish(new ChatMessageEvent(messageDTO));
+                            }
+                            break;
+                        case ResponseType.GetHistoryRoom:
+                            {
+                                var roomHistoryDTO = JsonConvert.DeserializeObject<ResponseDTO<RoomHistoryDTO>>(json).Data;
+                                _eventAggregator.Publish(new ChatRoomHistoryEvent(roomHistoryDTO));
+                            }
+                            break;
+                            //case ResponseType.Message:
+                            //    var messageDTO = Deserialize<ResponseDTO<ChatMessageDTO>>(json).Data;
+                            //    _eventAggregator.Publish(new ChatMessageEvent(messageDTO));
+                            //    break;
                     }
                 }
                 catch (Exception ex)
                 {
-                    MessageBox.Show($"Ошибка сети {ex.Message}", "Ошибка сети",MessageBoxButton.OK,MessageBoxType.Error);
+                    MessageBox.Show($"Ошибка сети {ex.Message}", "Ошибка сети", MessageBoxButton.OK, MessageBoxType.Error);
                 }
             }
         }

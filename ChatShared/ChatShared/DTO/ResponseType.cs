@@ -13,7 +13,8 @@ namespace ChatShared.DTO
         CreatRoomResult,
         GetChatRooms,
         Error,
-        Message
+        Message,
+        GetHistoryRoom
         //..
     }
 }

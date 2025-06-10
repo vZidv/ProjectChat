@@ -101,7 +101,7 @@ namespace ChatClient.ViewModels
 
         private async void ExecuteLoginCommand(object? obj)
         {
-            NetworkSession.Session = new NetworkService();
+            NetworkSession.Session = new NetworkService(App.EventAggregator);
             await NetworkSession.Session.ConnectAsync();
 
             var session = NetworkSession.Session;

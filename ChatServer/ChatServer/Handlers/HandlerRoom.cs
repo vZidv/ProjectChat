@@ -51,5 +51,20 @@ namespace ChatServer.Handlers
             }
             return roomDTOs;
         }
+
+        public async Task<ChatMessageDTO[]> GetHistoryRoomAsync(int roomId)
+        {
+            Message[] messages = await _context.Messages.Where(x => x.RoomId == roomId).ToArrayAsync();
+            var messagesDTO = new ChatMessageDTO[messages.Length];
+            for (int i = 0; i < messages.Length; i++)
+            {
+                messagesDTO[i] = new ChatMessageDTO()
+                {
+                    Text = messages[i].Text,
+                    RoomId = messages[i].RoomId
+                };
+            }
+            return messagesDTO;
+        }
     }
 }

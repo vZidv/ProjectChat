@@ -63,7 +63,10 @@ namespace ChatClient.ViewModels
             GetMessageCommand = new ViewModelCommand(ExecuteGetMessageCommand);
 
             App.EventAggregator.Subscribe<ChatMessageEvent>(OnNewMessageReceived);
+            App.EventAggregator.Subscribe<ChatRoomHistoryEvent>(onRoomHistoryReceived);
+
             ChatMessageDTOs = new();
+            GetMessageCommand.Execute(null);
         }
 
         private async void ExecuteGetMessageCommand(object? obj)
@@ -93,6 +96,14 @@ namespace ChatClient.ViewModels
 
             ChatMessageDTOs.Add(message);
             NewMessageText = string.Empty;
+        }
+
+        private void onRoomHistoryReceived(ChatRoomHistoryEvent chatRoomHistoryEvent)
+        {
+            if (chatRoomHistoryEvent.HistoryDTO.RoomId != ChatRoomDTO.Id)
+                return;
+
+            ChatMessageDTOs = new ObservableCollection<ChatMessageDTO>(chatRoomHistoryEvent.HistoryDTO.MessageDTOs);
         }
 
 
