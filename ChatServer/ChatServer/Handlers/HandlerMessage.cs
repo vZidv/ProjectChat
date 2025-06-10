@@ -12,10 +12,12 @@ namespace ChatServer.Handlers
     public class HandlerMessage
     {
         private readonly ProjectChatContext _context;
+        private HandlerClient handlerClient;
 
-        public HandlerMessage(ProjectChatContext context)
+        public HandlerMessage(ProjectChatContext context, HandlerClient handlerClient)
         {
             _context = context;
+            this.handlerClient = handlerClient;
         }
 
         public async Task WritingMessageAsync(ChatMessageDTO newMessageDTO, int clientId)
@@ -31,6 +33,9 @@ namespace ChatServer.Handlers
 
             _context.Messages.Add(newMessage);
             await _context.SaveChangesAsync();
+            
         }
+
+        
     }
 }

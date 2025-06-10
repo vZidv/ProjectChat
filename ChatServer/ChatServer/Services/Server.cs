@@ -19,7 +19,8 @@ namespace ChatServer.Services
     public class Server
     {
         private readonly TcpListener _listener;
-        private static readonly ConcurrentDictionary<string, ClientSession> _sessions = new();
+        private HandlerClient _handlerClient = new();
+        //private static readonly ConcurrentDictionary<string, ClientSession> _sessions = new();
 
         public Server(int port)
         {
@@ -34,11 +35,11 @@ namespace ChatServer.Services
             {
                 TcpClient client = await _listener.AcceptTcpClientAsync();
                 Console.WriteLine($"Новое подключение: {client.Client.RemoteEndPoint}");
-                _ = Task.Run(() => HandleClientAsync(client));
+                _ = Task.Run(() => HandleSessionAsync(client));
             }
         }
 
-        private async Task HandleClientAsync(TcpClient client)
+        private async Task HandleSessionAsync(TcpClient client)
         {
             string? currentToken = null;
             try
@@ -73,15 +74,8 @@ namespace ChatServer.Services
                                 LoginResultDTO result = await handleLogin.HandleLoginAsync(loginDTO);
 
                                 if (result.Success)
-                                {
-                                    var session = new ClientSession()
-                                    {
-                                        ClientId = result.ClientId,
-                                        Token = result.Token,
-                                        CurrentRoomId = -1
-                                    };
-                                    _sessions.TryAdd(result.Token, session);
-                                }
+                                    _handlerClient.AddClient(result);
+                                
                                 await SendResponseAsync(stream, result, ResponseType.LoginResult);
 
                                 Console.WriteLine($"Результат авторизации отправлен пользователю: {client.Client.RemoteEndPoint}");
@@ -104,7 +98,7 @@ namespace ChatServer.Services
                         case RequestType.CreatRoom:
                             {
                                 var requestDTO = JsonConvert.DeserializeObject<RequestDTO<ChatRoomDTO>>(request);
-                                if (!TokenCheck(requestDTO.Token))
+                                if (_handlerClient.TryGetSession(requestDTO.Token) == null)
                                     break;
 
                                 var createRoomDTO = requestDTO.Data;
@@ -119,7 +113,7 @@ namespace ChatServer.Services
                         case RequestType.GetChatRooms:
                             {
                                 var requestDTO = JsonConvert.DeserializeObject<RequestDTO<GetChatRoomsDTO>>(request);
-                                if (!TokenCheck(requestDTO.Token))
+                                if (_handlerClient.TryGetSession(requestDTO.Token) == null)
                                     break;
 
                                 var getRoomsDTO = requestDTO.Data;
@@ -134,11 +128,11 @@ namespace ChatServer.Services
                         case RequestType.UpdateCurrentRoom:
                             {
                                 var requestDTO = JsonConvert.DeserializeObject<RequestDTO<ChatRoomDTO>>(request);
-                                if (!TokenCheck(requestDTO.Token))
+                                if (_handlerClient.TryGetSession(requestDTO.Token) == null)
                                     break;
 
-                                _sessions.TryGetValue(requestDTO.Token, out var session);
-                                session.CurrentRoomId = requestDTO.Data.Id;
+                                ClientSession session = _handlerClient.TryGetSession(requestDTO.Token);
+                                _handlerClient.ClientInRoom(session, requestDTO.Data);                           
 
                                 Console.WriteLine($"Пользователь: {client.Client.RemoteEndPoint} зашел в комнату: Name:{requestDTO.Data.Name}; Id:{requestDTO.Data.Id}");
                             }
@@ -146,13 +140,13 @@ namespace ChatServer.Services
                         case RequestType.SendMessage:
                             {
                                 var requestDTO = JsonConvert.DeserializeObject<RequestDTO<ChatMessageDTO>>(request);
-                                if (!TokenCheck(requestDTO.Token))
+                                if (_handlerClient.TryGetSession(requestDTO.Token) == null)
                                     break;
 
                                 ChatMessageDTO messageDTO = requestDTO.Data;
-                                _sessions.TryGetValue(requestDTO.Token, out var session);
+                                ClientSession session = _handlerClient.TryGetSession(requestDTO.Token);
 
-                                var handlerMessage = new HandlerMessage(new Data.ProjectChatContext());
+                                var handlerMessage = new HandlerMessage(new Data.ProjectChatContext(), _handlerClient);
                                 await handlerMessage.WritingMessageAsync(messageDTO, session.ClientId);
 
                                 Console.WriteLine($"Сообщение {messageDTO.Text} в комнате {messageDTO.RoomId} записано");
@@ -171,7 +165,7 @@ namespace ChatServer.Services
             finally
             {
                 if (!string.IsNullOrEmpty(currentToken))
-                    _sessions.TryRemove(currentToken, out _);
+                    _handlerClient.TryRemoveSession(currentToken);
             }
         }
         private async Task SendResponseAsync<T>(Stream stream, T response, ResponseType type, string? message = null)
@@ -193,20 +187,6 @@ namespace ChatServer.Services
             {
                 Console.WriteLine($"Ошибка при отправке ответа: {ex.Message}");
             }
-        }
-        /// <summary>
-        ///  True - token is valid, false - token is not valid
-        /// </summary>
-        /// <param name="token">Client token</param>
-        /// <returns></returns>
-        private bool TokenCheck(string token)
-        {
-            if (!_sessions.TryGetValue(token, out var session))
-            {
-                Console.WriteLine($"Не удалось найти сессию для токена: {token}");
-                return false;
-            }
-            return true;
         }
     }
 }

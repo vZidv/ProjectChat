@@ -45,7 +45,7 @@
             <ListBox
                 Background="Transparent"
                 ScrollViewer.VerticalScrollBarVisibility="Auto"
-                ItemsSource="{Binding ChatMessages, UpdateSourceTrigger=PropertyChanged}"
+                ItemsSource="{Binding ChatMessageDTOs, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay, NotifyOnSourceUpdated=True}"
                 >
                 <ListBox.ItemTemplate>
                     <DataTemplate>

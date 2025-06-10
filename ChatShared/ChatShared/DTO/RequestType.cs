@@ -10,10 +10,13 @@ namespace ChatShared.DTO
     {
         Login,
         Register,
+
         SendMessage,
+
         CreatRoom,
         GetChatRooms,
-        UpdateCurrentRoom
+        UpdateCurrentRoom,
+        GetHistoryRoom
         //..
     }
 }

@@ -8,6 +8,8 @@ using System.Windows.Input;
 using ChatShared.DTO;
 using ChatShared.Events;
 using System.Windows;
+using System.Collections.ObjectModel;
+using System.Net.NetworkInformation;
 
 namespace ChatClient.ViewModels
 {
@@ -15,7 +17,7 @@ namespace ChatClient.ViewModels
     {
         private ChatRoomDTO _chatRoomDTO;
 
-        private List<ChatMessageDTO> _chatMessageDTOs;
+        private ObservableCollection<ChatMessageDTO> _chatMessageDTOs;
 
         private ClientLoginDTO _clientLoginDTO;
 
@@ -26,7 +28,7 @@ namespace ChatClient.ViewModels
             get { return _chatRoomDTO; }
         }
 
-        public List<ChatMessageDTO> ChatMessageDTOs
+        public ObservableCollection<ChatMessageDTO> ChatMessageDTOs
         {
             get { return _chatMessageDTOs; }
             set
@@ -48,6 +50,7 @@ namespace ChatClient.ViewModels
 
         //Command
         public ICommand SendMessageCommand { get; }
+        public ICommand GetMessageCommand { get; }
 
         public ChatViewModel() { }
 
@@ -57,8 +60,22 @@ namespace ChatClient.ViewModels
             _clientLoginDTO = client;
 
             SendMessageCommand = new ViewModelCommand(ExecuteSendMessageCommand, CanExecuteSendMessageCommand);
+            GetMessageCommand = new ViewModelCommand(ExecuteGetMessageCommand);
 
             App.EventAggregator.Subscribe<ChatMessageEvent>(OnNewMessageReceived);
+            ChatMessageDTOs = new();
+        }
+
+        private async void ExecuteGetMessageCommand(object? obj)
+        {
+            GetRoomHistoryDTO historyDTO = new()
+            {
+                RoomId = ChatRoomDTO.Id,
+                Limit = 50
+            };
+
+            var session = NetworkSession.Session;
+            await session.SendAsync(historyDTO, RequestType.GetHistoryRoom);
         }
 
         private bool CanExecuteSendMessageCommand(object? obj) => (NewMessageText != string.Empty);
@@ -72,8 +89,9 @@ namespace ChatClient.ViewModels
                 RoomId = ChatRoomDTO.Id
             };
             var session = NetworkSession.Session;
-            session.SendAsync(message, RequestType.SendMessage);
+            await session.SendAsync(message, RequestType.SendMessage);
 
+            ChatMessageDTOs.Add(message);
             NewMessageText = string.Empty;
         }
 
