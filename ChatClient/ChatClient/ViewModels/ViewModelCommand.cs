@@ -12,6 +12,8 @@ namespace ChatClient.ViewModels
         private readonly Action<object?> _executeAction;
         private readonly Predicate<object?> _canExecuteAction;
 
+        private event EventHandler? _canExecuteChangedInternal;
+
         public ViewModelCommand(Action<object?> executeAction)
         {
             _executeAction = executeAction;
@@ -26,8 +28,16 @@ namespace ChatClient.ViewModels
 
         public event EventHandler? CanExecuteChanged
         {
-            add { CommandManager.RequerySuggested += value; }
-            remove { CommandManager.RequerySuggested -= value; }
+            add
+            {
+                CommandManager.RequerySuggested += value;
+                _canExecuteChangedInternal += value;
+            }
+            remove
+            {
+                CommandManager.RequerySuggested -= value;
+                _canExecuteChangedInternal -= value;
+            }
         }
         public bool CanExecute(object? parameter)
         {
@@ -37,6 +47,11 @@ namespace ChatClient.ViewModels
         public void Execute(object? parameter)
         {
             _executeAction(parameter);
+        }
+
+        public void RaiseCanExecuteChanged()
+        {
+            _canExecuteChangedInternal?.Invoke(this, EventArgs.Empty);
         }
     }
 }

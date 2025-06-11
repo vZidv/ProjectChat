@@ -12,15 +12,15 @@ namespace ChatServer.Handlers
     public class HandlerMessage
     {
         private readonly ProjectChatContext _context;
-        private HandlerClient handlerClient;
+        private readonly HandlerClient _handlerClient;
 
         public HandlerMessage(ProjectChatContext context, HandlerClient handlerClient)
         {
             _context = context;
-            this.handlerClient = handlerClient;
+            this._handlerClient = handlerClient;
         }
 
-        public async Task WritingMessageAsync(ChatMessageDTO newMessageDTO, int clientId)
+        public async Task<ChatMessageDTO> WritingMessageAsync(ChatMessageDTO newMessageDTO, int clientId)
         {
             var newMessage = new Message()
             {
@@ -33,7 +33,20 @@ namespace ChatServer.Handlers
 
             _context.Messages.Add(newMessage);
             await _context.SaveChangesAsync();
-            
+
+            return new ChatMessageDTO()
+            {
+                Text = newMessageDTO.Text,
+                RoomId = newMessageDTO.RoomId,
+
+                Sender = _context.Clients
+                    .Where(c => c.Id == clientId)
+                    .Select(c => c.Login)
+                    .FirstOrDefault(),
+                SentAt = newMessage.SentAt,
+                isEdit = false
+            };
+
         }
 
         

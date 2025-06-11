@@ -4,6 +4,7 @@ using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net.Sockets;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -12,20 +13,21 @@ namespace ChatServer.Handlers
     public class HandlerClient
     {
         private static readonly ConcurrentDictionary<string, ClientSession> _sessions = new();
-        private static readonly ConcurrentDictionary<ChatRoomDTO, List<ClientSession>> _roomClients = new();
+        private static readonly ConcurrentDictionary<int, List<ClientSession>> _roomClients = new();
 
 
-        public void AddClient(LoginResultDTO loginResult)
+        public void AddClient(LoginResultDTO loginResult, NetworkStream stream)
         {
             var session = new ClientSession()
             {
                 ClientId = loginResult.ClientId,
                 Token = loginResult.Token,
+                Stream = stream,
                 CurrentRoomId = -1
             };
             _sessions.TryAdd(loginResult.Token, session);
         }
-
+        
         public ClientSession? TryGetSession(string token)
         {
             ClientSession? session = null;
@@ -39,20 +41,23 @@ namespace ChatServer.Handlers
             return session;
         }
 
-        public void ClientInRoom(ClientSession client, ChatRoomDTO room)
+        public void ClientInRoom(ClientSession client, int IdRoom)
         {
-            if (!_roomClients.ContainsKey(room))
-                _roomClients[room] = new List<ClientSession>();
+            if (!_roomClients.ContainsKey(IdRoom))
+                _roomClients[IdRoom] = new List<ClientSession>();
 
-            _roomClients[room].Add(client);
-            client.CurrentRoomId = room.Id;
+            if(client.CurrentRoomId > 0)
+                _roomClients[IdRoom].Remove(client);
+
+            _roomClients[IdRoom].Add(client);
+            client.CurrentRoomId = IdRoom;
         }
 
-        public ClientSession[]? GetSessionsFromRoom(ChatRoomDTO room)
+        public ClientSession[]? GetClientsFromRoom(int IdRoom)
         {
-            if (!_roomClients.ContainsKey(room))
+            if (!_roomClients.ContainsKey(IdRoom))
                 return null;
-            return _roomClients[room].ToArray();
+            return _roomClients[IdRoom].ToArray();
         }
     }
 }

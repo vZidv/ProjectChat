@@ -23,7 +23,7 @@
         </Grid.RowDefinitions>
 
         <Grid
-            Background="{StaticResource WindowBorderInactive}"
+            Background="{StaticResource BgColor4}"
             Grid.Row="0">
             <Viewbox
                 HorizontalAlignment="Left">
@@ -51,13 +51,23 @@
                     <DataTemplate>
                         <Border
                             CornerRadius="5"
-                            Background="GreenYellow">
+                            Background="{StaticResource BgColor4}">
                             <StackPanel>
+                                <TextBlock 
+                                    Text="{Binding Sender}"
+                                    FontWeight="Bold"
+                                    TextWrapping="Wrap"
+                                    FontSize="12"
+                                    Margin="5,2,5,0"
+                                    Foreground="{StaticResource Primary}"
+                                />
                                 <TextBlock 
                                     Text="{Binding Text}"
                                     FontWeight="DemiBold"
                                     TextWrapping="Wrap"
-                                    FontSize="20"/>
+                                    FontSize="20"
+                                    Margin="5,0,5,2"
+                                    Foreground="{StaticResource ClearWhite}"/>
                             </StackPanel>
                         </Border>
                     </DataTemplate>
@@ -65,8 +75,12 @@
 
                 <d:ListBox.ItemsSource>
                     <x:Array Type="{x:Type dto:ChatMessageDTO}">
-                        <dto:ChatMessageDTO Text="Hello wordl !"/>
-                        <dto:ChatMessageDTO Text="Hi"/>
+                        <dto:ChatMessageDTO  
+                            Text="Hello wordl !"
+                            Sender="Oleg"/>
+                        <dto:ChatMessageDTO 
+                            Text="Hi"
+                            Sender="Anton"/>
                     </x:Array>
                 </d:ListBox.ItemsSource>
             </ListBox>
@@ -74,13 +88,13 @@
 
         <Grid
                 Grid.Row="2"
-             Background="{StaticResource WindowBorderInactive}"
+             Background="{StaticResource BgColor4}"
             >
 
             <Viewbox Stretch="Uniform" StretchDirection="Both" Grid.Row="2" VerticalAlignment="Top">
                 <StackPanel Orientation="Horizontal" VerticalAlignment="Center" HorizontalAlignment="Center">
                     <TextBox
-                        Text="{Binding NewMessageText, Mode=TwoWay}"
+                        Text="{Binding NewMessageText, Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}"
             MinWidth="250"
             Height="30"
             Margin="30,5"

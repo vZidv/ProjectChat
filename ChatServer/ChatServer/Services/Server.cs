@@ -20,7 +20,6 @@ namespace ChatServer.Services
     {
         private readonly TcpListener _listener;
         private HandlerClient _handlerClient = new();
-        //private static readonly ConcurrentDictionary<string, ClientSession> _sessions = new();
 
         public Server(int port)
         {
@@ -74,7 +73,7 @@ namespace ChatServer.Services
                                 LoginResultDTO result = await handleLogin.HandleLoginAsync(loginDTO);
 
                                 if (result.Success)
-                                    _handlerClient.AddClient(result);
+                                    _handlerClient.AddClient(result, stream);
 
                                 await SendResponseAsync(stream, result, ResponseType.LoginResult);
 
@@ -132,7 +131,7 @@ namespace ChatServer.Services
                                     break;
 
                                 ClientSession session = _handlerClient.TryGetSession(requestDTO.Token);
-                                _handlerClient.ClientInRoom(session, requestDTO.Data);
+                                _handlerClient.ClientInRoom(session, requestDTO.Data.Id);
 
                                 Console.WriteLine($"Пользователь: {client.Client.RemoteEndPoint} зашел в комнату: Name:{requestDTO.Data.Name}; Id:{requestDTO.Data.Id}");
                             }
@@ -146,8 +145,19 @@ namespace ChatServer.Services
                                 ChatMessageDTO messageDTO = requestDTO.Data;
                                 ClientSession session = _handlerClient.TryGetSession(requestDTO.Token);
 
+
                                 var handlerMessage = new HandlerMessage(new Data.ProjectChatContext(), _handlerClient);
-                                await handlerMessage.WritingMessageAsync(messageDTO, session.ClientId);
+                                ChatMessageDTO newMessageDTO = await handlerMessage.WritingMessageAsync(messageDTO, session.ClientId);
+
+                                ClientSession[] clients = _handlerClient.GetClientsFromRoom(messageDTO.RoomId);
+
+                                foreach (var clientSession in clients)
+                                {
+                                    if (session.ClientId == clientSession.ClientId)
+                                        continue;
+                                    await SendResponseAsync(clientSession.Stream, newMessageDTO, ResponseType.Message);
+                                    Console.WriteLine($"Отправил сообщение {newMessageDTO.Text} пользователю: {session.ClientId}");
+                                }
 
                                 Console.WriteLine($"Сообщение {messageDTO.Text} в комнате {messageDTO.RoomId} записано");
                             }

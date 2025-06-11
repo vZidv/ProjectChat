@@ -45,6 +45,7 @@ namespace ChatClient.ViewModels
             {
                 _newMessageText = value;
                 OnPropertyChanged(nameof(NewMessageText));
+                (SendMessageCommand as ViewModelCommand)?.RaiseCanExecuteChanged();
             }
         }
 
@@ -89,7 +90,8 @@ namespace ChatClient.ViewModels
             var message = new ChatMessageDTO()
             {
                 Text = NewMessageText,
-                RoomId = ChatRoomDTO.Id
+                RoomId = ChatRoomDTO.Id,
+                Sender = _clientLoginDTO.Login
             };
             var session = NetworkSession.Session;
             await session.SendAsync(message, RequestType.SendMessage);
@@ -110,6 +112,7 @@ namespace ChatClient.ViewModels
 
         private void OnNewMessageReceived(ChatMessageEvent chatEvent)
         {
+            if(chatEvent.Message.RoomId != ChatRoomDTO.Id) return;
             ChatMessageDTOs.Add(chatEvent.Message);
         }
     }

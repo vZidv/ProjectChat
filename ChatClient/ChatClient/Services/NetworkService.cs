@@ -50,6 +50,7 @@ namespace ChatClient.Services
             }
             catch (Exception ex)
             {
+                MessageBox.Show("Не удалось подключиться к серверу.", "Ошибка подключения", MessageBoxButton.OK, MessageBoxType.Error);
                 Dispose();
                 throw new Exception("Не удалось подключиться к серверу.", ex);
             }
@@ -87,13 +88,6 @@ namespace ChatClient.Services
                     if (string.IsNullOrEmpty(json)) continue;
 
                     var type = JsonConvert.DeserializeObject<ResponseDTO<object>>(json).Type;
-                    //var bytesRead = 10;
-                    //var response = new List<byte>();
-
-                    //while ((bytesRead = _stream.ReadByte()) != '\n')
-                    //    response.Add(Convert.ToByte(bytesRead));
-                    //var json = response.ToArray();
-                    //var type = Deserialize<ResponseDTO<Object>>(json).Type;
 
                     switch (type)
                     {
@@ -109,15 +103,15 @@ namespace ChatClient.Services
                                 _eventAggregator.Publish(new ChatRoomHistoryEvent(roomHistoryDTO));
                             }
                             break;
-                            //case ResponseType.Message:
-                            //    var messageDTO = Deserialize<ResponseDTO<ChatMessageDTO>>(json).Data;
-                            //    _eventAggregator.Publish(new ChatMessageEvent(messageDTO));
-                            //    break;
                     }
                 }
                 catch (Exception ex)
                 {
-                    MessageBox.Show($"Ошибка сети {ex.Message}", "Ошибка сети", MessageBoxButton.OK, MessageBoxType.Error);
+                    if (MessageBox.Show($"Ошибка сети {ex.Message}", "Ошибка сети", MessageBoxButton.OK, MessageBoxType.Error)) 
+                    {
+                        Dispose();
+                        App.Current.Shutdown();
+                    }
                 }
             }
         }
