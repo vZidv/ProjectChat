@@ -114,14 +114,7 @@
                     </StackPanel>
                 </Viewbox>
 
-                <Button
-                        Command="{Binding LogoutCommand}"
-                        HorizontalAlignment="Center"
-                        FontSize="25"
-                        Content="Выход"
-                        Grid.Row="2" 
-                        Style="{StaticResource AccentButtonStyle }"
-                        />
+
 
 
             </Grid>
