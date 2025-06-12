@@ -1,4 +1,5 @@
 ﻿using ChatClient.CustomControls;
+using ChatClient.View;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
@@ -21,14 +22,24 @@ namespace ChatClient.ViewModels
 
         public ICommand OpenProjectLinkCommand { get; }
         public ICommand OpenProjectVersionLinkCommand { get; }
+        public ICommand OpenAboutProgramCommand { get; }
 
         public LeftBorderMenuViewModel()
         {
             ClosePageCommand = new ViewModelCommand(ExecuteClosePageCommand);
             OpenProjectLinkCommand = new ViewModelCommand(ExecuteOpenProjectLinkCommand);
             OpenProjectVersionLinkCommand = new ViewModelCommand(ExecuteOpenProjectVersionLinkCommand);
+            OpenAboutProgramCommand = new ViewModelCommand(ExecuteOpenAboutProgramCommand);
         }
 
+        private void ExecuteOpenAboutProgramCommand(object? obj)
+        {
+            AboutProgramView view = new();
+            AboutProgramViewModel viewModel = new();
+            view.DataContext = viewModel;
+
+            Services.NavigationService.TopFrame.Content = view;
+        }
 
         private void ExecuteClosePageCommand(object? obj) => Services.NavigationService.TopFrame.Content = null;
 

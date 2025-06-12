@@ -1,0 +1,143 @@
+﻿<Page x:Class="ChatClient.View.AboutProgramView"
+      xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+      xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+      xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+      xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+      xmlns:local="clr-namespace:ChatClient.View"
+      xmlns:vm="clr-namespace:ChatClient.ViewModels"
+      mc:Ignorable="d" 
+      d:DesignHeight="470" d:DesignWidth="900"
+      Title="AboutProgramView">
+
+    <Page.Resources>
+        <Style TargetType="TextBlock">
+            <Setter Property="Foreground" Value="{StaticResource ClearWhite}"/>
+            <Setter Property="FontWeight" Value="Medium"/>
+            <Setter Property="FontSize" Value="18"/>
+        </Style>
+        <Style TargetType="Hyperlink" x:Key="Url_hyperLink">
+            <Setter Property="TextDecorations" Value="None"/>
+            <Setter Property="Foreground" Value="{StaticResource Primary}"/>
+            <Setter Property="Cursor" Value="Hand"/>
+            <Style.Triggers>
+                <Trigger Property="TextBlock.IsMouseOver" Value="True">
+                    <Setter Property="TextDecorations" Value="Underline"/>
+                </Trigger>
+            </Style.Triggers>
+        </Style>
+    </Page.Resources>
+    <Page.DataContext>
+        <vm:AboutProgramViewModel/>
+    </Page.DataContext>
+    <Grid>
+        <Border
+            Grid.ColumnSpan="2"
+            Background="Black"
+            Opacity="0.4"
+            />
+        <Button
+HorizontalAlignment="Stretch"
+VerticalAlignment="Stretch"
+Background="Transparent"
+BorderThickness="0"
+Command="{Binding ClosePageCommand}">
+            <Button.Template>
+                <ControlTemplate TargetType="Button">
+                    <Border Background="{TemplateBinding Background}">
+                        <ContentPresenter
+                            HorizontalAlignment="Center"
+                            VerticalAlignment="Center"/>
+                    </Border>
+                </ControlTemplate>
+            </Button.Template>
+        </Button>
+        <Border
+            Width="460"
+            Height="380"
+            Background="{StaticResource BgColor4}"
+            CornerRadius="12">
+            <Grid>
+                <StackPanel
+                    Margin="22,15">
+                    <TextBlock
+                        FontWeight="Bold"
+                        Text="ProjectChat"
+                        FontSize="22"
+                        />
+                    <TextBlock
+                        FontWeight="Light"
+                        Margin="0,5"
+                        Text="версия 1.0"
+                        FontSize="14"
+                        Foreground="{StaticResource Second}"
+                        />
+                    <TextBlock
+                        TextAlignment="Justify"
+                        TextWrapping="Wrap"
+                        Text="Программа написана в интересах изучения работы приложений на сетевом протоколе TCP."
+                        />
+                    <TextBlock
+                        Margin="0,10,0,0"
+                        TextAlignment="Justify"
+                        TextWrapping="Wrap">
+                        <Run Text="Программа распространяеться по лицензии"/>
+                            <Hyperlink
+                                Command="{Binding LicenseUrlCommand}"
+                                Style="{StaticResource Url_hyperLink}">
+                                MIT License
+                            </Hyperlink>
+                    </TextBlock>
+
+                    <TextBlock>
+                            <Run Text="Исходный код доступен на "/>
+                            <Hyperlink
+                                Command="{Binding GithubUrlCommand}"
+                                Style="{StaticResource Url_hyperLink}">
+                                Github
+                            </Hyperlink>
+                    </TextBlock>
+
+                    <TextBlock 
+                        Text="Контакты:" 
+                        Margin="0,15,0,0"/>
+                    <TextBlock>
+                            <Run Text="Автор "/>
+                            <Hyperlink
+                                Command="{Binding ProfGithubUrlCommand}"
+                                Style="{StaticResource Url_hyperLink}">
+                                vZidv
+                            </Hyperlink>
+                    </TextBlock>
+                    <TextBlock>
+                            <Run Text="Email "/>
+                            <Hyperlink
+                                Style="{StaticResource Url_hyperLink}">
+                                diz.shulinus@yandex.ru
+                            </Hyperlink>
+                    </TextBlock>
+
+
+
+                    <TextBlock>
+                            <Run Text="Telegram "/>
+                            <Hyperlink
+                                Style="{StaticResource Url_hyperLink}">
+                                @mysarias
+                            </Hyperlink>
+                    </TextBlock>
+
+
+                </StackPanel>
+                <Button 
+                    Margin="10"
+                    HorizontalAlignment="Right"
+                    VerticalAlignment="Bottom"
+                    Width="80"
+                    Height="30"
+                    Content="Закрыть"
+                    Foreground="{StaticResource Primary}"
+                    Command="{Binding ClosePageCommand}"/>
+            </Grid>
+        </Border>
+    </Grid>
+</Page>

@@ -35,8 +35,8 @@
         </Grid.ColumnDefinitions>
         <Border
             Grid.ColumnSpan="2"
-            Background="{StaticResource BgColor1}"
-            Opacity="0.3"
+            Background="Black"
+            Opacity="0.4"
             />
         <Grid
             Grid.Column="0"
@@ -78,10 +78,13 @@
                     FontSize="10"
                     Text=" — "
                     Foreground="{StaticResource Second}"/>
-                        <TextBlock
-                    FontSize="20"
-                    Text="О программе"
-                    Foreground="{StaticResource Second}"/>
+                        <TextBlock>
+                            <Hyperlink
+                                Command="{Binding OpenAboutProgramCommand}"
+                                Style="{StaticResource Url_hyperLink}">
+                                О программе
+                            </Hyperlink>
+                        </TextBlock>
                     </StackPanel>
                 </StackPanel>
             </Grid>
