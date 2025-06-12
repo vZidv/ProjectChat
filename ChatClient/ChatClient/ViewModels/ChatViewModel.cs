@@ -16,12 +16,10 @@ namespace ChatClient.ViewModels
     public class ChatViewModel : BaseViewModel
     {
         private ChatRoomDTO _chatRoomDTO;
-
         private ObservableCollection<ChatMessageDTO> _chatMessageDTOs;
-
         private ClientLoginDTO _clientLoginDTO;
-
         private string _newMessageText;
+
 
         public ChatRoomDTO ChatRoomDTO
         {
@@ -48,6 +46,8 @@ namespace ChatClient.ViewModels
                 (SendMessageCommand as ViewModelCommand)?.RaiseCanExecuteChanged();
             }
         }
+
+
 
         //Command
         public ICommand SendMessageCommand { get; }

@@ -17,12 +17,14 @@ namespace ChatClient.ViewModels
     public class MainViewModel : BaseViewModel
     {
         //Fields
-        private ClientLoginDTO _clientDTO; //DTO for the logged-in user
+        private ClientLoginDTO _clientDTO;
 
-        private ChatRoomDTO _selectedChatRoom; // Selected chat room
-        private ChatRoomDTO[] _chatRooms; // List of chat rooms
+        private ChatRoomDTO _selectedChatRoom; 
+        private ChatRoomDTO[] _chatRooms; 
+        private ChatRoomDTO[] _filteredChatRooms; 
+        private Page _currentPage; 
 
-        private Page _currentPage; // Current page in the main frame
+        private string _searchText;
 
         //Properties
         public ClientLoginDTO ClientDTO
@@ -65,6 +67,19 @@ namespace ChatClient.ViewModels
             }
         }
 
+        public ChatRoomDTO[] FilteredChatRooms
+        {
+            get
+            {
+                return _filteredChatRooms;
+            }
+            set
+            {
+                _filteredChatRooms = value;
+                OnPropertyChanged(nameof(FilteredChatRooms));
+            }
+        }
+
         public Page CurrentPage
         {
             get
@@ -78,10 +93,22 @@ namespace ChatClient.ViewModels
             }
         }
 
+        public string SearchText
+        {
+            get { return _searchText; }
+            set
+            {
+                _searchText = value;
+                OnPropertyChanged(nameof(SearchText));
+                ChatRoomFilter();
+            }
+        }
+
         //Commands
         public ICommand LogoutCommand { get; }
         public ICommand CreatRoomCommand { get; }
         public ICommand LoadChatRoomsCommand { get; }
+        public ICommand SearchChatCommand { get; }
 
         public MainViewModel()
         {
@@ -94,12 +121,23 @@ namespace ChatClient.ViewModels
             LogoutCommand = new ViewModelCommand(ExecuteLogoutCommand);
             CreatRoomCommand = new ViewModelCommand(ExecuteCreatRoomCommand);
             LoadChatRoomsCommand = new ViewModelCommand(ExecuteLoadChatRoomsCommand);
+            SearchChatCommand = new ViewModelCommand(ExecuteSearchChatCommand, CanExecuteSearchChatCommand);
 
             CurrentPage = new View.EmptyChatView();
 
             LoadChatRoomsCommand.Execute(null);
+            FilteredChatRooms = ChatRooms;
         }
 
+        private bool CanExecuteSearchChatCommand(object? obj)
+        {
+            throw new NotImplementedException();
+        }
+
+        private void ExecuteSearchChatCommand(object? obj)
+        {
+            throw new NotImplementedException();
+        }
 
         private async void ExecuteLoadChatRoomsCommand(object? obj)
         {
@@ -157,6 +195,16 @@ namespace ChatClient.ViewModels
             }
             catch (Exception ex) { }
 
+        }
+
+        private void ChatRoomFilter()
+        {
+            if(string.IsNullOrWhiteSpace(SearchText))
+                FilteredChatRooms = ChatRooms;
+            else
+            {
+                FilteredChatRooms = ChatRooms.Where(x => x.Name.Contains(SearchText, StringComparison.OrdinalIgnoreCase)).ToArray();
+            }
         }
     }
 }
