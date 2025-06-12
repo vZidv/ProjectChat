@@ -108,7 +108,8 @@ namespace ChatClient.ViewModels
         public ICommand LogoutCommand { get; }
         public ICommand CreatRoomCommand { get; }
         public ICommand LoadChatRoomsCommand { get; }
-        public ICommand SearchChatCommand { get; }
+
+        public ICommand OpenLeftBoarMenuCommand { get; }
 
         public MainViewModel()
         {
@@ -121,7 +122,8 @@ namespace ChatClient.ViewModels
             LogoutCommand = new ViewModelCommand(ExecuteLogoutCommand);
             CreatRoomCommand = new ViewModelCommand(ExecuteCreatRoomCommand);
             LoadChatRoomsCommand = new ViewModelCommand(ExecuteLoadChatRoomsCommand);
-            SearchChatCommand = new ViewModelCommand(ExecuteSearchChatCommand, CanExecuteSearchChatCommand);
+
+            OpenLeftBoarMenuCommand = new ViewModelCommand(ExecuteOpenLeftBoarMenuCommand);
 
             CurrentPage = new View.EmptyChatView();
 
@@ -129,14 +131,15 @@ namespace ChatClient.ViewModels
             FilteredChatRooms = ChatRooms;
         }
 
-        private bool CanExecuteSearchChatCommand(object? obj)
+        private void ExecuteOpenLeftBoarMenuCommand(object? obj)
         {
-            throw new NotImplementedException();
-        }
+            LeftBorderMenuView page = new();
+            LeftBorderMenuViewModel model = new();
 
-        private void ExecuteSearchChatCommand(object? obj)
-        {
-            throw new NotImplementedException();
+            page.DataContext = model;
+
+            Services.NavigationService.TopFrame.Content = page;
+
         }
 
         private async void ExecuteLoadChatRoomsCommand(object? obj)

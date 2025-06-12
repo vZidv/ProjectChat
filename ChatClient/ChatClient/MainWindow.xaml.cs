@@ -25,6 +25,7 @@ namespace ChatClient
         {
             InitializeComponent();
             Services.NavigationService.MainFrame = MainFrame;
+            Services.NavigationService.TopFrame = TopFrame;
         }
 
         private void Window_MouseDown(object sender, MouseButtonEventArgs e)

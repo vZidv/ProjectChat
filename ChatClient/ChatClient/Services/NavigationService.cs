@@ -9,6 +9,7 @@ namespace ChatClient.Services
 {
     public static class NavigationService
     {
+        public static Frame? TopFrame { get; set; }
         public static Frame? MainFrame { get; set; }
     }
 }

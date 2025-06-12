@@ -10,6 +10,8 @@ namespace ChatClient.ViewModels
 {
     class MainWindowViewModel : BaseViewModel
     {
+        // Fields
+        private Page _currentTopPage;
         private Page _currentPage;
 
         public Page CurrentPage
@@ -21,6 +23,17 @@ namespace ChatClient.ViewModels
                 OnPropertyChanged(nameof(CurrentPage));
             }
         }
+
+        public Page CurrentTopPage
+        {
+            get { return _currentTopPage; }
+            set
+            {
+                _currentTopPage = value;
+                OnPropertyChanged(nameof(CurrentTopPage));
+            }
+        }
+
         public MainWindowViewModel()
         {     
            CurrentPage = new View.LoginView();
