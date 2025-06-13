@@ -106,7 +106,6 @@ namespace ChatClient.ViewModels
 
         //Commands
         public ICommand LogoutCommand { get; }
-        public ICommand CreatRoomCommand { get; }
         public ICommand LoadChatRoomsCommand { get; }
 
         public ICommand OpenLeftBoarMenuCommand { get; }
@@ -120,7 +119,6 @@ namespace ChatClient.ViewModels
             ClientDTO = clientDTO;
 
             LogoutCommand = new ViewModelCommand(ExecuteLogoutCommand);
-            CreatRoomCommand = new ViewModelCommand(ExecuteCreatRoomCommand);
             LoadChatRoomsCommand = new ViewModelCommand(ExecuteLoadChatRoomsCommand);
 
             OpenLeftBoarMenuCommand = new ViewModelCommand(ExecuteOpenLeftBoarMenuCommand);
@@ -162,11 +160,6 @@ namespace ChatClient.ViewModels
                 MessageBox.Show("Не удалось загрузить комнаты");
             }
             await NetworkSession.Session.ListenAsync();
-        }
-
-        private void ExecuteCreatRoomCommand(object? obj)
-        {
-
         }
 
         private void ExecuteLogoutCommand(object? obj)

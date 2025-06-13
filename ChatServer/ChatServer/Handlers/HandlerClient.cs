@@ -1,4 +1,4 @@
-﻿using ChatServer.Models;
+﻿using ChatServer.Session;
 using ChatShared.DTO;
 using System;
 using System.Collections.Concurrent;
