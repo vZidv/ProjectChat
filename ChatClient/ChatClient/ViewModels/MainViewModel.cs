@@ -166,13 +166,7 @@ namespace ChatClient.ViewModels
 
         private void ExecuteCreatRoomCommand(object? obj)
         {
-            var win = new View.CreateRoomView();
-            var dataContext = new CreateRoomViewModel(ClientDTO);
-            win.DataContext = dataContext;
-            dataContext.CloseAction = () => win.Close();
 
-            win.ShowDialog();
-            LoadChatRoomsCommand.Execute(null);
         }
 
         private void ExecuteLogoutCommand(object? obj)

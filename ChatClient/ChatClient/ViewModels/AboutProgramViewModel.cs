@@ -23,8 +23,7 @@ namespace ChatClient.ViewModels
         public ICommand LicenseUrlCommand { get; }
         public ICommand GithubUrlCommand { get; }
         public ICommand ProfGithubUrlCommand { get; }
-        //public ICommand ProfGithubUrlCommand { get; }
-        //public ICommand ProfGithubUrlCommand { get; }
+
 
         public AboutProgramViewModel()
         {

@@ -6,7 +6,7 @@
       xmlns:local="clr-namespace:ChatClient.View"
       mc:Ignorable="d" 
       xmlns:vm="clr-namespace:ChatClient.ViewModels"
-      d:DesignHeight="470" d:DesignWidth="900"
+      d:DesignHeight="670" d:DesignWidth="900"
       Title="LeftBorderMenuView">
 
     <Page.Resources>
@@ -22,6 +22,27 @@
                 </Trigger>
             </Style.Triggers>
         </Style>
+        <Style TargetType="TextBlock" x:Key="menuButtonText_textBlock">
+            <Setter Property="Foreground" Value="{StaticResource ClearWhite}"/>
+            <Setter Property="FontWeight" Value="DemiBold"/>
+            <Setter Property="Margin" Value="25,0,0,0"/>
+            <Setter Property="TextAlignment" Value="Center"/>
+            <Setter Property="FontSize" Value="18"/>
+            <Setter Property="VerticalAlignment" Value="Center"/>
+        </Style>
+        <Style TargetType="TextBlock" x:Key="menuButtonIcon_textBlock">
+            <Setter Property="Foreground" Value="{StaticResource ClearWhite}"/>
+            <Setter Property="FontWeight" Value="Normal"/>
+            <Setter Property="FontSize" Value="28"/>
+            <Setter Property="Margin" Value="10,0,0,0"/>
+        </Style>
+        <Style TargetType="Button" x:Key="menu_button" BasedOn="{StaticResource DefaultButtonStyle}">
+            <Setter Property="Background" Value="{StaticResource BgColor2}"/>
+            <Setter Property="Height" Value="55"/>
+            <Setter Property="HorizontalAlignment" Value="Stretch"/>
+            <Setter Property="HorizontalContentAlignment" Value="Left"/>
+            <Setter Property="BorderThickness" Value="0"/>
+        </Style>
     </Page.Resources>
 
     <Page.DataContext>
@@ -30,7 +51,7 @@
 
     <Grid>
         <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="270"/>
+            <ColumnDefinition Width="290"/>
             <ColumnDefinition Width="*"/>
         </Grid.ColumnDefinitions>
         <Border
@@ -42,11 +63,117 @@
             Grid.Column="0"
             Background="{StaticResource BgColor2}">
             <Grid.RowDefinitions>
-                <RowDefinition Height="100"/>
+                <RowDefinition Height="140"/>
                 <RowDefinition Height="*"/>
                 <RowDefinition Height="70"/>
             </Grid.RowDefinitions>
 
+            <!--Top path-->
+
+            <Grid>
+                <StackPanel>
+                    <Border
+                    Margin="20,15"
+                    HorizontalAlignment="Left"
+                    Width="70"
+                    Height="70"
+                    CornerRadius="50"
+                    Background="{StaticResource Primary}"/>
+                    <TextBlock
+                        Margin="20,0,0,10"
+                        FontSize="20"
+                        FontWeight="Bold"
+                        Foreground="{StaticResource ClearWhite}"
+                        Text="{Binding UserName}"
+                        d:Text="Username"/>
+                    <Border 
+                        Background="{StaticResource BgColor1}"
+                        Height="1"/>
+                </StackPanel>
+
+            </Grid>
+
+            <!--Middle path-->
+
+            <Grid
+                Grid.Row="1">
+                <StackPanel>
+                    <Button
+                        Style="{StaticResource menu_button}">
+                        <Button.Content>
+                            <StackPanel
+                                HorizontalAlignment="Left"
+                                Orientation="Horizontal">
+                                <TextBlock
+                                Style="{StaticResource menuButtonIcon_textBlock}"
+                                FontFamily="Segoe MDL2 Assets"
+                                Text="&#xE77B;"/>
+                                <TextBlock
+                                Style="{StaticResource menuButtonText_textBlock}"
+                                Text="Мой профиль"/>
+                            </StackPanel>
+
+                        </Button.Content>
+                    </Button>
+                    <Button
+                        Style="{StaticResource menu_button}">
+                        <Button.Content>
+                            <StackPanel
+                                HorizontalAlignment="Left"
+                                Orientation="Horizontal">
+                                <TextBlock
+                                Style="{StaticResource menuButtonIcon_textBlock}"
+                                FontFamily="Segoe MDL2 Assets"
+                                Text="&#xE716;"/>
+                                <TextBlock
+                                Style="{StaticResource menuButtonText_textBlock}"
+                                Text="Создать группу"/>
+                            </StackPanel>
+
+                        </Button.Content>
+                    </Button>
+                    <Button
+                        Style="{StaticResource menu_button}">
+                        <Button.Content>
+                            <StackPanel
+                                HorizontalAlignment="Left"
+                                Orientation="Horizontal">
+                                <TextBlock
+                                Style="{StaticResource menuButtonIcon_textBlock}"
+                                FontFamily="Segoe MDL2 Assets"
+                                Text="&#xE713;"/>
+                                <TextBlock
+                                Style="{StaticResource menuButtonText_textBlock}"
+                                Text="Настройки"/>
+                            </StackPanel>
+
+                        </Button.Content>
+                    </Button>
+
+                    <StackPanel Margin="0,10,0,0"
+                                HorizontalAlignment="Left"
+                                Orientation="Horizontal">
+                        <TextBlock
+                                 Margin="18,0,0,0"
+                                Style="{StaticResource menuButtonIcon_textBlock}"
+                                FontFamily="Segoe MDL2 Assets"
+                                Text="&#xE708;"/>
+                        <TextBlock
+                                Style="{StaticResource menuButtonText_textBlock}"
+                                Text="Ночной режим"/>
+                        <ToggleButton
+                            VerticalAlignment="Center"
+                            Style="{StaticResource DefaultToggleButtonStyle}"
+                            Margin="15,0"
+                            Width="20"
+                            Height="20"/>
+                    </StackPanel>
+
+                </StackPanel>
+
+                <!--Bottom path-->
+
+            </Grid>
             <Grid
                 Grid.Row="2">
                 <StackPanel 
@@ -60,7 +187,7 @@
                             ProjectChat
                         </Hyperlink>
                     </TextBlock>
-                    
+
                     <StackPanel
                         Orientation="Horizontal">
 
