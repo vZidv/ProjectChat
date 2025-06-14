@@ -26,7 +26,18 @@ namespace ChatServer.Handlers
                 return new LoginResultDTO()
                 {
                     Success = true,
-                    ClientId = user.Id,
+
+                    ClientProfileDTO = new() 
+                    { 
+                        Id = user.Id,
+                        Login = user.Login,
+                        Name = user.Name,
+                        LastName = user.LastName,
+                        Email = user.Email,
+                        Status = user.Status,
+                    },
+
+
                     Token = Guid.NewGuid().ToString(),
                     ErrorMessage = null,
                 };
@@ -34,7 +45,7 @@ namespace ChatServer.Handlers
             return new LoginResultDTO()
             {
                 Success = false,
-                ClientId = -1,
+                ClientProfileDTO = null,
                 Token = null,
                 ErrorMessage = "Неверный логин или пароль",
             };

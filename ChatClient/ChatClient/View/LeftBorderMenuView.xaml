@@ -84,7 +84,7 @@
                         FontSize="20"
                         FontWeight="Bold"
                         Foreground="{StaticResource ClearWhite}"
-                        Text="{Binding UserName}"
+                        Text="{Binding ClientName}"
                         d:Text="Username"/>
                     <Border 
                         Background="{StaticResource BgColor1}"

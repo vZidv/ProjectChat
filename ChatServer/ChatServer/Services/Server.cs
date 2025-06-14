@@ -147,16 +147,16 @@ namespace ChatServer.Services
 
 
                                 var handlerMessage = new HandlerMessage(new Data.ProjectChatContext(), _handlerClient);
-                                ChatMessageDTO newMessageDTO = await handlerMessage.WritingMessageAsync(messageDTO, session.ClientId);
+                                ChatMessageDTO newMessageDTO = await handlerMessage.WritingMessageAsync(messageDTO, session.Client.Id);
 
                                 ClientSession[] clients = _handlerClient.GetClientsFromRoom(messageDTO.RoomId);
 
                                 foreach (var clientSession in clients)
                                 {
-                                    if (session.ClientId == clientSession.ClientId)
+                                    if (session.Client.Id == clientSession.Client.Id)
                                         continue;
                                     await SendResponseAsync(clientSession.Stream, newMessageDTO, ResponseType.Message);
-                                    Console.WriteLine($"Отправил сообщение {newMessageDTO.Text} пользователю: {session.ClientId}");
+                                    Console.WriteLine($"Отправил сообщение {newMessageDTO.Text} пользователю: {session.Client.Id}");
                                 }
 
                                 Console.WriteLine($"Сообщение {messageDTO.Text} в комнате {messageDTO.RoomId} записано");

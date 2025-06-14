@@ -9,7 +9,7 @@ namespace ChatClient.Services
 {
     public static class NetworkSession
     {
-        public static ClientLoginDTO? Client { get; set; }
+        public static ClientProfileDTO? ClientProfile { get; set; }
         public static NetworkService? Session { get; set; }
         public static string? Token { get; set; }
 
@@ -18,7 +18,7 @@ namespace ChatClient.Services
             if (Session != null)
                 Session.Dispose();
 
-            Client = null;
+            ClientProfile = null;
             Session = null;
         }
     }

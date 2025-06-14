@@ -117,9 +117,7 @@ namespace ChatClient.ViewModels
 
             if (response.Success)
             {
-                client.Id = response.ClientId;
-
-                NetworkSession.Client = client;
+                NetworkSession.ClientProfile = response.ClientProfileDTO;
                 NetworkSession.Token = response.Token;
 
                 var mainViewModel = new ViewModels.MainViewModel(client);

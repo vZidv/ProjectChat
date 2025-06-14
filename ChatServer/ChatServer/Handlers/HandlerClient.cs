@@ -20,7 +20,7 @@ namespace ChatServer.Handlers
         {
             var session = new ClientSession()
             {
-                ClientId = loginResult.ClientId,
+                Client = loginResult.ClientProfileDTO,
                 Token = loginResult.Token,
                 Stream = stream,
                 CurrentRoomId = -1
