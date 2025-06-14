@@ -116,6 +116,7 @@
                         </Button.Content>
                     </Button>
                     <Button
+                        Command="{Binding OpenCreatRoomPageCommand}"
                         Style="{StaticResource menu_button}">
                         <Button.Content>
                             <StackPanel

@@ -102,7 +102,7 @@ namespace ChatServer.Services
 
                                 var createRoomDTO = requestDTO.Data;
                                 var handleCreateRoom = new HandlerRoom(new Data.ProjectChatContext());
-                                bool result = await handleCreateRoom.CreatRoomAsync(createRoomDTO);
+                                CreatChatRoomResultDTO result = await handleCreateRoom.CreatRoomAsync(createRoomDTO);
 
                                 await SendResponseAsync(stream, result, ResponseType.CreatRoomResult);
 

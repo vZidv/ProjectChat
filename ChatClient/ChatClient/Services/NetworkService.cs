@@ -103,6 +103,12 @@ namespace ChatClient.Services
                                 _eventAggregator.Publish(new ChatRoomHistoryEvent(roomHistoryDTO));
                             }
                             break;
+                        case ResponseType.CreatRoomResult:
+                            {
+                                var resultCreatRoom = JsonConvert.DeserializeObject<ResponseDTO<CreatChatRoomResultDTO>>(json).Data;
+                                _eventAggregator.Publish(new CreatRoomEvent(resultCreatRoom));
+                            }
+                            break;
                     }
                 }
                 catch (Exception ex)

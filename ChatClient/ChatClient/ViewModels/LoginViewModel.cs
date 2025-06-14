@@ -120,9 +120,7 @@ namespace ChatClient.ViewModels
                 NetworkSession.ClientProfile = response.ClientProfileDTO;
                 NetworkSession.Token = response.Token;
 
-                var mainViewModel = new ViewModels.MainViewModel(client);
                 var mainView = new View.MainView();
-                mainView.DataContext = mainViewModel;
 
                 Services.NavigationService.MainFrame.Content = mainView;
             }

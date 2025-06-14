@@ -11,34 +11,22 @@ using System.Windows.Media.Media3D;
 using System.Windows.Controls;
 using ChatShared.DTO;
 using ChatClient.Services;
+using ChatShared.Events;
+using System.Collections.ObjectModel;
 
 namespace ChatClient.ViewModels
 {
     public class MainViewModel : BaseViewModel
     {
         //Fields
-        private ClientLoginDTO _clientDTO;
-
-        private ChatRoomDTO _selectedChatRoom; 
-        private ChatRoomDTO[] _chatRooms; 
-        private ChatRoomDTO[] _filteredChatRooms; 
-        private Page _currentPage; 
+        private ChatRoomDTO _selectedChatRoom;
+        private ObservableCollection<ChatRoomDTO> _chatRooms;
+        private ObservableCollection<ChatRoomDTO> _filteredChatRooms;
+        private Page _currentPage;
 
         private string _searchText;
 
         //Properties
-        public ClientLoginDTO ClientDTO
-        {
-            get
-            {
-                return _clientDTO;
-            }
-            set
-            {
-                _clientDTO = value;
-                OnPropertyChanged(nameof(ClientDTO));
-            }
-        }
 
         public ChatRoomDTO SelectedChatRoom
         {
@@ -54,7 +42,7 @@ namespace ChatClient.ViewModels
             }
         }
 
-        public ChatRoomDTO[] ChatRooms
+        public ObservableCollection<ChatRoomDTO> ChatRooms
         {
             get
             {
@@ -67,7 +55,7 @@ namespace ChatClient.ViewModels
             }
         }
 
-        public ChatRoomDTO[] FilteredChatRooms
+        public ObservableCollection<ChatRoomDTO> FilteredChatRooms
         {
             get
             {
@@ -110,23 +98,19 @@ namespace ChatClient.ViewModels
 
         public ICommand OpenLeftBoarMenuCommand { get; }
 
+
         public MainViewModel()
         {
-
-        }
-        public MainViewModel(ClientLoginDTO clientDTO)
-        {
-            ClientDTO = clientDTO;
-
             LogoutCommand = new ViewModelCommand(ExecuteLogoutCommand);
             LoadChatRoomsCommand = new ViewModelCommand(ExecuteLoadChatRoomsCommand);
-
             OpenLeftBoarMenuCommand = new ViewModelCommand(ExecuteOpenLeftBoarMenuCommand);
 
             CurrentPage = new View.EmptyChatView();
 
             LoadChatRoomsCommand.Execute(null);
             FilteredChatRooms = ChatRooms;
+
+            App.EventAggregator.Subscribe<CreatRoomEvent>(AddCreatedChatRoom);
         }
 
         private void ExecuteOpenLeftBoarMenuCommand(object? obj)
@@ -144,7 +128,7 @@ namespace ChatClient.ViewModels
         {
             var request = new GetChatRoomsDTO()
             {
-                ClientId = ClientDTO.Id
+                ClientId = NetworkSession.ClientProfile.Id
             };
 
             var session = NetworkSession.Session;
@@ -153,7 +137,7 @@ namespace ChatClient.ViewModels
 
             if (response != null)
             {
-                ChatRooms = response;
+                ChatRooms = new ObservableCollection<ChatRoomDTO>(response);
             }
             else
             {
@@ -174,7 +158,7 @@ namespace ChatClient.ViewModels
             if (SelectedChatRoom == null) return;
 
             var chatRoomView = new ChatView();
-            var chatViewModel = new ChatViewModel(SelectedChatRoom, ClientDTO);
+            var chatViewModel = new ChatViewModel(SelectedChatRoom);
             chatRoomView.DataContext = chatViewModel;
             CurrentPage = chatRoomView;
 
@@ -187,13 +171,22 @@ namespace ChatClient.ViewModels
 
         }
 
+        private void AddCreatedChatRoom(CreatRoomEvent @event)
+        {
+            CreatChatRoomResultDTO result = @event.CreatChatRoomResultDTO;
+            if (result.Success)
+            {
+                FilteredChatRooms.Add(result.ChatRoomDTO);
+            }
+        }
+
         private void ChatRoomFilter()
         {
-            if(string.IsNullOrWhiteSpace(SearchText))
+            if (string.IsNullOrWhiteSpace(SearchText))
                 FilteredChatRooms = ChatRooms;
             else
             {
-                FilteredChatRooms = ChatRooms.Where(x => x.Name.Contains(SearchText, StringComparison.OrdinalIgnoreCase)).ToArray();
+                FilteredChatRooms = new ObservableCollection<ChatRoomDTO>(ChatRooms.Where(x => x.Name.Contains(SearchText, StringComparison.OrdinalIgnoreCase)));
             }
         }
     }

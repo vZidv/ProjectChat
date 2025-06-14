@@ -19,10 +19,15 @@ namespace ChatServer.Handlers
             _context = context;
         }
 
-        public async Task<bool> CreatRoomAsync(ChatRoomDTO roomDTO)
+        public async Task<CreatChatRoomResultDTO> CreatRoomAsync(ChatRoomDTO roomDTO)
         {
+            CreatChatRoomResultDTO result = new(true, null, roomDTO);
             if (roomDTO == null)
-                return false;
+            {
+                result.Success = false;
+                result.ErrorMessage = "Room data is null.";
+                return result;
+            }
 
             var chatRoom = new ChatRoom()
             {
@@ -32,8 +37,19 @@ namespace ChatServer.Handlers
                 OwnerId = roomDTO.OwnerId
             };
             _context.ChatRooms.Add(chatRoom);
-            await _context.SaveChangesAsync();
-            return true;
+            try
+            {
+                await _context.SaveChangesAsync();
+            }
+            catch (Exception ex)
+            {
+                result.Success = false;
+                result.ErrorMessage = ex.Message;
+            }
+
+            result.ChatRoomDTO.Id = chatRoom.Id;
+
+            return result;
         }
 
         public async Task<ChatRoomDTO[]> GetRoomsForClientAsync(int clientId)

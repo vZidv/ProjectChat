@@ -17,7 +17,6 @@ namespace ChatClient.ViewModels
     {
         private ChatRoomDTO _chatRoomDTO;
         private ObservableCollection<ChatMessageDTO> _chatMessageDTOs;
-        private ClientLoginDTO _clientLoginDTO;
         private string _newMessageText;
 
 
@@ -55,10 +54,9 @@ namespace ChatClient.ViewModels
 
         public ChatViewModel() { }
 
-        public ChatViewModel(ChatRoomDTO chatRoomDTO, ClientLoginDTO client)
+        public ChatViewModel(ChatRoomDTO chatRoomDTO)
         {
             _chatRoomDTO = chatRoomDTO;
-            _clientLoginDTO = client;
 
             SendMessageCommand = new ViewModelCommand(ExecuteSendMessageCommand, CanExecuteSendMessageCommand);
             GetMessageCommand = new ViewModelCommand(ExecuteGetMessageCommand);
@@ -91,7 +89,7 @@ namespace ChatClient.ViewModels
             {
                 Text = NewMessageText,
                 RoomId = ChatRoomDTO.Id,
-                Sender = _clientLoginDTO.Login
+                Sender = NetworkSession.ClientProfile.Login
             };
             var session = NetworkSession.Session;
             await session.SendAsync(message, RequestType.SendMessage);
