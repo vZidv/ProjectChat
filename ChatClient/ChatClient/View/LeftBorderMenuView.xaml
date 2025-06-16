@@ -99,6 +99,7 @@
                 Grid.Row="1">
                 <StackPanel>
                     <Button
+                        Command="{Binding OpenClietnProfilePageCommand}"
                         Style="{StaticResource menu_button}">
                         <Button.Content>
                             <StackPanel
