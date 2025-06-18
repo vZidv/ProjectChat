@@ -6,9 +6,9 @@ using System.Threading.Tasks;
 
 namespace ChatShared.DTO
 {
-    public class RoomHistoryDTO
+    public enum MessageType
     {
-        public RoomMessageDTO[] MessageDTOs { get; set; }
-        public int RoomId { get; set; }
+        RoomMessage,
+        PrivateMessage
     }
 }

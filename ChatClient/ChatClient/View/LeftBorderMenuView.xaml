@@ -83,9 +83,13 @@
                         Margin="20,0,0,10"
                         FontSize="20"
                         FontWeight="Bold"
-                        Foreground="{StaticResource ClearWhite}"
-                        Text="{Binding ClientName}"
-                        d:Text="Username"/>
+                        Foreground="{StaticResource ClearWhite}">
+                        
+                        <Run d:Text="Oleg"
+                            Text="{Binding ClientProfileDTO.Name}"/>
+                        <Run d:Text="Mirovec"
+                            Text="{Binding ClientProfileDTO.LastName}"/>
+                    </TextBlock>
                     <Border 
                         Background="{StaticResource BgColor1}"
                         Height="1"/>

@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using ChatServer.Data;
 using ChatServer.Models;
 using ChatShared.DTO;
+using Microsoft.EntityFrameworkCore;
 
 namespace ChatServer.Handlers
 {
@@ -20,13 +21,12 @@ namespace ChatServer.Handlers
             this._handlerClient = handlerClient;
         }
 
-        public async Task<ChatMessageDTO> WritingMessageAsync(ChatMessageDTO newMessageDTO, int clientId)
+        public async Task<MessageDTO> WritingMessageAsync(MessageDTO newMessageDTO, int clientId)
         {
             var newMessage = new Message()
             {
                 Text = newMessageDTO.Text,
                 ClientId = clientId,
-                RoomId = newMessageDTO.RoomId,
                 SentAt = DateTime.Now,
                 IsEdited = false
             };
@@ -34,21 +34,35 @@ namespace ChatServer.Handlers
             _context.Messages.Add(newMessage);
             await _context.SaveChangesAsync();
 
-            return new ChatMessageDTO()
+
+
+            switch (newMessageDTO.MessageType)
             {
-                Text = newMessageDTO.Text,
-                RoomId = newMessageDTO.RoomId,
+                case MessageType.RoomMessage:
+                    {
+                        var roomMessageDTO = newMessageDTO as RoomMessageDTO;
 
-                Sender = _context.Clients
-                    .Where(c => c.Id == clientId)
-                    .Select(c => c.Login)
-                    .FirstOrDefault(),
-                SentAt = newMessage.SentAt,
-                isEdit = false
-            };
+                        if ((_context.ChatRooms.FirstOrDefault(r => r.Id == roomMessageDTO.RoomId) is ChatRoom room))
+                            newMessage.ChatRooms.Add(room);
+                        
+                    }
+                    break;
+                case MessageType.PrivateMessage:
+                    {
+                        var message = newMessageDTO as PrivateMessageDTO;
 
+                        var messageToChatRoom = new MessageToClient()
+                        {
+                            ClientId = message.ClientId,
+                            MessageId = newMessage.Id
+                        };
+
+                    }
+                    break;
+            }
+
+            await _context.SaveChangesAsync();
+            return newMessageDTO;
         }
-
-        
     }
 }

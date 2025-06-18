@@ -138,28 +138,50 @@ namespace ChatServer.Services
                             break;
                         case RequestType.SendMessage:
                             {
-                                var requestDTO = JsonConvert.DeserializeObject<RequestDTO<ChatMessageDTO>>(request);
-                                if (_handlerClient.TryGetSession(requestDTO.Token) == null)
+                                var jsonRequest = JObject.Parse(request);
+                                string token = jsonRequest.GetValue("Token")?.ToString();
+                                if (_handlerClient.TryGetSession(token) == null)
                                     break;
 
-                                ChatMessageDTO messageDTO = requestDTO.Data;
-                                ClientSession session = _handlerClient.TryGetSession(requestDTO.Token);
+                                MessageType messageType = (jsonRequest.GetValue("Data") as JObject).GetValue("MessageType").ToObject<MessageType>();
 
-
+                                ClientSession session = _handlerClient.TryGetSession(token);
                                 var handlerMessage = new HandlerMessage(new Data.ProjectChatContext(), _handlerClient);
-                                ChatMessageDTO newMessageDTO = await handlerMessage.WritingMessageAsync(messageDTO, session.Client.Id);
 
-                                ClientSession[] clients = _handlerClient.GetClientsFromRoom(messageDTO.RoomId);
-
-                                foreach (var clientSession in clients)
+                                switch (messageType)
                                 {
-                                    if (session.Client.Id == clientSession.Client.Id)
-                                        continue;
-                                    await SendResponseAsync(clientSession.Stream, newMessageDTO, ResponseType.Message);
-                                    Console.WriteLine($"Отправил сообщение {newMessageDTO.Text} пользователю: {session.Client.Id}");
-                                }
+                                    case MessageType.RoomMessage:
+                                        {
+                                            var messageDTO = JsonConvert.DeserializeObject<RequestDTO<RoomMessageDTO>>(request).Data;
 
-                                Console.WriteLine($"Сообщение {messageDTO.Text} в комнате {messageDTO.RoomId} записано");
+                                            MessageDTO newMessageDTO = await handlerMessage.WritingMessageAsync(messageDTO, session.Client.Id);
+
+                                            var message = newMessageDTO as RoomMessageDTO;
+                                            ClientSession[] clients = _handlerClient.GetClientsFromRoom(message.RoomId);
+
+                                            foreach (var clientSession in clients)
+                                            {
+                                                if (session.Client.Id == clientSession.Client.Id)
+                                                    continue;
+                                                await SendResponseAsync(clientSession.Stream, newMessageDTO, ResponseType.Message);
+                                                Console.WriteLine($"Отправил сообщение {newMessageDTO.Text} пользователю: {session.Client.Id}");
+                                            }
+                                            Console.WriteLine($"Сообщение {message.Text} в комнате {message.RoomId} записано");
+                                        }
+                                        break;
+                                    case MessageType.PrivateMessage:
+                                        {
+                                            var messageDTO = JsonConvert.DeserializeObject<RequestDTO<PrivateMessageDTO>>(request).Data;
+
+                                            MessageDTO newMessageDTO = await handlerMessage.WritingMessageAsync(messageDTO, session.Client.Id);
+
+                                            var message = newMessageDTO as PrivateMessageDTO;
+
+                                            await SendResponseAsync(stream, newMessageDTO, ResponseType.Message);
+                                            Console.WriteLine($"Сообщение {message.Text} отправлено пользователю {message.ClientId} записано");
+                                        }
+                                        break;
+                                }
                             }
                             break;
                         case RequestType.GetHistoryRoom:
@@ -169,7 +191,7 @@ namespace ChatServer.Services
                                     break;
 
                                 var roomHandler = new HandlerRoom(new Data.ProjectChatContext());
-                                ChatMessageDTO[] messageDTO = await roomHandler.GetHistoryRoomAsync(requestDTO.Data.RoomId);
+                                RoomMessageDTO[] messageDTO = await roomHandler.GetHistoryRoomAsync(requestDTO.Data.RoomId);
 
                                 var result = new RoomHistoryDTO()
                                 {

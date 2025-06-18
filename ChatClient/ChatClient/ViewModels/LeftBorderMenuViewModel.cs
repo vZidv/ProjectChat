@@ -1,6 +1,7 @@
 ﻿using ChatClient.CustomControls;
 using ChatClient.Services;
 using ChatClient.View;
+using ChatShared.DTO;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
@@ -14,16 +15,16 @@ namespace ChatClient.ViewModels
     class LeftBorderMenuViewModel : BaseViewModel
     {
         //Fields
-        private string _clientName;
+        private ClientProfileDTO _clientProfileDTO;
         //Property
 
-        public string ClientName
+        public ClientProfileDTO ClientProfileDTO
         {
-            get => _clientName;
+            get => _clientProfileDTO;
             set
             {
-                _clientName = value;
-                OnPropertyChanged(nameof(ClientName));
+                _clientProfileDTO = value;
+                OnPropertyChanged(nameof(_clientProfileDTO));
             }
         }
         //Commands
@@ -39,7 +40,7 @@ namespace ChatClient.ViewModels
 
         public LeftBorderMenuViewModel()
         {
-            ClientName = NetworkSession.ClientProfile.Login;
+            ClientProfileDTO = NetworkSession.ClientProfile;
 
             ClosePageCommand = new ViewModelCommand(ExecuteClosePageCommand);
 

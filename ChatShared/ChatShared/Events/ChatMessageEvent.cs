@@ -9,9 +9,9 @@ namespace ChatShared.Events
 {
     public class ChatMessageEvent : ChatEvent
     {
-        public ChatMessageDTO Message { get;}
+        public MessageDTO Message { get;}
 
-        public ChatMessageEvent(ChatMessageDTO message) : base(ResponseType.Message)
+        public ChatMessageEvent(MessageDTO message) : base(ResponseType.Message)
         {
             Message = message;
         }

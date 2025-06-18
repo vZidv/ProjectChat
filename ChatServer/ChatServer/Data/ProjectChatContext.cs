@@ -38,6 +38,8 @@ public partial class ProjectChatContext : DbContext
 
             entity.ToTable("ChatRoom");
 
+            entity.HasIndex(e => e.OwnerId, "IX_ChatRoom_OwnerId");
+
             entity.Property(e => e.Name).HasMaxLength(100);
             entity.Property(e => e.Password).HasMaxLength(256);
 
@@ -45,6 +47,21 @@ public partial class ProjectChatContext : DbContext
                 .HasForeignKey(d => d.OwnerId)
                 .OnDelete(DeleteBehavior.ClientSetNull)
                 .HasConstraintName("FK__ChatRoom__OwnerI__4D94879B");
+
+            entity.HasMany(d => d.Messages).WithMany(p => p.ChatRooms)
+                .UsingEntity<Dictionary<string, object>>(
+                    "MessageToChatRoom",
+                    r => r.HasOne<Message>().WithMany()
+                        .HasForeignKey("MessageId")
+                        .HasConstraintName("FK_MessageToChatRoom_Message"),
+                    l => l.HasOne<ChatRoom>().WithMany()
+                        .HasForeignKey("ChatRoomId")
+                        .HasConstraintName("FK_MessageToChatRoom_ChatRoom"),
+                    j =>
+                    {
+                        j.HasKey("ChatRoomId", "MessageId");
+                        j.ToTable("MessageToChatRoom");
+                    });
         });
 
         modelBuilder.Entity<Client>(entity =>
@@ -70,6 +87,21 @@ public partial class ProjectChatContext : DbContext
             entity.Property(e => e.Name).HasMaxLength(50);
             entity.Property(e => e.PasswordHash).HasMaxLength(256);
             entity.Property(e => e.Status).HasMaxLength(50);
+
+            entity.HasMany(d => d.MessagesNavigation).WithMany(p => p.Clients)
+                .UsingEntity<Dictionary<string, object>>(
+                    "MessageToClient",
+                    r => r.HasOne<Message>().WithMany()
+                        .HasForeignKey("MessageId")
+                        .HasConstraintName("FK_MessageToClient_Message"),
+                    l => l.HasOne<Client>().WithMany()
+                        .HasForeignKey("ClientId")
+                        .HasConstraintName("FK_MessageToClient_Client"),
+                    j =>
+                    {
+                        j.HasKey("ClientId", "MessageId");
+                        j.ToTable("MessageToClient");
+                    });
         });
 
         modelBuilder.Entity<Message>(entity =>
@@ -77,6 +109,8 @@ public partial class ProjectChatContext : DbContext
             entity.HasKey(e => e.Id).HasName("PK__Message__3214EC07A5250A36");
 
             entity.ToTable("Message");
+
+            entity.HasIndex(e => e.ClientId, "IX_Message_ClientId");
 
             entity.Property(e => e.SentAt)
                 .HasDefaultValueSql("(getdate())")
@@ -86,11 +120,6 @@ public partial class ProjectChatContext : DbContext
                 .HasForeignKey(d => d.ClientId)
                 .OnDelete(DeleteBehavior.ClientSetNull)
                 .HasConstraintName("FK__Message__ClientI__5535A963");
-
-            entity.HasOne(d => d.Room).WithMany(p => p.Messages)
-                .HasForeignKey(d => d.RoomId)
-                .OnDelete(DeleteBehavior.ClientSetNull)
-                .HasConstraintName("FK__Message__RoomId__5629CD9C");
         });
 
         modelBuilder.Entity<Role>(entity =>
@@ -112,6 +141,10 @@ public partial class ProjectChatContext : DbContext
             entity.HasKey(e => new { e.RoomId, e.ClientId }).HasName("PK__RoomMemb__6CE1D89B7B89B302");
 
             entity.ToTable("RoomMember");
+
+            entity.HasIndex(e => e.ClientId, "IX_RoomMember_ClientId");
+
+            entity.HasIndex(e => e.RoleId, "IX_RoomMember_RoleId");
 
             entity.HasOne(d => d.Client).WithMany(p => p.RoomMembers)
                 .HasForeignKey(d => d.ClientId)

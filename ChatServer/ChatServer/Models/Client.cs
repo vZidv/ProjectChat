@@ -32,4 +32,6 @@ public partial class Client
     public virtual ICollection<Message> Messages { get; set; } = new List<Message>();
 
     public virtual ICollection<RoomMember> RoomMembers { get; set; } = new List<RoomMember>();
+
+    public virtual ICollection<Message> MessagesNavigation { get; set; } = new List<Message>();
 }

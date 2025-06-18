@@ -15,9 +15,9 @@ public partial class ChatRoom
 
     public int OwnerId { get; set; }
 
-    public virtual ICollection<Message> Messages { get; set; } = new List<Message>();
-
     public virtual Client Owner { get; set; } = null!;
 
     public virtual ICollection<RoomMember> RoomMembers { get; set; } = new List<RoomMember>();
+
+    public virtual ICollection<Message> Messages { get; set; } = new List<Message>();
 }

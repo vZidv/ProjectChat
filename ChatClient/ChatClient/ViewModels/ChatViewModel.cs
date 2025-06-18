@@ -16,7 +16,7 @@ namespace ChatClient.ViewModels
     public class ChatViewModel : BaseViewModel
     {
         private ChatRoomDTO _chatRoomDTO;
-        private ObservableCollection<ChatMessageDTO> _chatMessageDTOs;
+        private ObservableCollection<MessageDTO> _chatMessageDTOs;
         private string _newMessageText;
 
 
@@ -25,7 +25,7 @@ namespace ChatClient.ViewModels
             get { return _chatRoomDTO; }
         }
 
-        public ObservableCollection<ChatMessageDTO> ChatMessageDTOs
+        public ObservableCollection<MessageDTO> ChatMessageDTOs
         {
             get { return _chatMessageDTOs; }
             set
@@ -85,14 +85,15 @@ namespace ChatClient.ViewModels
 
         private async void ExecuteSendMessageCommand(object? obj)
         {
-            var message = new ChatMessageDTO()
+            var message = new RoomMessageDTO()
             {
                 Text = NewMessageText,
                 RoomId = ChatRoomDTO.Id,
                 Sender = NetworkSession.ClientProfile.Login
             };
+            MessageDTO messageDTO = message;
             var session = NetworkSession.Session;
-            await session.SendAsync(message, RequestType.SendMessage);
+            await session.SendAsync(messageDTO, RequestType.SendMessage);
 
             ChatMessageDTOs.Add(message);
             NewMessageText = string.Empty;
@@ -103,14 +104,14 @@ namespace ChatClient.ViewModels
             if (chatRoomHistoryEvent.HistoryDTO.RoomId != ChatRoomDTO.Id)
                 return;
 
-            ChatMessageDTOs = new ObservableCollection<ChatMessageDTO>(chatRoomHistoryEvent.HistoryDTO.MessageDTOs);
+            ChatMessageDTOs = new ObservableCollection<MessageDTO>(chatRoomHistoryEvent.HistoryDTO.MessageDTOs);
         }
 
 
 
         private void OnNewMessageReceived(ChatMessageEvent chatEvent)
         {
-            if(chatEvent.Message.RoomId != ChatRoomDTO.Id) return;
+            if((chatEvent.Message as RoomMessageDTO).RoomId != ChatRoomDTO.Id) return;
             ChatMessageDTOs.Add(chatEvent.Message);
         }
     }

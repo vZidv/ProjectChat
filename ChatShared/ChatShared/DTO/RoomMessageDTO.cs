@@ -6,9 +6,11 @@ using System.Threading.Tasks;
 
 namespace ChatShared.DTO
 {
-    public class RoomHistoryDTO
+    public class RoomMessageDTO : MessageDTO
     {
-        public RoomMessageDTO[] MessageDTOs { get; set; }
         public int RoomId { get; set; }
+
+        public RoomMessageDTO() : base(MessageType.RoomMessage) { }
+        
     }
 }

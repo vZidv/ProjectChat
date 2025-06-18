@@ -11,6 +11,7 @@ using ChatShared.DTO;
 using ChatShared.Events;
 using Newtonsoft.Json;
 using ChatClient.CustomControls;
+using Newtonsoft.Json.Linq;
 
 namespace ChatClient.Services
 {
@@ -93,8 +94,23 @@ namespace ChatClient.Services
                     {
                         case ResponseType.Message:
                             {
-                                var messageDTO = JsonConvert.DeserializeObject<ResponseDTO<ChatMessageDTO>>(json).Data;
-                                _eventAggregator.Publish(new ChatMessageEvent(messageDTO));
+                                MessageType messageType = JObject.Parse(json)["Data"]["MessageType"].ToObject<MessageType>();
+                                switch (messageType)
+                                {
+                                    case MessageType.RoomMessage:
+                                        {
+                                            var roomMessageDTO = JsonConvert.DeserializeObject<ResponseDTO<RoomMessageDTO>>(json).Data;
+                                            _eventAggregator.Publish(new ChatMessageEvent(roomMessageDTO));
+                                        }
+                                        break;
+                                    case MessageType.PrivateMessage:
+                                        {
+                                            var privateMessageDTO = JsonConvert.DeserializeObject<ResponseDTO<PrivateMessageDTO>>(json).Data;
+                                            _eventAggregator.Publish(new ChatMessageEvent(privateMessageDTO));
+                                        }
+                                        break;
+
+                                }
                             }
                             break;
                         case ResponseType.GetHistoryRoom:
@@ -113,9 +129,9 @@ namespace ChatClient.Services
                 }
                 catch (Exception ex)
                 {
-                    if (MessageBox.Show($"Ошибка сети {ex.Message}", "Ошибка сети", MessageBoxButton.OK, MessageBoxType.Error)) 
+                    if (MessageBox.Show($"Ошибка сети {ex.Message}", "Ошибка сети", MessageBoxButton.OK, MessageBoxType.Error))
                     {
-                        Dispose();
+                        NetworkSession.Dispose();
                         App.Current.Shutdown();
                     }
                 }
