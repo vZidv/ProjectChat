@@ -10,6 +10,7 @@ using System.Windows.Input;
 using System.Windows.Media.Media3D;
 using System.Windows.Controls;
 using ChatShared.DTO;
+using ChatShared.DTO.Enums;
 using ChatClient.Services;
 using ChatShared.Events;
 using System.Collections.ObjectModel;

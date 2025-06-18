@@ -8,6 +8,7 @@ using System.Text.Json;
 using System.Text.Json.Serialization;
 using System.Threading.Tasks;
 using ChatShared.DTO;
+using ChatShared.DTO.Enums;
 using ChatShared.Events;
 using Newtonsoft.Json;
 using ChatClient.CustomControls;

@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using ChatServer.Data;
 using ChatServer.Models;
 using ChatShared.DTO;
+using ChatShared.DTO.Enums;
 using Microsoft.EntityFrameworkCore;
 
 namespace ChatServer.Handlers

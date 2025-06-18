@@ -6,6 +6,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Input;
 using ChatShared.DTO;
+using ChatShared.DTO.Enums;
 using ChatShared.Events;
 using System.Windows;
 using System.Collections.ObjectModel;

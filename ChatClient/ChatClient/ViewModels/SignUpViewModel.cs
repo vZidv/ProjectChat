@@ -6,6 +6,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Input;
 using ChatShared.DTO;
+using ChatShared.DTO.Enums;
 
 namespace ChatClient.ViewModels
 {
@@ -64,7 +65,7 @@ namespace ChatClient.ViewModels
                 Email = Email
             };
             var session = NetworkSession.Session;
-            await session.SendAsync<ClientSignUpDTO>(newClient, ChatShared.DTO.RequestType.Register);
+            await session.SendAsync<ClientSignUpDTO>(newClient, RequestType.Register);
             bool result = await session.ResponseAsync<bool>();
             
             if (result)

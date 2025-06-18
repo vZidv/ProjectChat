@@ -4,16 +4,18 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace ChatShared.DTO
+namespace ChatShared.DTO.Enums
 {
-    public enum ResponseType
+    public enum RequestType
     {
-        LoginResult,
-        SignUpResult,
-        CreatRoomResult,
+        Login,
+        Register,
+
+        SendMessage,
+
+        CreatRoom,
         GetChatRooms,
-        Error,
-        Message,
+        UpdateCurrentRoom,
         GetHistoryRoom
         //..
     }

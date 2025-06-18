@@ -11,6 +11,7 @@ using ChatServer.Handlers;
 using System.Text.Json.Nodes;
 using Newtonsoft.Json.Linq;
 using ChatShared.DTO;
+using ChatShared.DTO.Enums;
 using System.Collections.Concurrent;
 using ChatServer.Session;
 

@@ -1,6 +1,7 @@
 ﻿using ChatClient.CustomControls;
 using ChatClient.Services;
 using ChatShared.DTO;
+using ChatShared.DTO.Enums;
 using System;
 using System.Collections.Generic;
 using System.Linq;
