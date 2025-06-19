@@ -172,5 +172,7 @@ namespace ChatClient.Services
             _client?.Dispose();
         }
 
+
+       
     }
 }

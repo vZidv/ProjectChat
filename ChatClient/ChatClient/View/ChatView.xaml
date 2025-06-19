@@ -9,7 +9,8 @@
       xmlns:dto="clr-namespace:ChatShared.DTO;assembly=ChatShared"
       mc:Ignorable="d" 
       d:DesignHeight="450" d:DesignWidth="800"
-      Title="ChatView">
+      Title="ChatView"
+      FocusManager.FocusedElement="{Binding ElementName=MessageTextBox}">
 
     <Page.DataContext>
         <vm:ChatViewModel/>
@@ -19,7 +20,7 @@
         <Grid.RowDefinitions>
             <RowDefinition Height="60"/>
             <RowDefinition Height="*"/>
-            <RowDefinition Height="0.15*"/>
+            <RowDefinition Height="55"/>
         </Grid.RowDefinitions>
 
         <Grid
@@ -91,11 +92,11 @@
                 </ListBox.ItemTemplate>
 
                 <d:ListBox.ItemsSource>
-                    <x:Array Type="{x:Type dto:ChatMessageDTO}">
-                        <dto:ChatMessageDTO  
+                    <x:Array Type="{x:Type dto:MessageDTO}">
+                        <dto:RoomMessageDTO  
                             Text="Hello wordl !"
                             Sender="Oleg"/>
-                        <dto:ChatMessageDTO 
+                        <dto:RoomMessageDTO 
                             Text="Hi"
                             Sender="Anton"/>
                     </x:Array>
@@ -104,26 +105,26 @@
         </Grid>
 
         <Grid
-                Grid.Row="2"
-             Background="{StaticResource BgColor3}"
-            >
-
-            <Viewbox Stretch="Uniform" StretchDirection="Both" Grid.Row="2" VerticalAlignment="Top">
-                <StackPanel Orientation="Horizontal" VerticalAlignment="Center" HorizontalAlignment="Center">
-                    <TextBox
-                        Text="{Binding NewMessageText, Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}"
-            MinWidth="250"
-            Height="30"
-            Margin="30,5"
-            ui:ControlHelper.CornerRadius="12"/>
-                    <Button 
+        Grid.Row="2"
+        Background="{StaticResource BgColor3}"
+        >
+                <TextBox  
+                   x:Name="MessageTextBox"  
+                   ui:ControlHelper.PlaceholderText="Сообщение..."  
+                   ui:ControlHelper.PlaceholderForeground="{StaticResource Second}"
+                   Foreground="{StaticResource ClearWhite}"
+                   Text="{Binding NewMessageText, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"  
+                   Background="Transparent"  
+                   BorderThickness="0"
+                   Width="Auto"
+                   Margin="30,5"  
+                   HorizontalAlignment="Stretch"  
+                   VerticalContentAlignment="Center"
+                   FontSize="18"/>
+                <Button
+            Width="0" Height="0"
             Command="{Binding SendMessageCommand}"
-            Content="Отправить"
-            Margin="15,0"
-            Style="{StaticResource DefaultButtonStyle}" IsDefault="True"/>
-                </StackPanel>
-            </Viewbox>
-
+            IsDefault="True"/>
         </Grid>
 
     </Grid>
