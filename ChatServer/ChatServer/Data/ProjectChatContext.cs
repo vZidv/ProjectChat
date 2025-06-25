@@ -41,7 +41,6 @@ public partial class ProjectChatContext : DbContext
             entity.HasIndex(e => e.OwnerId, "IX_ChatRoom_OwnerId");
 
             entity.Property(e => e.Name).HasMaxLength(100);
-            entity.Property(e => e.Password).HasMaxLength(256);
 
             entity.HasOne(d => d.Owner).WithMany(p => p.ChatRooms)
                 .HasForeignKey(d => d.OwnerId)
@@ -87,6 +86,40 @@ public partial class ProjectChatContext : DbContext
             entity.Property(e => e.Name).HasMaxLength(50);
             entity.Property(e => e.PasswordHash).HasMaxLength(256);
             entity.Property(e => e.Status).HasMaxLength(50);
+
+            entity.HasMany(d => d.Clients).WithMany(p => p.Contacts)
+                .UsingEntity<Dictionary<string, object>>(
+                    "ClientContact",
+                    r => r.HasOne<Client>().WithMany()
+                        .HasForeignKey("ClientId")
+                        .OnDelete(DeleteBehavior.ClientSetNull)
+                        .HasConstraintName("FK_ClientContact_Client"),
+                    l => l.HasOne<Client>().WithMany()
+                        .HasForeignKey("ContactId")
+                        .OnDelete(DeleteBehavior.ClientSetNull)
+                        .HasConstraintName("FK_ClientContact_Client1"),
+                    j =>
+                    {
+                        j.HasKey("ClientId", "ContactId");
+                        j.ToTable("ClientContact");
+                    });
+
+            entity.HasMany(d => d.Contacts).WithMany(p => p.Clients)
+                .UsingEntity<Dictionary<string, object>>(
+                    "ClientContact",
+                    r => r.HasOne<Client>().WithMany()
+                        .HasForeignKey("ContactId")
+                        .OnDelete(DeleteBehavior.ClientSetNull)
+                        .HasConstraintName("FK_ClientContact_Client1"),
+                    l => l.HasOne<Client>().WithMany()
+                        .HasForeignKey("ClientId")
+                        .OnDelete(DeleteBehavior.ClientSetNull)
+                        .HasConstraintName("FK_ClientContact_Client"),
+                    j =>
+                    {
+                        j.HasKey("ClientId", "ContactId");
+                        j.ToTable("ClientContact");
+                    });
 
             entity.HasMany(d => d.MessagesNavigation).WithMany(p => p.Clients)
                 .UsingEntity<Dictionary<string, object>>(

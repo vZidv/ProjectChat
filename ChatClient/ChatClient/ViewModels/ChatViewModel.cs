@@ -11,6 +11,7 @@ using ChatShared.Events;
 using System.Windows;
 using System.Collections.ObjectModel;
 using System.Net.NetworkInformation;
+using ChatClient.View;
 
 namespace ChatClient.ViewModels
 {
@@ -52,6 +53,7 @@ namespace ChatClient.ViewModels
         //Command
         public ICommand SendMessageCommand { get; }
         public ICommand GetMessageCommand { get; }
+        public ICommand OpenChatRoomPageCommand { get; }
 
         public ChatViewModel() { }
 
@@ -61,12 +63,22 @@ namespace ChatClient.ViewModels
 
             SendMessageCommand = new ViewModelCommand(ExecuteSendMessageCommand, CanExecuteSendMessageCommand);
             GetMessageCommand = new ViewModelCommand(ExecuteGetMessageCommand);
+            OpenChatRoomPageCommand = new ViewModelCommand(ExecuteOpenChatRoomPageCommand);
 
             App.EventAggregator.Subscribe<ChatMessageEvent>(OnNewMessageReceived);
             App.EventAggregator.Subscribe<ChatRoomHistoryEvent>(onRoomHistoryReceived);
 
             ChatMessageDTOs = new();
             GetMessageCommand.Execute(null);
+        }
+
+        private void ExecuteOpenChatRoomPageCommand(object? obj)
+        {
+            ChatRoomProfileView view = new();
+            ChatRoomProfileViewModel viewModel = new(ChatRoomDTO);
+            view.DataContext = viewModel;
+
+            Services.NavigationService.TopFrame.Content = view;
         }
 
         private async void ExecuteGetMessageCommand(object? obj)

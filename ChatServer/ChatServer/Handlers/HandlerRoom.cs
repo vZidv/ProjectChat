@@ -33,7 +33,6 @@ namespace ChatServer.Handlers
             {
                 Name = roomDTO.Name,
                 IsPrivate = false,
-                Password = null,
                 OwnerId = roomDTO.OwnerId
             };
             _context.ChatRooms.Add(chatRoom);

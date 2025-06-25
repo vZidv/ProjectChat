@@ -1,0 +1,134 @@
+﻿<Page x:Class="ChatClient.View.ChatRoomProfileView"  
+     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"  
+     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"  
+     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"   
+     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"   
+     xmlns:local="clr-namespace:ChatClient.View"  
+     xmlns:vm="clr-namespace:ChatClient.ViewModels"  
+     mc:Ignorable="d"   
+     d:DesignHeight="600" d:DesignWidth="1000"  
+     Title="ChatRoomProfileView">  
+
+   <Page.DataContext>
+        <vm:ChatRoomProfileViewModel/>  
+   </Page.DataContext>  
+
+   <Grid>  
+       <Border  
+           Grid.ColumnSpan="2"  
+           Background="Black"  
+           Opacity="0.4"  
+           />  
+       <Button  
+HorizontalAlignment="Stretch"  
+VerticalAlignment="Stretch"  
+Background="Transparent"  
+BorderThickness="0"  
+Command="{Binding ClosePageCommand}">  
+           <Button.Template>  
+               <ControlTemplate TargetType="Button">  
+                   <Border Background="{TemplateBinding Background}">  
+                       <ContentPresenter  
+                           HorizontalAlignment="Center"  
+                           VerticalAlignment="Center"/>  
+                   </Border>  
+               </ControlTemplate>  
+           </Button.Template>  
+       </Button>  
+       <Border  
+           Width="400"  
+           Height="550"  
+           Background="{StaticResource BgColor3}"  
+           CornerRadius="12">  
+
+           <Grid>  
+               <Grid.RowDefinitions>  
+                   <RowDefinition Height="60"/>  
+                   <RowDefinition/>  
+                   <RowDefinition Height="10"/>  
+                   <RowDefinition/>  
+                   <RowDefinition/>  
+               </Grid.RowDefinitions>  
+               <Grid  
+                   Grid.Row="0">  
+                   <TextBlock  
+                       Text="Информация о группе"  
+                       Style="{StaticResource BaseTextBlockStyle}"  
+                       Foreground="{StaticResource ClearWhite}"  
+                       FontSize="20"  
+                       VerticalAlignment="Center"  
+                       Margin="15,0,0,0"/>  
+                   <StackPanel   
+                       Orientation="Horizontal"  
+                       HorizontalAlignment="Right">
+                        <Button  
+                           FontSize="20"  
+                           FontWeight="Bold"  
+                           Width="40"  
+                           Height="40"  
+                           Background="Transparent"  
+                           Content="&#xE712;"  
+                           FontFamily="Segoe MDL2 Assets"  
+                           Foreground="{StaticResource Second}" Click="Button_Click" 
+                           >
+                            <Button.ContextMenu>
+                                <ContextMenu 
+                                    Foreground="{StaticResource ClearWhite}"
+                                    Background="{StaticResource BgColor2}">
+                                    <MenuItem Header="Редактировать группу" Foreground="{StaticResource ClearWhite}"></MenuItem>
+                                    <MenuItem Header="Добавить участников" Foreground="{StaticResource ClearWhite}"/>
+                                </ContextMenu>
+                            </Button.ContextMenu>
+                        </Button>  
+                       <Button  
+                        Width="40"  
+                        Height="40"  
+                        FontWeight="Bold"  
+                        Command="{Binding ClosePageCommand}"  
+                        Background="Transparent"  
+                        Foreground="{StaticResource Second}"  
+                        Content="&#xE8BB;"   
+                        FontFamily="Segoe MDL2 Assets"  
+                       />  
+                   </StackPanel>  
+               </Grid>  
+               <Grid  
+                   Grid.Row="1"  
+                   >  
+                   <Grid.ColumnDefinitions>  
+                       <ColumnDefinition Width="110"/>  
+                       <ColumnDefinition/>  
+                   </Grid.ColumnDefinitions>  
+                   <Border  
+                       Width="90"  
+                       Height="90"  
+                       Margin="7"  
+                       CornerRadius="50"  
+                       Background="{StaticResource Primary}"/>  
+
+                   <StackPanel  
+                       VerticalAlignment="Center"  
+                       Grid.Column="1"  
+                       Orientation="Vertical">  
+                       <TextBlock   
+                           Foreground="{StaticResource ClearWhite}"  
+                           FontWeight="DemiBold"  
+                           FontSize="24"  
+                           Margin="10,0,10,0">  
+                           <Run d:Text="Group name" Text="{Binding ChatRoomDTO.Name, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>  
+                       </TextBlock>  
+                       <TextBlock  
+                           FontWeight="DemiBold"  
+                           FontSize="16"  
+                           Margin="10,0"  
+                           Foreground="{StaticResource Second}"  
+                           d:Text="16 участников"/>  
+                   </StackPanel>  
+               </Grid>  
+               <Border   
+                       Grid.Row="2"  
+                       Background="{StaticResource BgColor4}"/>  
+           </Grid>  
+       </Border>  
+   </Grid>  
+</Page>

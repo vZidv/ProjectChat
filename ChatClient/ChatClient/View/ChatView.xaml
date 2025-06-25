@@ -47,6 +47,24 @@
                     d:Text="10 участников"
                     HorizontalAlignment="Left"/>
             </StackPanel>
+            <Button  
+HorizontalAlignment="Stretch"  
+VerticalAlignment="Stretch"  
+Background="Transparent"  
+BorderThickness="0"
+Cursor="Hand"
+Command="{Binding OpenChatRoomPageCommand}"
+>
+                <Button.Template>
+                    <ControlTemplate TargetType="Button">
+                        <Border Background="{TemplateBinding Background}">
+                            <ContentPresenter  
+                           HorizontalAlignment="Center"  
+                           VerticalAlignment="Center"/>
+                        </Border>
+                    </ControlTemplate>
+                </Button.Template>
+            </Button>
         </Grid>
         <Grid
             Grid.Row="1">

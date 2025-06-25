@@ -121,7 +121,7 @@ namespace ChatClient.ViewModels
 
             page.DataContext = model;
 
-            Services.NavigationService.TopFrame.Content = page;
+            NavigationService.TopFrame.Content = page;
 
         }
 
@@ -149,9 +149,10 @@ namespace ChatClient.ViewModels
 
         private void ExecuteLogoutCommand(object? obj)
         {
-            NavigationService.MainFrame.Content = new View.LoginView();
+            if (NavigationService.MainFrame != null)
+                NavigationService.MainFrame.Content = new LoginView();
+            
             NetworkSession.Dispose();
-
         }
 
         private async void OpenSelectedChatRoom()

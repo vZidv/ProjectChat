@@ -139,6 +139,24 @@
                         </Button.Content>
                     </Button>
                     <Button
+                        Command="{Binding OpenCreatRoomPageCommand}"
+                        Style="{StaticResource menu_button}">
+                        <Button.Content>
+                            <StackPanel
+                                HorizontalAlignment="Left"
+                                Orientation="Horizontal">
+                                <TextBlock
+                                Style="{StaticResource menuButtonIcon_textBlock}"
+                                FontFamily="Segoe MDL2 Assets"
+                                Text="&#xF180;"/>
+                                <TextBlock
+                                Style="{StaticResource menuButtonText_textBlock}"
+                                Text="Контакты"/>
+                            </StackPanel>
+
+                        </Button.Content>
+                    </Button>
+                    <Button
                         Style="{StaticResource menu_button}">
                         <Button.Content>
                             <StackPanel

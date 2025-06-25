@@ -110,6 +110,7 @@ Command="{Binding ClosePageCommand}">
                         </TextBlock>
                         <TextBlock
                             FontWeight="DemiBold"
+                            FontSize="16"
                             Margin="10,0"
                             Foreground="{StaticResource Primary}"
                             d:Text="в сети"/>
@@ -157,7 +158,7 @@ Command="{Binding ClosePageCommand}">
                                         <Run 
                                         FontSize="20"    
                                         Foreground="{StaticResource Primary}"
-                                        d:Text="Frog"
+                                        d:Text="@Frog"
                                         Text="{Binding ClientProfileDTO.Login}"/>
                                     </Hyperlink>
                                 </TextBlock>

@@ -9,8 +9,6 @@ public partial class ChatRoom
 
     public string Name { get; set; } = null!;
 
-    public string? Password { get; set; }
-
     public bool IsPrivate { get; set; }
 
     public int OwnerId { get; set; }
