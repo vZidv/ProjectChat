@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace ChatShared.DTO
 {
-    public class GetChatRoomsDTO
+    public class GetChatsDTO
     {
         public int ClientId { get; set; }
     }

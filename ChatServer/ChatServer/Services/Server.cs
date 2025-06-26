@@ -110,19 +110,19 @@ namespace ChatServer.Services
                                 Console.WriteLine($"Результат создания комнаты отправлен пользователю: {client.Client.RemoteEndPoint}");
                             }
                             break;
-                        case RequestType.GetChatRooms:
+                        case RequestType.GetChats:
                             {
-                                var requestDTO = JsonConvert.DeserializeObject<RequestDTO<GetChatRoomsDTO>>(request);
+                                var requestDTO = JsonConvert.DeserializeObject<RequestDTO<GetChatsDTO>>(request);
                                 if (_handlerClient.TryGetSession(requestDTO.Token) == null)
                                     break;
 
                                 var getRoomsDTO = requestDTO.Data;
-                                var handleGetRooms = new HandlerRoom(new Data.ProjectChatContext());
-                                ChatRoomDTO[] roomsDTO = await handleGetRooms.GetRoomsForClientAsync(getRoomsDTO.ClientId);
+                                var handlerChat = new HandlerChat(new Data.ProjectChatContext());
+                                List<ChatMiniProfileDTO> chatMiniProfileDTOs = await handlerChat.GetChatListForClientAsync(getRoomsDTO.ClientId);
 
-                                await SendResponseAsync(stream, roomsDTO, ResponseType.GetChatRooms);
+                                await SendResponseAsync(stream, chatMiniProfileDTOs, ResponseType.GetChats);
 
-                                Console.WriteLine($"Результат на список доступны комнат отправлен пользователю: {client.Client.RemoteEndPoint}");
+                                Console.WriteLine($"Результат на список доступных чатов отправлен пользователю: {client.Client.RemoteEndPoint}");
                             }
                             break;
                         case RequestType.UpdateCurrentRoom:

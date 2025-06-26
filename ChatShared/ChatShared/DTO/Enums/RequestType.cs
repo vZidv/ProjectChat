@@ -14,7 +14,7 @@ namespace ChatShared.DTO.Enums
         SendMessage,
 
         CreatRoom,
-        GetChatRooms,
+        GetChats,
         UpdateCurrentRoom,
         GetHistoryRoom
         //..

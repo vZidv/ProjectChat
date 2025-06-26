@@ -20,52 +20,52 @@ namespace ChatClient.ViewModels
     public class MainViewModel : BaseViewModel
     {
         //Fields
-        private ChatRoomDTO _selectedChatRoom;
-        private ObservableCollection<ChatRoomDTO> _chatRooms;
-        private ObservableCollection<ChatRoomDTO> _filteredChatRooms;
+        private ChatMiniProfileDTO _selectedChat;
+        private ObservableCollection<ChatMiniProfileDTO> _chats;
+        private ObservableCollection<ChatMiniProfileDTO> _filteredChats;
         private Page _currentPage;
 
         private string _searchText;
 
         //Properties
 
-        public ChatRoomDTO SelectedChatRoom
+        public ChatMiniProfileDTO SelectedChat
         {
             get
             {
-                return _selectedChatRoom;
+                return _selectedChat;
             }
             set
             {
-                _selectedChatRoom = value;
-                OnPropertyChanged(nameof(SelectedChatRoom));
+                _selectedChat = value;
+                OnPropertyChanged(nameof(SelectedChat));
                 OpenSelectedChatRoom();
             }
         }
 
-        public ObservableCollection<ChatRoomDTO> ChatRooms
+        public ObservableCollection<ChatMiniProfileDTO> Chats
         {
             get
             {
-                return _chatRooms;
+                return _chats;
             }
             set
             {
-                _chatRooms = value;
-                OnPropertyChanged(nameof(ChatRooms));
+                _chats = value;
+                OnPropertyChanged(nameof(Chats));
             }
         }
 
-        public ObservableCollection<ChatRoomDTO> FilteredChatRooms
+        public ObservableCollection<ChatMiniProfileDTO> FilteredChats
         {
             get
             {
-                return _filteredChatRooms;
+                return _filteredChats;
             }
             set
             {
-                _filteredChatRooms = value;
-                OnPropertyChanged(nameof(FilteredChatRooms));
+                _filteredChats = value;
+                OnPropertyChanged(nameof(FilteredChats));
             }
         }
 
@@ -95,7 +95,7 @@ namespace ChatClient.ViewModels
 
         //Commands
         public ICommand LogoutCommand { get; }
-        public ICommand LoadChatRoomsCommand { get; }
+        public ICommand LoadChatsCommand { get; }
 
         public ICommand OpenLeftBoarMenuCommand { get; }
 
@@ -103,13 +103,13 @@ namespace ChatClient.ViewModels
         public MainViewModel()
         {
             LogoutCommand = new ViewModelCommand(ExecuteLogoutCommand);
-            LoadChatRoomsCommand = new ViewModelCommand(ExecuteLoadChatRoomsCommand);
+            LoadChatsCommand = new ViewModelCommand(ExecuteLoadChatsCommand);
             OpenLeftBoarMenuCommand = new ViewModelCommand(ExecuteOpenLeftBoarMenuCommand);
 
             CurrentPage = new View.EmptyChatView();
 
-            LoadChatRoomsCommand.Execute(null);
-            FilteredChatRooms = ChatRooms;
+            LoadChatsCommand.Execute(null);
+            FilteredChats = Chats;
 
             App.EventAggregator.Subscribe<CreatRoomEvent>(AddCreatedChatRoom);
         }
@@ -121,30 +121,30 @@ namespace ChatClient.ViewModels
 
             page.DataContext = model;
 
-            NavigationService.TopFrame.Content = page;
+            NavigationService.TopFrame!.Content = page;
 
         }
 
-        private async void ExecuteLoadChatRoomsCommand(object? obj)
+        private async void ExecuteLoadChatsCommand(object? obj)
         {
-            var request = new GetChatRoomsDTO()
+            var request = new GetChatsDTO()
             {
-                ClientId = NetworkSession.ClientProfile.Id
+                ClientId = NetworkSession.ClientProfile!.Id
             };
 
-            var session = NetworkSession.Session;
-            await session.SendAsync(request, RequestType.GetChatRooms);
-            var response = await session.ResponseAsync<ChatRoomDTO[]>();
+            var session = NetworkSession.Session!;
+            await session.SendAsync(request, RequestType.GetChats);
+            var response = await session.ResponseAsync<ChatMiniProfileDTO[]>();
 
             if (response != null)
             {
-                ChatRooms = new ObservableCollection<ChatRoomDTO>(response);
+                Chats = new ObservableCollection<ChatMiniProfileDTO>(response);
             }
             else
             {
                 MessageBox.Show("Не удалось загрузить комнаты");
             }
-            await NetworkSession.Session.ListenAsync();
+            await NetworkSession.Session!.ListenAsync();
         }
 
         private void ExecuteLogoutCommand(object? obj)
@@ -157,17 +157,17 @@ namespace ChatClient.ViewModels
 
         private async void OpenSelectedChatRoom()
         {
-            if (SelectedChatRoom == null) return;
+            if (SelectedChat == null) return;
 
             var chatRoomView = new ChatView();
-            var chatViewModel = new ChatViewModel(SelectedChatRoom);
+            var chatViewModel = new ChatViewModel(SelectedChat);
             chatRoomView.DataContext = chatViewModel;
             CurrentPage = chatRoomView;
 
             try
             {
                 var session = NetworkSession.Session;
-                await session.SendAsync(SelectedChatRoom, RequestType.UpdateCurrentRoom);
+                await session.SendAsync(SelectedChat, RequestType.UpdateCurrentRoom);
             }
             catch (Exception ex) { }
 
@@ -175,20 +175,20 @@ namespace ChatClient.ViewModels
 
         private void AddCreatedChatRoom(CreatRoomEvent @event)
         {
-            CreatChatRoomResultDTO result = @event.CreatChatRoomResultDTO;
-            if (result.Success)
-            {
-                FilteredChatRooms.Add(result.ChatRoomDTO);
-            }
+            //CreatChatRoomResultDTO result = @event.CreatChatRoomResultDTO!;
+            //if (result.Success)
+            //{
+            //    FilteredChats.Add(result.ChatRoomDTO!);
+            //}
         }
 
         private void ChatRoomFilter()
         {
             if (string.IsNullOrWhiteSpace(SearchText))
-                FilteredChatRooms = ChatRooms;
+                FilteredChats = Chats;
             else
             {
-                FilteredChatRooms = new ObservableCollection<ChatRoomDTO>(ChatRooms.Where(x => x.Name.Contains(SearchText, StringComparison.OrdinalIgnoreCase)));
+                FilteredChats = new ObservableCollection<ChatMiniProfileDTO>(Chats.Where(x => x.Name.Contains(SearchText, StringComparison.OrdinalIgnoreCase)));
             }
         }
     }

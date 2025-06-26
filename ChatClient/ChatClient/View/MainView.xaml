@@ -11,9 +11,11 @@
       d:DesignHeight="750" d:DesignWidth="1100"
       Title="MainView">
 
+
     <Page.DataContext>
         <vm:MainViewModel/>
     </Page.DataContext>
+
 
     <Grid Background="{StaticResource WindowBorder}">
         <Grid.ColumnDefinitions>
@@ -88,7 +90,7 @@
                         <ListBox 
                         Background="Transparent"
                         Margin="0,15"
-                        ItemsSource="{Binding FilteredChatRooms, UpdateSourceTrigger=PropertyChanged}"
+                        ItemsSource="{Binding FilteredChats, UpdateSourceTrigger=PropertyChanged}"
                         SelectionChanged="ListBox_SelectionChanged"
                             Cursor="Hand">
                             <ListBox.ItemTemplate>
@@ -103,9 +105,8 @@
                                     MinHeight="40"
                                     MinWidth="40"
                                     CornerRadius="40"
-                                    Margin="0,0,10,0"
-                                    />
-
+                                    Margin="0,0,10,0"/>
+                                        
                                         <TextBlock
                                         FontSize="15"
                                         Foreground="{StaticResource ClearWhite}"
@@ -118,8 +119,8 @@
                             </ListBox.ItemTemplate>
 
                             <d:ListBox.ItemsSource>
-                                <x:Array Type="{x:Type dto:ChatRoomDTO}">
-                                    <dto:ChatRoomDTO Name="TestRoom"/>
+                                <x:Array Type="{x:Type dto:ChatMiniProfileDTO}">
+                                    <dto:ChatMiniProfileDTO Name="TestRoom"/>
                                 </x:Array>
                             </d:ListBox.ItemsSource>
 
@@ -127,9 +128,6 @@
 
                     </StackPanel>
                 </Viewbox>
-
-
-
 
             </Grid>
         </Border>

@@ -33,7 +33,7 @@
                 
                 <TextBlock 
                     Foreground="{StaticResource ClearWhite}"
-                    Text="{Binding ChatRoomDTO.Name}"
+                    Text="{Binding ChatDTO.Name}"
                     Margin="20,0"
                     FontSize="20"
                     d:Text="ChatRoomName"

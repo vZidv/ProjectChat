@@ -9,9 +9,9 @@ namespace ChatClient.Services
 {
     public static class NetworkSession
     {
-        public static ClientProfileDTO? ClientProfile { get; set; }
+        public static ClientProfileDTO? ClientProfile { get; set; } = null!;
         public static NetworkService? Session { get; set; } = null!;
-        public static string? Token { get; set; }
+        public static string? Token { get; set; } = null!;
 
         public static void Dispose()
         {

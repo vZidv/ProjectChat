@@ -17,14 +17,14 @@ namespace ChatClient.ViewModels
 {
     public class ChatViewModel : BaseViewModel
     {
-        private ChatRoomDTO _chatRoomDTO;
+        private ChatMiniProfileDTO _chatDTO;
         private ObservableCollection<MessageDTO> _chatMessageDTOs;
         private string _newMessageText;
 
 
-        public ChatRoomDTO ChatRoomDTO
+        public ChatMiniProfileDTO ChatDTO
         {
-            get { return _chatRoomDTO; }
+            get { return _chatDTO; }
         }
 
         public ObservableCollection<MessageDTO> ChatMessageDTOs
@@ -57,75 +57,75 @@ namespace ChatClient.ViewModels
 
         public ChatViewModel() { }
 
-        public ChatViewModel(ChatRoomDTO chatRoomDTO)
+        public ChatViewModel(ChatMiniProfileDTO chatDTO)
         {
-            _chatRoomDTO = chatRoomDTO;
+            _chatDTO = chatDTO;
 
-            SendMessageCommand = new ViewModelCommand(ExecuteSendMessageCommand, CanExecuteSendMessageCommand);
-            GetMessageCommand = new ViewModelCommand(ExecuteGetMessageCommand);
-            OpenChatRoomPageCommand = new ViewModelCommand(ExecuteOpenChatRoomPageCommand);
+            //SendMessageCommand = new ViewModelCommand(ExecuteSendMessageCommand, CanExecuteSendMessageCommand);
+            //GetMessageCommand = new ViewModelCommand(ExecuteGetMessageCommand);
+            //OpenChatRoomPageCommand = new ViewModelCommand(ExecuteOpenChatRoomPageCommand);
 
-            App.EventAggregator.Subscribe<ChatMessageEvent>(OnNewMessageReceived);
-            App.EventAggregator.Subscribe<ChatRoomHistoryEvent>(onRoomHistoryReceived);
+            //App.EventAggregator.Subscribe<ChatMessageEvent>(OnNewMessageReceived);
+            //App.EventAggregator.Subscribe<ChatRoomHistoryEvent>(onRoomHistoryReceived);
 
             ChatMessageDTOs = new();
-            GetMessageCommand.Execute(null);
+            //GetMessageCommand.Execute(null);
         }
 
-        private void ExecuteOpenChatRoomPageCommand(object? obj)
-        {
-            ChatRoomProfileView view = new();
-            ChatRoomProfileViewModel viewModel = new(ChatRoomDTO);
-            view.DataContext = viewModel;
+        //private void ExecuteOpenChatRoomPageCommand(object? obj)
+        //{
+        //    ChatRoomProfileView view = new();
+        //    ChatRoomProfileViewModel viewModel = new(ChatRoomDTO);
+        //    view.DataContext = viewModel;
 
-            Services.NavigationService.TopFrame.Content = view;
-        }
+        //    Services.NavigationService.TopFrame.Content = view;
+        //}
 
-        private async void ExecuteGetMessageCommand(object? obj)
-        {
-            GetRoomHistoryDTO historyDTO = new()
-            {
-                RoomId = ChatRoomDTO.Id,
-                Limit = 50
-            };
+        //private async void ExecuteGetMessageCommand(object? obj)
+        //{
+        //    GetRoomHistoryDTO historyDTO = new()
+        //    {
+        //        RoomId = ChatRoomDTO.Id,
+        //        Limit = 50
+        //    };
 
-            var session = NetworkSession.Session;
-            await session.SendAsync(historyDTO, RequestType.GetHistoryRoom);
-        }
+        //    var session = NetworkSession.Session;
+        //    await session.SendAsync(historyDTO, RequestType.GetHistoryRoom);
+        //}
 
-        private bool CanExecuteSendMessageCommand(object? obj) => (NewMessageText != string.Empty);
-
-
-        private async void ExecuteSendMessageCommand(object? obj)
-        {
-            var message = new RoomMessageDTO()
-            {
-                Text = NewMessageText,
-                RoomId = ChatRoomDTO.Id,
-                Sender = NetworkSession.ClientProfile.Login
-            };
-            MessageDTO messageDTO = message;
-            var session = NetworkSession.Session;
-            await session.SendAsync(messageDTO, RequestType.SendMessage);
-
-            ChatMessageDTOs.Add(message);
-            NewMessageText = string.Empty;
-        }
-
-        private void onRoomHistoryReceived(ChatRoomHistoryEvent chatRoomHistoryEvent)
-        {
-            if (chatRoomHistoryEvent.HistoryDTO.RoomId != ChatRoomDTO.Id)
-                return;
-
-            ChatMessageDTOs = new ObservableCollection<MessageDTO>(chatRoomHistoryEvent.HistoryDTO.MessageDTOs);
-        }
+        //private bool CanExecuteSendMessageCommand(object? obj) => (NewMessageText != string.Empty);
 
 
+        //private async void ExecuteSendMessageCommand(object? obj)
+        //{
+        //    var message = new RoomMessageDTO()
+        //    {
+        //        Text = NewMessageText,
+        //        RoomId = ChatRoomDTO.Id,
+        //        Sender = NetworkSession.ClientProfile.Login
+        //    };
+        //    MessageDTO messageDTO = message;
+        //    var session = NetworkSession.Session;
+        //    await session.SendAsync(messageDTO, RequestType.SendMessage);
 
-        private void OnNewMessageReceived(ChatMessageEvent chatEvent)
-        {
-            if((chatEvent.Message as RoomMessageDTO).RoomId != ChatRoomDTO.Id) return;
-            ChatMessageDTOs.Add(chatEvent.Message);
-        }
+        //    ChatMessageDTOs.Add(message);
+        //    NewMessageText = string.Empty;
+        //}
+
+        //private void onRoomHistoryReceived(ChatRoomHistoryEvent chatRoomHistoryEvent)
+        //{
+        //    if (chatRoomHistoryEvent.HistoryDTO.RoomId != ChatRoomDTO.Id)
+        //        return;
+
+        //    ChatMessageDTOs = new ObservableCollection<MessageDTO>(chatRoomHistoryEvent.HistoryDTO.MessageDTOs);
+        //}
+
+
+
+        //private void OnNewMessageReceived(ChatMessageEvent chatEvent)
+        //{
+        //    if((chatEvent.Message as RoomMessageDTO).RoomId != ChatRoomDTO.Id) return;
+        //    ChatMessageDTOs.Add(chatEvent.Message);
+        //}
     }
 }

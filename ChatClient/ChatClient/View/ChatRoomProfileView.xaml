@@ -125,9 +125,7 @@ Command="{Binding ClosePageCommand}">
                            d:Text="16 участников"/>  
                    </StackPanel>  
                </Grid>  
-               <Border   
-                       Grid.Row="2"  
-                       Background="{StaticResource BgColor4}"/>  
+ 
            </Grid>  
        </Border>  
    </Grid>  

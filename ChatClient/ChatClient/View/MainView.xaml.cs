@@ -30,7 +30,7 @@ namespace ChatClient.View
         private void ListBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
             if (DataContext is MainViewModel vm)
-                vm.SelectedChatRoom = (sender as ListBox).SelectedItem as ChatRoomDTO;
+                vm.SelectedChat = (sender as ListBox).SelectedItem as ChatMiniProfileDTO;
         }
     }
 }
