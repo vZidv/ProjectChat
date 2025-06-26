@@ -175,11 +175,20 @@ namespace ChatClient.ViewModels
 
         private void AddCreatedChatRoom(CreatRoomEvent @event)
         {
-            //CreatChatRoomResultDTO result = @event.CreatChatRoomResultDTO!;
-            //if (result.Success)
-            //{
-            //    FilteredChats.Add(result.ChatRoomDTO!);
-            //}
+            CreatChatRoomResultDTO result = @event.CreatChatRoomResultDTO!;
+            ChatMiniProfileDTO newRoom = new()
+            {
+                Id = result.ChatRoomDTO!.Id,
+                Name = result.ChatRoomDTO!.Name,
+                isGroup = true,
+                LastMessaget = string.Empty, // <- - Replace with actual last message
+                LastActivity = DateTime.Now
+
+            };
+            if (result.Success)
+            {
+                FilteredChats.Add(newRoom);
+            }
         }
 
         private void ChatRoomFilter()
