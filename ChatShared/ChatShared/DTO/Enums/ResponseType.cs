@@ -14,7 +14,7 @@ namespace ChatShared.DTO.Enums
         GetChats,
         Error,
         Message,
-        GetHistoryRoom
+        GetHistoryChatRoom
         //..
     }
 }

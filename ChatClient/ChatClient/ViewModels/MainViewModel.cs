@@ -180,7 +180,7 @@ namespace ChatClient.ViewModels
             {
                 Id = result.ChatRoomDTO!.Id,
                 Name = result.ChatRoomDTO!.Name,
-                isGroup = true,
+                ChatType = ChatType.Private,
                 LastMessaget = string.Empty, // <- - Replace with actual last message
                 LastActivity = DateTime.Now
 

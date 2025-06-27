@@ -1,20 +1,22 @@
 ﻿using ChatServer.Data;
 using ChatServer.Models;
 using ChatShared.DTO;
+using ChatShared.DTO.Messages;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
+using ChatShared.DTO.Enums;
 
 namespace ChatServer.Handlers
 {
-    public class HandlerRoom
+    public class HandlerChatRoom
     {
         private readonly ProjectChatContext _context;
 
-        public HandlerRoom(ProjectChatContext context)
+        public HandlerChatRoom(ProjectChatContext context)
         {
             _context = context;
         }
@@ -67,25 +69,51 @@ namespace ChatServer.Handlers
             return roomDTOs;
         }
 
-        public async Task<RoomMessageDTO[]> GetHistoryRoomAsync(int roomId)
+        public async Task<RoomMessageDTO[]> GetHistoryChatRoomAsync(int chatRoomId, ChatType chatType, int senderId)
         {
-            ChatRoom room = await _context.ChatRooms.Where(r => r.Id == roomId).Include(r => r.Messages).ThenInclude(m => m.Client).FirstOrDefaultAsync();
-            Message[] messages = room.Messages.ToArray();
-            var messagesToRoomDTO = new RoomMessageDTO[messages.Length];
+            RoomMessageDTO[] result = null!;
+            Message[] messages = null!;
+            switch (chatType)
+            {
+                case ChatType.Private:
+                    {
+                         messages = await _context.Messages
+                            .Where(
+                            m => (m.ClientId == senderId && m.Clients.Any(c => c.Id == chatRoomId)) ||
+                                 (m.ClientId == chatRoomId && m.Clients.Any(c => c.Id == senderId)))
+                            .Include(m => m.Client).ToArrayAsync();
+
+                        result = new RoomMessageDTO[messages.Length];
+
+                    }
+                    break;
+
+                case ChatType.Group:
+                    {
+                        ChatRoom room = await _context.ChatRooms.Where(r => r.Id == chatRoomId).Include(r => r.Messages).ThenInclude(m => m.Client).FirstOrDefaultAsync();
+
+                        messages = room.Messages.ToArray();
+                        result = new RoomMessageDTO[messages.Length];
+
+                    }
+                    break;
+            }
+
             for (int i = 0; i < messages.Length; i++)
             {
-                messagesToRoomDTO[i] = new RoomMessageDTO()
+                result[i] = new RoomMessageDTO()
                 {
                     Text = messages[i].Text,
                     Sender = messages[i].Client.Login,
                     SentAt = messages[i].SentAt,
                     isEdit = messages[i].IsEdited,
 
-                    RoomId = roomId
+                    RoomId = chatRoomId
                 };
-                
+
             }
-            return messagesToRoomDTO;
+
+            return result;
         }
     }
 }

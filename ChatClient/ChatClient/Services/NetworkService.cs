@@ -9,6 +9,7 @@ using System.Text.Json.Serialization;
 using System.Threading.Tasks;
 using ChatShared.DTO;
 using ChatShared.DTO.Enums;
+using ChatShared.DTO.Messages;
 using ChatShared.Events;
 using Newtonsoft.Json;
 using ChatClient.CustomControls;
@@ -101,23 +102,23 @@ namespace ChatClient.Services
                                     case MessageType.RoomMessage:
                                         {
                                             var roomMessageDTO = JsonConvert.DeserializeObject<ResponseDTO<RoomMessageDTO>>(json).Data;
-                                            _eventAggregator.Publish(new ChatMessageEvent(roomMessageDTO));
+                                            _eventAggregator.Publish(new ChatMessageEvent(roomMessageDTO, ChatType.Group));
                                         }
                                         break;
                                     case MessageType.PrivateMessage:
                                         {
                                             var privateMessageDTO = JsonConvert.DeserializeObject<ResponseDTO<PrivateMessageDTO>>(json).Data;
-                                            _eventAggregator.Publish(new ChatMessageEvent(privateMessageDTO));
+                                            _eventAggregator.Publish(new ChatMessageEvent(privateMessageDTO, ChatType.Private));
                                         }
                                         break;
 
                                 }
                             }
                             break;
-                        case ResponseType.GetHistoryRoom:
+                        case ResponseType.GetHistoryChatRoom:
                             {
-                                var roomHistoryDTO = JsonConvert.DeserializeObject<ResponseDTO<RoomHistoryDTO>>(json).Data;
-                                _eventAggregator.Publish(new ChatRoomHistoryEvent(roomHistoryDTO));
+                                var roomHistoryDTO = JsonConvert.DeserializeObject<ResponseDTO<ChatHistoryDTO>>(json).Data;
+                                _eventAggregator.Publish(new ChatHistoryEvent(roomHistoryDTO));
                             }
                             break;
                         case ResponseType.CreatRoomResult:

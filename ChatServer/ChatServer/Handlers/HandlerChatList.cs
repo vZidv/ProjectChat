@@ -1,6 +1,7 @@
 ﻿using ChatServer.Data;
 using ChatServer.Models;
 using ChatShared.DTO;
+using ChatShared.DTO.Enums;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
@@ -10,11 +11,11 @@ using System.Threading.Tasks;
 
 namespace ChatServer.Handlers
 {
-    public class HandlerChat
+    public class HandlerChatList
     {
         private readonly ProjectChatContext _context;
 
-        public HandlerChat(ProjectChatContext context)
+        public HandlerChatList(ProjectChatContext context)
         {
             _context = context;
         }
@@ -42,7 +43,7 @@ namespace ChatServer.Handlers
                 {
                     Id = client.Id,
                     Name = string.Format($"{client.LastName} {client.Name}"),
-                    isGroup = false,
+                    ChatType = ChatType.Private,
                     LastMessaget = string.Empty, // <- - Replace with actual last message
                     LastActivity = client.LastLogin // <- - Replace with actual last activity
                 };
@@ -60,7 +61,7 @@ namespace ChatServer.Handlers
                 {
                     Id = room.Id,
                     Name = room.Name,
-                    isGroup = true,
+                    ChatType = ChatType.Group,
                     LastMessaget = string.Empty, // <- - Replace with actual last message
                     LastActivity = DateTime.Now // <- - Replace with actual last activity
                 };

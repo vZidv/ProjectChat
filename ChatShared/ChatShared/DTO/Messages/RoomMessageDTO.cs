@@ -5,13 +5,13 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace ChatShared.DTO
+namespace ChatShared.DTO.Messages
 {
     public class RoomMessageDTO : MessageDTO
     {
         public int RoomId { get; set; }
 
         public RoomMessageDTO() : base(MessageType.RoomMessage) { }
-        
+
     }
 }

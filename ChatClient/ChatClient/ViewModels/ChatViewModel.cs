@@ -7,6 +7,7 @@ using System.Threading.Tasks;
 using System.Windows.Input;
 using ChatShared.DTO;
 using ChatShared.DTO.Enums;
+using ChatShared.DTO.Messages;
 using ChatShared.Events;
 using System.Windows;
 using System.Collections.ObjectModel;
@@ -20,6 +21,7 @@ namespace ChatClient.ViewModels
         private ChatMiniProfileDTO _chatDTO;
         private ObservableCollection<MessageDTO> _chatMessageDTOs;
         private string _newMessageText;
+        private CreatMessageDelegate creatMessage;
 
 
         public ChatMiniProfileDTO ChatDTO
@@ -61,15 +63,31 @@ namespace ChatClient.ViewModels
         {
             _chatDTO = chatDTO;
 
-            //SendMessageCommand = new ViewModelCommand(ExecuteSendMessageCommand, CanExecuteSendMessageCommand);
-            //GetMessageCommand = new ViewModelCommand(ExecuteGetMessageCommand);
+            SendMessageCommand = new ViewModelCommand(ExecuteSendMessageCommand, CanExecuteSendMessageCommand);
+            GetMessageCommand = new ViewModelCommand(ExecuteGetMessageCommand);
             //OpenChatRoomPageCommand = new ViewModelCommand(ExecuteOpenChatRoomPageCommand);
 
-            //App.EventAggregator.Subscribe<ChatMessageEvent>(OnNewMessageReceived);
-            //App.EventAggregator.Subscribe<ChatRoomHistoryEvent>(onRoomHistoryReceived);
+            App.EventAggregator.Subscribe<ChatMessageEvent>(OnNewMessageReceived);
+            App.EventAggregator.Subscribe<ChatHistoryEvent>(onChatRoomHistoryReceived);
 
+            SetChatRoomType();
             ChatMessageDTOs = new();
-            //GetMessageCommand.Execute(null);
+            GetMessageCommand.Execute(null);
+        }
+
+        private void SetChatRoomType()
+        {
+            switch (ChatDTO.ChatType)
+            {
+                case ChatType.Group:
+                    creatMessage = CreatRoomMessageDTO;
+                    break;
+                case ChatType.Private:
+                    creatMessage = CreatPrivateMessageDTO;
+                    break;
+                default:
+                    throw new Exception("Unknown chat type");
+            }
         }
 
         //private void ExecuteOpenChatRoomPageCommand(object? obj)
@@ -81,51 +99,90 @@ namespace ChatClient.ViewModels
         //    Services.NavigationService.TopFrame.Content = view;
         //}
 
-        //private async void ExecuteGetMessageCommand(object? obj)
-        //{
-        //    GetRoomHistoryDTO historyDTO = new()
-        //    {
-        //        RoomId = ChatRoomDTO.Id,
-        //        Limit = 50
-        //    };
+        private async void ExecuteGetMessageCommand(object? obj)
+        {
+            GetChatHistoryDTO historyDTO = new()
+            {
+                ChatId = ChatDTO.Id,
+                ChatType = ChatDTO.ChatType,
+                Limit = 50
+            };
 
-        //    var session = NetworkSession.Session;
-        //    await session.SendAsync(historyDTO, RequestType.GetHistoryRoom);
-        //}
+            var session = NetworkSession.Session;
+            await session.SendAsync(historyDTO, RequestType.GetHistoryChat);
+        }
 
-        //private bool CanExecuteSendMessageCommand(object? obj) => (NewMessageText != string.Empty);
-
-
-        //private async void ExecuteSendMessageCommand(object? obj)
-        //{
-        //    var message = new RoomMessageDTO()
-        //    {
-        //        Text = NewMessageText,
-        //        RoomId = ChatRoomDTO.Id,
-        //        Sender = NetworkSession.ClientProfile.Login
-        //    };
-        //    MessageDTO messageDTO = message;
-        //    var session = NetworkSession.Session;
-        //    await session.SendAsync(messageDTO, RequestType.SendMessage);
-
-        //    ChatMessageDTOs.Add(message);
-        //    NewMessageText = string.Empty;
-        //}
-
-        //private void onRoomHistoryReceived(ChatRoomHistoryEvent chatRoomHistoryEvent)
-        //{
-        //    if (chatRoomHistoryEvent.HistoryDTO.RoomId != ChatRoomDTO.Id)
-        //        return;
-
-        //    ChatMessageDTOs = new ObservableCollection<MessageDTO>(chatRoomHistoryEvent.HistoryDTO.MessageDTOs);
-        //}
+        private bool CanExecuteSendMessageCommand(object? obj) => (NewMessageText != string.Empty);
 
 
+        private async void ExecuteSendMessageCommand(object? obj)
+        {
+            MessageDTO message = creatMessage(NewMessageText);
 
-        //private void OnNewMessageReceived(ChatMessageEvent chatEvent)
-        //{
-        //    if((chatEvent.Message as RoomMessageDTO).RoomId != ChatRoomDTO.Id) return;
-        //    ChatMessageDTOs.Add(chatEvent.Message);
-        //}
+            var session = NetworkSession.Session;
+            await session.SendAsync(message, RequestType.SendMessage);
+
+            ChatMessageDTOs.Add(message);
+            NewMessageText = string.Empty;
+        }
+
+        private delegate MessageDTO CreatMessageDelegate(string text);
+
+        private RoomMessageDTO CreatRoomMessageDTO(string text)
+        {
+            if (ChatDTO.ChatType != ChatType.Group)
+                throw new Exception("Unavailable type");
+
+            return new RoomMessageDTO
+            {
+                Text = text,
+                RoomId = ChatDTO.Id,
+                Sender = NetworkSession.ClientProfile.Login
+            };
+        }
+
+        private PrivateMessageDTO CreatPrivateMessageDTO(string text)
+        {
+            if (ChatDTO.ChatType != ChatType.Private)
+                throw new Exception("Unavailable type");
+            return new PrivateMessageDTO
+            {
+                Text = text,
+                ClientId = ChatDTO.Id,
+                Sender = NetworkSession.ClientProfile.Login
+            };
+        }
+
+        private void onChatRoomHistoryReceived(ChatHistoryEvent chatRoomHistoryEvent)
+        {
+            if (chatRoomHistoryEvent.HistoryDTO.ChatId != ChatDTO.Id || ChatDTO.ChatType != chatRoomHistoryEvent.HistoryDTO.ChatType)
+                return;
+
+            ChatMessageDTOs = new ObservableCollection<MessageDTO>(chatRoomHistoryEvent.HistoryDTO.MessageDTOs);
+        }
+
+
+
+        private void OnNewMessageReceived(ChatMessageEvent chatEvent)
+        {
+            if (chatEvent.ChatType != ChatDTO.ChatType)
+                return;
+
+            switch (chatEvent.ChatType)
+            {
+                case ChatType.Group:
+                    {
+                        if ((chatEvent.Message as RoomMessageDTO).RoomId != ChatDTO.Id) return;
+                    }
+                    break;
+                case ChatType.Private:
+                    {
+                        if ((chatEvent.Message as PrivateMessageDTO).ClientId != ChatDTO.Id) return;
+                    }
+                    break;
+            }
+
+            ChatMessageDTOs.Add(chatEvent.Message);
+        }
     }
 }

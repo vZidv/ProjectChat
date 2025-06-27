@@ -12,6 +12,7 @@ using System.Text.Json.Nodes;
 using Newtonsoft.Json.Linq;
 using ChatShared.DTO;
 using ChatShared.DTO.Enums;
+using ChatShared.DTO.Messages;
 using System.Collections.Concurrent;
 using ChatServer.Session;
 
@@ -102,7 +103,7 @@ namespace ChatServer.Services
                                     break;
 
                                 var createRoomDTO = requestDTO.Data;
-                                var handleCreateRoom = new HandlerRoom(new Data.ProjectChatContext());
+                                var handleCreateRoom = new HandlerChatRoom(new Data.ProjectChatContext());
                                 CreatChatRoomResultDTO result = await handleCreateRoom.CreatRoomAsync(createRoomDTO);
 
                                 await SendResponseAsync(stream, result, ResponseType.CreatRoomResult);
@@ -117,7 +118,7 @@ namespace ChatServer.Services
                                     break;
 
                                 var getRoomsDTO = requestDTO.Data;
-                                var handlerChat = new HandlerChat(new Data.ProjectChatContext());
+                                var handlerChat = new HandlerChatList(new Data.ProjectChatContext());
                                 List<ChatMiniProfileDTO> chatMiniProfileDTOs = await handlerChat.GetChatListForClientAsync(getRoomsDTO.ClientId);
 
                                 await SendResponseAsync(stream, chatMiniProfileDTOs, ResponseType.GetChats);
@@ -185,23 +186,27 @@ namespace ChatServer.Services
                                 }
                             }
                             break;
-                        case RequestType.GetHistoryRoom:
+                        case RequestType.GetHistoryChat:
                             {
-                                var requestDTO = JsonConvert.DeserializeObject<RequestDTO<GetRoomHistoryDTO>>(request);
+                                var requestDTO = JsonConvert.DeserializeObject<RequestDTO<GetChatHistoryDTO>>(request);
                                 if (_handlerClient.TryGetSession(requestDTO.Token) == null)
                                     break;
 
-                                var roomHandler = new HandlerRoom(new Data.ProjectChatContext());
-                                RoomMessageDTO[] messageDTO = await roomHandler.GetHistoryRoomAsync(requestDTO.Data.RoomId);
+                                GetChatHistoryDTO chatHistoryDTO = requestDTO.Data;
+                                ClientSession session = _handlerClient.TryGetSession(requestDTO.Token);
 
-                                var result = new RoomHistoryDTO()
+                                var roomHandler = new HandlerChatRoom(new Data.ProjectChatContext());
+                                RoomMessageDTO[] messageDTO = await roomHandler.GetHistoryChatRoomAsync(chatHistoryDTO.ChatId, chatHistoryDTO.ChatType, session.Client.Id);
+
+                                var result = new ChatHistoryDTO()
                                 {
-                                    MessageDTOs = messageDTO,
-                                    RoomId = requestDTO.Data.RoomId
+                                    ChatId = chatHistoryDTO.ChatId,
+                                    ChatType = chatHistoryDTO.ChatType,
+                                    MessageDTOs = messageDTO
                                 };
 
-                                await SendResponseAsync(stream, result, ResponseType.GetHistoryRoom);
-                                Console.WriteLine($"Пользователю: {client.Client.RemoteEndPoint} отправлена история комнаты: {requestDTO.Data.RoomId}");
+                                await SendResponseAsync(stream, result, ResponseType.GetHistoryChatRoom);
+                                Console.WriteLine($"Пользователю: {client.Client.RemoteEndPoint} отправлена история комнаты: {requestDTO.Data.ChatId}");
                             }
                             break;
                         default:

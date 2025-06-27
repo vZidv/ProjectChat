@@ -1,5 +1,5 @@
-﻿using ChatShared.DTO;
-using ChatShared.DTO.Enums;
+﻿using ChatShared.DTO.Enums;
+using ChatShared.DTO.Messages;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -12,9 +12,12 @@ namespace ChatShared.Events
     {
         public MessageDTO Message { get;}
 
-        public ChatMessageEvent(MessageDTO message) : base(ResponseType.Message)
+        public ChatType ChatType { get; }
+
+        public ChatMessageEvent(MessageDTO message, ChatType chatType) : base(ResponseType.Message)
         {
             Message = message;
+            ChatType = chatType;
         }
     }
 }

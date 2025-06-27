@@ -6,17 +6,10 @@ using System.Threading.Tasks;
 
 namespace ChatShared.DTO.Enums
 {
-    public enum RequestType
+    public enum ChatType
     {
-        Login,
-        Register,
-
-        SendMessage,
-        GetHistoryChat,
-
-        CreatRoom,
-        GetChats,
-        UpdateCurrentRoom,
+        Group,
+        Private,
         //..
     }
 }

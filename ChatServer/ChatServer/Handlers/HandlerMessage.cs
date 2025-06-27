@@ -7,6 +7,7 @@ using ChatServer.Data;
 using ChatServer.Models;
 using ChatShared.DTO;
 using ChatShared.DTO.Enums;
+using ChatShared.DTO.Messages;
 using Microsoft.EntityFrameworkCore;
 
 namespace ChatServer.Handlers
@@ -43,7 +44,7 @@ namespace ChatServer.Handlers
                     {
                         var roomMessageDTO = newMessageDTO as RoomMessageDTO;
 
-                        if ((_context.ChatRooms.FirstOrDefault(r => r.Id == roomMessageDTO.RoomId) is ChatRoom room))
+                        if ((await _context.ChatRooms.FirstOrDefaultAsync(r => r.Id == roomMessageDTO.RoomId) is ChatRoom room))
                             newMessage.ChatRooms.Add(room);
                         
                     }
@@ -51,12 +52,9 @@ namespace ChatServer.Handlers
                 case MessageType.PrivateMessage:
                     {
                         var message = newMessageDTO as PrivateMessageDTO;
-
-                        var messageToChatRoom = new MessageToClient()
-                        {
-                            ClientId = message.ClientId,
-                            MessageId = newMessage.Id
-                        };
+                        
+                        if((await _context.Clients.FirstOrDefaultAsync(c => c.Id == message.ClientId) is Client client))
+                            newMessage.Clients.Add(client);
 
                     }
                     break;

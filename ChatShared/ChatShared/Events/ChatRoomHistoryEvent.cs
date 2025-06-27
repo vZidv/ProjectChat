@@ -8,13 +8,13 @@ using System.Threading.Tasks;
 
 namespace ChatShared.Events
 {
-    public class ChatRoomHistoryEvent : ChatEvent
+    public class ChatHistoryEvent : ChatEvent
     {
-        public RoomHistoryDTO HistoryDTO { get; }
+        public ChatHistoryDTO HistoryDTO { get; }
 
-        public ChatRoomHistoryEvent(RoomHistoryDTO roomHistoryDTO ) : base(ResponseType.GetHistoryRoom)
+        public ChatHistoryEvent(ChatHistoryDTO historyDTO ) : base(ResponseType.GetHistoryChatRoom)
         {
-            HistoryDTO = roomHistoryDTO;
+            HistoryDTO = historyDTO;
         }
     }
 }

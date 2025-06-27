@@ -1,4 +1,5 @@
-﻿using System;
+﻿using ChatShared.DTO.Enums;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -10,7 +11,7 @@ namespace ChatShared.DTO
     {
         public int Id { get; set; }
         public string Name { get; set; }
-        public bool isGroup { get; set; }
+        public ChatType ChatType { get; set; }
         public string LastMessaget { get; set; }
         public DateTime LastActivity { get; set; }
     }

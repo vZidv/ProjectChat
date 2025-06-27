@@ -5,11 +5,11 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace ChatShared.DTO
+namespace ChatShared.DTO.Messages
 {
     public abstract class MessageDTO
     {
-        public MessageType MessageType { get;}
+        public MessageType MessageType { get; }
 
         public string Text { get; set; }
         public string? Sender { get; set; } = null;
