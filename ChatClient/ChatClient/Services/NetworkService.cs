@@ -127,6 +127,12 @@ namespace ChatClient.Services
                                 _eventAggregator.Publish(new CreatRoomEvent(resultCreatRoom));
                             }
                             break;
+                        case ResponseType.SearchChatsResult:
+                            {
+                                var resultSearchChats = JsonConvert.DeserializeObject<ResponseDTO<SeachChatResultDTO>>(json).Data;
+                                _eventAggregator.Publish(new SearchChatsEvent(resultSearchChats));
+                            }
+                            break;
                     }
                 }
                 catch (Exception ex)

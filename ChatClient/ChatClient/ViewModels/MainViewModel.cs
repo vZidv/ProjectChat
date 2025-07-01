@@ -17,6 +17,8 @@ using System.Collections.ObjectModel;
 using System.Windows;
 using MessageBox = ChatClient.CustomControls.MessageBox;
 using ControlzEx.Standard;
+using Timer = System.Timers.Timer;
+using System.Timers;
 
 namespace ChatClient.ViewModels
 {
@@ -36,6 +38,7 @@ namespace ChatClient.ViewModels
         private Page _currentPage;
 
         private string _searchText;
+        private Timer _debounceTimer;
 
         //Properties
 
@@ -128,6 +131,9 @@ namespace ChatClient.ViewModels
                 OnPropertyChanged(nameof(SearchText));
                 UpdateChatsListView(_searchText);
                 SearchChatsCommand.Execute(this);
+
+                _debounceTimer.Stop();
+                _debounceTimer.Start();
             }
         }
 
@@ -154,6 +160,11 @@ namespace ChatClient.ViewModels
             LoadChatsCommand.Execute(null);
 
             App.EventAggregator.Subscribe<CreatRoomEvent>(AddCreatedChatRoom);
+            App.EventAggregator.Subscribe<SearchChatsEvent>(onSearchChatGlobal);
+
+            _debounceTimer = new Timer(500);
+            _debounceTimer.AutoReset = false;
+            _debounceTimer.Elapsed += DebounceTimer_Elapsed;
         }
 
 
@@ -168,6 +179,27 @@ namespace ChatClient.ViewModels
             LocalSearchResults = LocalChatsSearch(SearchText);
         }
 
+        private void DebounceTimer_Elapsed(object? sender, ElapsedEventArgs e)
+        {
+            SearchChatsGlobal(SearchText);
+        }
+
+        private async void SearchChatsGlobal(string name)
+        {
+            var request = new SeachChatDTO()
+            {
+               SearchText = name
+            };
+
+            var session = NetworkSession.Session!;
+            await session.SendAsync(request, RequestType.SearchChats);
+        }
+
+        private void onSearchChatGlobal(SearchChatsEvent searchChatsEvent)
+        {
+            ChatMiniProfileDTO[] chatMiniProfileDTO = searchChatsEvent.SeachChatResultDTO.Chats;
+            GlobalSearchResults = new ObservableCollection<ChatMiniProfileDTO>(chatMiniProfileDTO);
+        }
         private ObservableCollection<ChatMiniProfileDTO> LocalChatsSearch(string name)
         {
             return new ObservableCollection<ChatMiniProfileDTO>(Chats.Where(c => c.Name.Contains(name, StringComparison.OrdinalIgnoreCase)).ToArray());

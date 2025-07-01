@@ -212,6 +212,27 @@ namespace ChatServer.Services
                                 Console.WriteLine($"Пользователю: {client.Client.RemoteEndPoint} отправлена история комнаты: {requestDTO.Data.ChatId}");
                             }
                             break;
+                        case RequestType.SearchChats:
+                            {
+                                var requestDTO = JsonConvert.DeserializeObject<RequestDTO<SeachChatDTO>>(request);
+                                if (_handlerClient.TryGetSession(requestDTO.Token) == null)
+                                    break;
+
+                                SeachChatDTO seachChatDTO = requestDTO.Data;
+                                var handlerChat = new HandlerChatList(new Data.ProjectChatContext());
+                                List<ChatMiniProfileDTO> chatMiniProfileDTOs = await handlerChat.SeachChatsByNameAsync(seachChatDTO.SearchText);
+
+                                var result = new SeachChatResultDTO()
+                                {
+                                    Chats = chatMiniProfileDTOs.ToArray(),
+                                    TotalCount = chatMiniProfileDTOs.Count,
+                                    SearchText = seachChatDTO.SearchText
+                                };
+
+                                await SendResponseAsync(stream, result, ResponseType.SearchChatsResult);
+                                Console.WriteLine($"Пользователю: {client.Client.RemoteEndPoint} отправлено {result.TotalCount} чатов, результат по поиска: \"{result.SearchText}\"");
+                            }
+                            break;
                         default:
                             Console.WriteLine("Неизвестный тип запроса");
                             break;

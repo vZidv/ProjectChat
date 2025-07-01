@@ -69,5 +69,26 @@ namespace ChatServer.Handlers
             }
             return result;
         }
+
+        public async Task <List<ChatMiniProfileDTO>> SeachChatsByNameAsync(string seachName)
+        {
+            List<ChatMiniProfileDTO> result = await _context.ChatRooms.Where(c => c.Name.Contains(seachName)).
+                Select(c => new ChatMiniProfileDTO
+                {
+                    Id = c.Id,
+                    Name = c.Name,
+                    ChatType = ChatType.Group,
+                    LastMessaget = string.Empty, // <- - Replace with actual last message
+                    LastActivity = DateTime.Now // <- - Replace with actual last activity
+                })
+                .ToListAsync();
+
+            return result;
+        }
+
+        //private async Task<List<ChatMiniProfileDTO>> SearchNewChatForClientByName(string seachName, int clientId)
+        //{
+
+        //}
     }
 }
