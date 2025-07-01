@@ -14,6 +14,9 @@ using ChatShared.DTO.Enums;
 using ChatClient.Services;
 using ChatShared.Events;
 using System.Collections.ObjectModel;
+using System.Windows;
+using MessageBox = ChatClient.CustomControls.MessageBox;
+using ControlzEx.Standard;
 
 namespace ChatClient.ViewModels
 {
@@ -21,8 +24,15 @@ namespace ChatClient.ViewModels
     {
         //Fields
         private ChatMiniProfileDTO _selectedChat;
+
         private ObservableCollection<ChatMiniProfileDTO> _chats;
-        private ObservableCollection<ChatMiniProfileDTO> _filteredChats;
+
+        private Visibility _allChatsVisibility = Visibility.Visible;
+        private Visibility _isSearching = Visibility.Hidden;
+
+        public ObservableCollection<ChatMiniProfileDTO> _localSearchResults;
+        public ObservableCollection<ChatMiniProfileDTO> _globalSearchResults;
+
         private Page _currentPage;
 
         private string _searchText;
@@ -56,16 +66,43 @@ namespace ChatClient.ViewModels
             }
         }
 
-        public ObservableCollection<ChatMiniProfileDTO> FilteredChats
+        public Visibility AllChatsVisibility
         {
-            get
-            {
-                return _filteredChats;
-            }
+            get { return _allChatsVisibility; }
             set
             {
-                _filteredChats = value;
-                OnPropertyChanged(nameof(FilteredChats));
+                _allChatsVisibility = value;
+                OnPropertyChanged(nameof(AllChatsVisibility));
+            }
+        }
+
+        public Visibility IsSearching
+        {
+            get { return _isSearching; }
+            set
+            {
+                _isSearching = value;
+                OnPropertyChanged(nameof(IsSearching));
+            }
+        }
+
+        public ObservableCollection<ChatMiniProfileDTO> LocalSearchResults
+        {
+            get { return _localSearchResults; }
+            set
+            {
+                _localSearchResults = value;
+                OnPropertyChanged(nameof(LocalSearchResults));
+            }
+        }
+
+        public ObservableCollection<ChatMiniProfileDTO> GlobalSearchResults
+        {
+            get { return _globalSearchResults; }
+            set
+            {
+                _globalSearchResults = value;
+                OnPropertyChanged(nameof(GlobalSearchResults));
             }
         }
 
@@ -89,7 +126,8 @@ namespace ChatClient.ViewModels
             {
                 _searchText = value;
                 OnPropertyChanged(nameof(SearchText));
-                ChatRoomFilter();
+                UpdateChatsListView(_searchText);
+                SearchChatsCommand.Execute(this);
             }
         }
 
@@ -99,19 +137,54 @@ namespace ChatClient.ViewModels
 
         public ICommand OpenLeftBoarMenuCommand { get; }
 
+        public ICommand SearchChatsCommand { get; }
+
 
         public MainViewModel()
         {
             LogoutCommand = new ViewModelCommand(ExecuteLogoutCommand);
             LoadChatsCommand = new ViewModelCommand(ExecuteLoadChatsCommand);
+
             OpenLeftBoarMenuCommand = new ViewModelCommand(ExecuteOpenLeftBoarMenuCommand);
+
+            SearchChatsCommand = new ViewModelCommand(ExecuteSearchChatsCommand, CanExecuteSearchChatsCommand);
 
             CurrentPage = new View.EmptyChatView();
 
             LoadChatsCommand.Execute(null);
-            FilteredChats = Chats;
 
             App.EventAggregator.Subscribe<CreatRoomEvent>(AddCreatedChatRoom);
+        }
+
+
+        private bool CanExecuteSearchChatsCommand(object? obj)
+        {
+            return !string.IsNullOrEmpty(SearchText);
+        }
+
+
+        private void ExecuteSearchChatsCommand(object? obj)
+        {
+            LocalSearchResults = LocalChatsSearch(SearchText);
+        }
+
+        private ObservableCollection<ChatMiniProfileDTO> LocalChatsSearch(string name)
+        {
+            return new ObservableCollection<ChatMiniProfileDTO>(Chats.Where(c => c.Name.Contains(name, StringComparison.OrdinalIgnoreCase)).ToArray());
+        }
+
+        void UpdateChatsListView(string text)
+        {
+            if (!string.IsNullOrEmpty(text))
+            {
+                IsSearching = Visibility.Visible;
+                AllChatsVisibility = Visibility.Hidden;
+            }
+            else
+            {
+                IsSearching = Visibility.Hidden;
+                AllChatsVisibility = Visibility.Visible;
+            }
         }
 
         private void ExecuteOpenLeftBoarMenuCommand(object? obj)
@@ -124,6 +197,7 @@ namespace ChatClient.ViewModels
             NavigationService.TopFrame!.Content = page;
 
         }
+
 
         private async void ExecuteLoadChatsCommand(object? obj)
         {
@@ -151,7 +225,7 @@ namespace ChatClient.ViewModels
         {
             if (NavigationService.MainFrame != null)
                 NavigationService.MainFrame.Content = new LoginView();
-            
+
             NetworkSession.Dispose();
         }
 
@@ -185,20 +259,8 @@ namespace ChatClient.ViewModels
                 LastActivity = DateTime.Now
 
             };
-            if (result.Success)
-            {
-                FilteredChats.Add(newRoom);
-            }
         }
 
-        private void ChatRoomFilter()
-        {
-            if (string.IsNullOrWhiteSpace(SearchText))
-                FilteredChats = Chats;
-            else
-            {
-                FilteredChats = new ObservableCollection<ChatMiniProfileDTO>(Chats.Where(x => x.Name.Contains(SearchText, StringComparison.OrdinalIgnoreCase)));
-            }
-        }
+
     }
 }
