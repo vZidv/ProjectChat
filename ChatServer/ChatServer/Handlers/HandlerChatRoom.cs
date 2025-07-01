@@ -9,6 +9,7 @@ using System.Text;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
 using ChatShared.DTO.Enums;
+using ChatServer.Session;
 
 namespace ChatServer.Handlers
 {
@@ -31,10 +32,12 @@ namespace ChatServer.Handlers
                 return result;
             }
 
+            int ChatRoomTypeId = _context.ChatRoomTypes.Where(t => t.Name == "Group").Select(t => t.Id).FirstOrDefault();
             var chatRoom = new ChatRoom()
             {
                 Name = roomDTO.Name,
                 IsPrivate = false,
+                ChatRoomTypeId = ChatRoomTypeId,
                 OwnerId = roomDTO.OwnerId
             };
             _context.ChatRooms.Add(chatRoom);
@@ -63,7 +66,7 @@ namespace ChatServer.Handlers
                 {
                     Id = rooms[i].Id,
                     Name = rooms[i].Name,
-                    OwnerId = rooms[i].OwnerId
+                    //OwnerId = rooms[i].OwnerId
                 };
             }
             return roomDTOs;
@@ -77,13 +80,7 @@ namespace ChatServer.Handlers
             {
                 case ChatType.Private:
                     {
-                         messages = await _context.Messages
-                            .Where(
-                            m => (m.ClientId == senderId && m.Clients.Any(c => c.Id == chatRoomId)) ||
-                                 (m.ClientId == chatRoomId && m.Clients.Any(c => c.Id == senderId)))
-                            .Include(m => m.Client).ToArrayAsync();
 
-                        result = new RoomMessageDTO[messages.Length];
 
                     }
                     break;
@@ -98,6 +95,9 @@ namespace ChatServer.Handlers
                     }
                     break;
             }
+
+            if(messages.Length == 0)
+                return result;
 
             for (int i = 0; i < messages.Length; i++)
             {
@@ -115,5 +115,7 @@ namespace ChatServer.Handlers
 
             return result;
         }
+
+
     }
 }

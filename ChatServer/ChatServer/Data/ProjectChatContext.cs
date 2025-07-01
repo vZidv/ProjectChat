@@ -18,13 +18,15 @@ public partial class ProjectChatContext : DbContext
 
     public virtual DbSet<ChatRoom> ChatRooms { get; set; }
 
+    public virtual DbSet<ChatRoomMember> ChatRoomMembers { get; set; }
+
+    public virtual DbSet<ChatRoomType> ChatRoomTypes { get; set; }
+
     public virtual DbSet<Client> Clients { get; set; }
 
     public virtual DbSet<Message> Messages { get; set; }
 
     public virtual DbSet<Role> Roles { get; set; }
-
-    public virtual DbSet<RoomMember> RoomMembers { get; set; }
 
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
 #warning To protect potentially sensitive information in your connection string, you should move it out of source code. You can avoid scaffolding the connection string by using the Name= syntax to read it from configuration - see https://go.microsoft.com/fwlink/?linkid=2131148. For more guidance on storing connection strings, see https://go.microsoft.com/fwlink/?LinkId=723263.
@@ -42,9 +44,13 @@ public partial class ProjectChatContext : DbContext
 
             entity.Property(e => e.Name).HasMaxLength(100);
 
+            entity.HasOne(d => d.ChatRoomType).WithMany(p => p.ChatRooms)
+                .HasForeignKey(d => d.ChatRoomTypeId)
+                .OnDelete(DeleteBehavior.ClientSetNull)
+                .HasConstraintName("FK_ChatRoom_ChatRoomType");
+
             entity.HasOne(d => d.Owner).WithMany(p => p.ChatRooms)
                 .HasForeignKey(d => d.OwnerId)
-                .OnDelete(DeleteBehavior.ClientSetNull)
                 .HasConstraintName("FK__ChatRoom__OwnerI__4D94879B");
 
             entity.HasMany(d => d.Messages).WithMany(p => p.ChatRooms)
@@ -60,7 +66,41 @@ public partial class ProjectChatContext : DbContext
                     {
                         j.HasKey("ChatRoomId", "MessageId");
                         j.ToTable("MessageToChatRoom");
+                        j.HasIndex(new[] { "MessageId" }, "IX_MessageToChatRoom_MessageId");
                     });
+        });
+
+        modelBuilder.Entity<ChatRoomMember>(entity =>
+        {
+            entity.HasKey(e => new { e.RoomId, e.ClientId }).HasName("PK__RoomMemb__6CE1D89B7B89B302");
+
+            entity.ToTable("ChatRoomMember");
+
+            entity.HasIndex(e => e.ClientId, "IX_RoomMember_ClientId");
+
+            entity.HasIndex(e => e.RoleId, "IX_RoomMember_RoleId");
+
+            entity.HasOne(d => d.Client).WithMany(p => p.ChatRoomMembers)
+                .HasForeignKey(d => d.ClientId)
+                .OnDelete(DeleteBehavior.ClientSetNull)
+                .HasConstraintName("FK__RoomMembe__Clien__5165187F");
+
+            entity.HasOne(d => d.Role).WithMany(p => p.ChatRoomMembers)
+                .HasForeignKey(d => d.RoleId)
+                .OnDelete(DeleteBehavior.ClientSetNull)
+                .HasConstraintName("FK__RoomMembe__RoleI__52593CB8");
+
+            entity.HasOne(d => d.Room).WithMany(p => p.ChatRoomMembers)
+                .HasForeignKey(d => d.RoomId)
+                .OnDelete(DeleteBehavior.ClientSetNull)
+                .HasConstraintName("FK__RoomMembe__RoomI__5070F446");
+        });
+
+        modelBuilder.Entity<ChatRoomType>(entity =>
+        {
+            entity.ToTable("ChatRoomType");
+
+            entity.Property(e => e.Name).HasMaxLength(50);
         });
 
         modelBuilder.Entity<Client>(entity =>
@@ -102,6 +142,7 @@ public partial class ProjectChatContext : DbContext
                     {
                         j.HasKey("ClientId", "ContactId");
                         j.ToTable("ClientContact");
+                        j.HasIndex(new[] { "ContactId" }, "IX_ClientContact_ContactId");
                     });
 
             entity.HasMany(d => d.Contacts).WithMany(p => p.Clients)
@@ -119,21 +160,7 @@ public partial class ProjectChatContext : DbContext
                     {
                         j.HasKey("ClientId", "ContactId");
                         j.ToTable("ClientContact");
-                    });
-
-            entity.HasMany(d => d.MessagesNavigation).WithMany(p => p.Clients)
-                .UsingEntity<Dictionary<string, object>>(
-                    "MessageToClient",
-                    r => r.HasOne<Message>().WithMany()
-                        .HasForeignKey("MessageId")
-                        .HasConstraintName("FK_MessageToClient_Message"),
-                    l => l.HasOne<Client>().WithMany()
-                        .HasForeignKey("ClientId")
-                        .HasConstraintName("FK_MessageToClient_Client"),
-                    j =>
-                    {
-                        j.HasKey("ClientId", "MessageId");
-                        j.ToTable("MessageToClient");
+                        j.HasIndex(new[] { "ContactId" }, "IX_ClientContact_ContactId");
                     });
         });
 
@@ -148,6 +175,7 @@ public partial class ProjectChatContext : DbContext
             entity.Property(e => e.SentAt)
                 .HasDefaultValueSql("(getdate())")
                 .HasColumnType("datetime");
+            entity.Property(e => e.Text).HasMaxLength(4000);
 
             entity.HasOne(d => d.Client).WithMany(p => p.Messages)
                 .HasForeignKey(d => d.ClientId)
@@ -167,32 +195,6 @@ public partial class ProjectChatContext : DbContext
                 .HasMaxLength(7)
                 .HasDefaultValue("#FFFFFF");
             entity.Property(e => e.Name).HasMaxLength(50);
-        });
-
-        modelBuilder.Entity<RoomMember>(entity =>
-        {
-            entity.HasKey(e => new { e.RoomId, e.ClientId }).HasName("PK__RoomMemb__6CE1D89B7B89B302");
-
-            entity.ToTable("RoomMember");
-
-            entity.HasIndex(e => e.ClientId, "IX_RoomMember_ClientId");
-
-            entity.HasIndex(e => e.RoleId, "IX_RoomMember_RoleId");
-
-            entity.HasOne(d => d.Client).WithMany(p => p.RoomMembers)
-                .HasForeignKey(d => d.ClientId)
-                .OnDelete(DeleteBehavior.ClientSetNull)
-                .HasConstraintName("FK__RoomMembe__Clien__5165187F");
-
-            entity.HasOne(d => d.Role).WithMany(p => p.RoomMembers)
-                .HasForeignKey(d => d.RoleId)
-                .OnDelete(DeleteBehavior.ClientSetNull)
-                .HasConstraintName("FK__RoomMembe__RoleI__52593CB8");
-
-            entity.HasOne(d => d.Room).WithMany(p => p.RoomMembers)
-                .HasForeignKey(d => d.RoomId)
-                .OnDelete(DeleteBehavior.ClientSetNull)
-                .HasConstraintName("FK__RoomMembe__RoomI__5070F446");
         });
 
         OnModelCreatingPartial(modelBuilder);

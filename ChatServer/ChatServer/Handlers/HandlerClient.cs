@@ -1,5 +1,7 @@
-﻿using ChatServer.Session;
+﻿using ChatServer.Models;
+using ChatServer.Session;
 using ChatShared.DTO;
+using ChatShared.DTO.Enums;
 using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
@@ -23,17 +25,16 @@ namespace ChatServer.Handlers
                 Client = loginResult.ClientProfileDTO,
                 Token = loginResult.Token,
                 Stream = stream,
-                CurrentRoomId = -1
             };
             _sessions.TryAdd(loginResult.Token, session);
         }
-        
         public ClientSession? TryGetSession(string token)
         {
             ClientSession? session = null;
             _sessions.TryGetValue(token, out session);
             return session;
         }
+
         public ClientSession? TryRemoveSession(string token)
         {
             ClientSession? session = null;
@@ -41,23 +42,21 @@ namespace ChatServer.Handlers
             return session;
         }
 
-        public void ClientInRoom(ClientSession client, int IdRoom)
+        public void ClientInChatRoom(ClientSession client, int chatRoomId)
         {
-            if (!_roomClients.ContainsKey(IdRoom))
-                _roomClients[IdRoom] = new List<ClientSession>();
+            if (!_roomClients.ContainsKey(chatRoomId))
+                _roomClients[chatRoomId] = new List<ClientSession>();
 
-            if(client.CurrentRoomId > 0)
-                _roomClients[IdRoom].Remove(client);
-
-            _roomClients[IdRoom].Add(client);
-            client.CurrentRoomId = IdRoom;
+            if (!_roomClients[chatRoomId].Contains(client))
+                _roomClients[chatRoomId].Add(client);
         }
 
-        public ClientSession[]? GetClientsFromRoom(int IdRoom)
+        public ClientSession[]? GetClientsFromChatRoom(int chatRoomId)
         {
-            if (!_roomClients.ContainsKey(IdRoom))
+            if (!_roomClients.ContainsKey(chatRoomId))
                 return null;
-            return _roomClients[IdRoom].ToArray();
+            return _roomClients[chatRoomId].ToArray();
         }
+
     }
 }

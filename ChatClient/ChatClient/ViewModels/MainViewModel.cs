@@ -167,7 +167,7 @@ namespace ChatClient.ViewModels
             try
             {
                 var session = NetworkSession.Session;
-                await session.SendAsync(SelectedChat, RequestType.UpdateCurrentRoom);
+                await session.SendAsync(SelectedChat, RequestType.UpdateCurrentChatRoom);
             }
             catch (Exception ex) { }
 

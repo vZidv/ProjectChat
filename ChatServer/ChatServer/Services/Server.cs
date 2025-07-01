@@ -126,14 +126,14 @@ namespace ChatServer.Services
                                 Console.WriteLine($"Результат на список доступных чатов отправлен пользователю: {client.Client.RemoteEndPoint}");
                             }
                             break;
-                        case RequestType.UpdateCurrentRoom:
+                        case RequestType.UpdateCurrentChatRoom:
                             {
-                                var requestDTO = JsonConvert.DeserializeObject<RequestDTO<ChatRoomDTO>>(request);
+                                var requestDTO = JsonConvert.DeserializeObject<RequestDTO<ChatMiniProfileDTO>>(request);
                                 if (_handlerClient.TryGetSession(requestDTO.Token) == null)
                                     break;
 
                                 ClientSession session = _handlerClient.TryGetSession(requestDTO.Token);
-                                _handlerClient.ClientInRoom(session, requestDTO.Data.Id);
+                                _handlerClient.ClientInChatRoom(session, requestDTO.Data.Id);
 
                                 Console.WriteLine($"Пользователь: {client.Client.RemoteEndPoint} зашел в комнату: Name:{requestDTO.Data.Name}; Id:{requestDTO.Data.Id}");
                             }
@@ -159,7 +159,7 @@ namespace ChatServer.Services
                                             MessageDTO newMessageDTO = await handlerMessage.WritingMessageAsync(messageDTO, session.Client.Id);
 
                                             var message = newMessageDTO as RoomMessageDTO;
-                                            ClientSession[] clients = _handlerClient.GetClientsFromRoom(message.RoomId);
+                                            ClientSession[] clients = _handlerClient.GetClientsFromChatRoom(message.RoomId);
 
                                             foreach (var clientSession in clients)
                                             {
@@ -179,6 +179,9 @@ namespace ChatServer.Services
 
                                             var message = newMessageDTO as PrivateMessageDTO;
 
+                                            ClientSession? clientst = _handlerClient.GetClientsFromChatRoom(message.ClientId).Where(c => c.Client.Id != session.Client.Id).FirstOrDefault();
+
+                                            if(clientst != null)
                                             await SendResponseAsync(stream, newMessageDTO, ResponseType.Message);
                                             Console.WriteLine($"Сообщение {message.Text} отправлено пользователю {message.ClientId} записано");
                                         }

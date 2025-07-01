@@ -51,10 +51,10 @@ namespace ChatServer.Handlers
                     break;
                 case MessageType.PrivateMessage:
                     {
-                        var message = newMessageDTO as PrivateMessageDTO;
+                        //var message = newMessageDTO as PrivateMessageDTO;
                         
-                        if((await _context.Clients.FirstOrDefaultAsync(c => c.Id == message.ClientId) is Client client))
-                            newMessage.Clients.Add(client);
+                        //if((await _context.Clients.FirstOrDefaultAsync(c => c.Id == message.ClientId) is Client client))
+                        //    newMessage.Clients.Add(client);
 
                     }
                     break;

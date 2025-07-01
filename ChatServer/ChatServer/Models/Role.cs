@@ -11,5 +11,5 @@ public partial class Role
 
     public string Color { get; set; } = null!;
 
-    public virtual ICollection<RoomMember> RoomMembers { get; set; } = new List<RoomMember>();
+    public virtual ICollection<ChatRoomMember> ChatRoomMembers { get; set; } = new List<ChatRoomMember>();
 }

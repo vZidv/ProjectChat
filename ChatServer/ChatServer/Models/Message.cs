@@ -18,6 +18,4 @@ public partial class Message
     public virtual Client Client { get; set; } = null!;
 
     public virtual ICollection<ChatRoom> ChatRooms { get; set; } = new List<ChatRoom>();
-
-    public virtual ICollection<Client> Clients { get; set; } = new List<Client>();
 }

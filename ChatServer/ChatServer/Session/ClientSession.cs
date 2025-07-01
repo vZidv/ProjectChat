@@ -13,6 +13,5 @@ namespace ChatServer.Session
         public ClientProfileDTO Client { get; set; }
         public string Token { get; set; }
         public NetworkStream Stream { get; set; } = null!;
-        public int CurrentRoomId { get; set; } = -1;
     }
 }

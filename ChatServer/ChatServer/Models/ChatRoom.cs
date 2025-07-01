@@ -7,15 +7,19 @@ public partial class ChatRoom
 {
     public int Id { get; set; }
 
-    public string Name { get; set; } = null!;
+    public string? Name { get; set; }
+
+    public int ChatRoomTypeId { get; set; }
+
+    public int? OwnerId { get; set; }
 
     public bool IsPrivate { get; set; }
 
-    public int OwnerId { get; set; }
+    public virtual ICollection<ChatRoomMember> ChatRoomMembers { get; set; } = new List<ChatRoomMember>();
 
-    public virtual Client Owner { get; set; } = null!;
+    public virtual ChatRoomType ChatRoomType { get; set; } = null!;
 
-    public virtual ICollection<RoomMember> RoomMembers { get; set; } = new List<RoomMember>();
+    public virtual Client? Owner { get; set; }
 
     public virtual ICollection<Message> Messages { get; set; } = new List<Message>();
 }
