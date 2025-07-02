@@ -219,8 +219,10 @@ namespace ChatServer.Services
                                     break;
 
                                 SeachChatDTO seachChatDTO = requestDTO.Data;
+                                ClientSession session = _handlerClient.TryGetSession(requestDTO.Token);
+
                                 var handlerChat = new HandlerChatList(new Data.ProjectChatContext());
-                                List<ChatMiniProfileDTO> chatMiniProfileDTOs = await handlerChat.SeachChatsByNameAsync(seachChatDTO.SearchText);
+                                List<ChatMiniProfileDTO> chatMiniProfileDTOs = await handlerChat.SearchNewChatForClientByName(seachChatDTO.SearchText, session.Client.Id);
 
                                 var result = new SeachChatResultDTO()
                                 {

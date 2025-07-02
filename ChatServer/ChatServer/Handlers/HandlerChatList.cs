@@ -24,7 +24,7 @@ namespace ChatServer.Handlers
         {
             List<ChatMiniProfileDTO> result = new();
 
-           
+
             Client[] contacts = (await _context.Clients.Where(c => c.Id == clientId).Include(c => c.Contacts).FirstOrDefaultAsync() as Client).Contacts.ToArray();
             ChatRoom[] rooms = await _context.ChatRooms.Where(r => r.IsPrivate == false || r.OwnerId == clientId).ToArrayAsync();
 
@@ -70,25 +70,47 @@ namespace ChatServer.Handlers
             return result;
         }
 
-        public async Task <List<ChatMiniProfileDTO>> SeachChatsByNameAsync(string seachName)
+        public async Task<List<ChatMiniProfileDTO>> SeachChatsByNameAsync(string seachName)
         {
-            List<ChatMiniProfileDTO> result = await _context.ChatRooms.Where(c => c.Name.Contains(seachName)).
-                Select(c => new ChatMiniProfileDTO
-                {
-                    Id = c.Id,
-                    Name = c.Name,
-                    ChatType = ChatType.Group,
-                    LastMessaget = string.Empty, // <- - Replace with actual last message
-                    LastActivity = DateTime.Now // <- - Replace with actual last activity
-                })
-                .ToListAsync();
+            List<ChatMiniProfileDTO> result = new();
+
+            ChatMiniProfileDTO[] rooms = await _context.ChatRooms.Where(c => c.Name.Contains(seachName)).
+            Select(c => new ChatMiniProfileDTO
+            {
+                Id = c.Id,
+                Name = c.Name,
+                ChatType = ChatType.Group,
+                LastMessaget = string.Empty, // <- - Replace with actual last message
+                LastActivity = DateTime.Now // <- - Replace with actual last activity
+            })
+            .ToArrayAsync();
+
+            ChatMiniProfileDTO[] contacts = await _context.Clients.Where(c => 
+            ((c.LastName ?? "") + "" + (c.Name ?? "")).Contains(seachName) ||
+            (c.Name ?? "").Contains(seachName) ||
+            (c.LastName ?? "").Contains(seachName)).
+            Select(c => new ChatMiniProfileDTO
+            {
+                Id = c.Id,
+                Name = string.Format($"{c.LastName} {c.Name}"),
+                ChatType = ChatType.Private,
+                LastMessaget = string.Empty, // <- - Replace with actual last message
+                LastActivity = DateTime.Now // <- - Replace with actual last activity
+            })
+            .ToArrayAsync();
+
+            result.AddRange(rooms);
+            result.AddRange(contacts);
 
             return result;
         }
 
-        //private async Task<List<ChatMiniProfileDTO>> SearchNewChatForClientByName(string seachName, int clientId)
-        //{
-
-        //}
+        public async Task<List<ChatMiniProfileDTO>> SearchNewChatForClientByName(string seachName, int clientId)
+        {
+            List<ChatMiniProfileDTO> result = await SeachChatsByNameAsync(seachName);
+            result = result.Where(c =>
+            (c.Id != clientId || c.ChatType != ChatType.Private)).ToList();
+            return result;
+        }
     }
 }
