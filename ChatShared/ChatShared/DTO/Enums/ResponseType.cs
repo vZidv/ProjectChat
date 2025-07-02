@@ -10,12 +10,14 @@ namespace ChatShared.DTO.Enums
     {
         LoginResult,
         SignUpResult,
+
         CreatRoomResult,
         GetChats,
         Error,
         Message,
         GetHistoryChatRoom,
         SearchChatsResult,
+        JoinInChatRoomResult
         //..
     }
 }

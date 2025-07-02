@@ -19,10 +19,14 @@ namespace ChatClient.ViewModels
     public class ChatViewModel : BaseViewModel
     {
         private ChatMiniProfileDTO _chatDTO;
+
         private ObservableCollection<MessageDTO> _chatMessageDTOs;
         private string _newMessageText;
         private CreatMessageDelegate creatMessage;
 
+        //Button visibility
+        private Visibility _joinChatGroupButtonVisibility = Visibility.Hidden;
+        private Visibility _addContacntButtonVisibility = Visibility.Hidden;
 
         public ChatMiniProfileDTO ChatDTO
         {
@@ -50,12 +54,33 @@ namespace ChatClient.ViewModels
             }
         }
 
+        public Visibility JoinChatGroupButtonVisibility
+        {
+            get { return _joinChatGroupButtonVisibility; }
+            set
+            {
+                _joinChatGroupButtonVisibility = value;
+                OnPropertyChanged(nameof(JoinChatGroupButtonVisibility));
+            }
+        }
+
+        public Visibility AddContacntButtonVisibility
+        {
+            get { return _addContacntButtonVisibility; }
+            set
+            {
+                _addContacntButtonVisibility = value;
+                OnPropertyChanged(nameof(AddContacntButtonVisibility));
+            }
+        }
+
 
 
         //Command
         public ICommand SendMessageCommand { get; }
         public ICommand GetMessageCommand { get; }
         public ICommand OpenChatRoomPageCommand { get; }
+        public ICommand JoinInChatGroupCommand { get;  }
 
         public ChatViewModel() { }
 
@@ -66,13 +91,68 @@ namespace ChatClient.ViewModels
             SendMessageCommand = new ViewModelCommand(ExecuteSendMessageCommand, CanExecuteSendMessageCommand);
             GetMessageCommand = new ViewModelCommand(ExecuteGetMessageCommand);
             //OpenChatRoomPageCommand = new ViewModelCommand(ExecuteOpenChatRoomPageCommand);
+            JoinInChatGroupCommand = new ViewModelCommand(ExecuteJoinInChatGroupCommand);
 
             App.EventAggregator.Subscribe<ChatMessageEvent>(OnNewMessageReceived);
             App.EventAggregator.Subscribe<ChatHistoryEvent>(onChatRoomHistoryReceived);
+            App.EventAggregator.Subscribe<AddMemberInChatEvent>(onAddMemberInChatRoom);
 
+            ChatInit();
+        }
+
+        // Delegates
+
+        private delegate MessageDTO CreatMessageDelegate(string text);
+
+        private void ChatInit()
+        {   CheckButtonsVisiability();
             SetChatRoomType();
             ChatMessageDTOs = new();
-            GetMessageCommand.Execute(null);
+            //GetMessageCommand.Execute(null);
+        }
+        private async void ExecuteJoinInChatGroupCommand(object? obj)
+        {
+            var request = new JoinInChatRoomDTO()
+            {
+                ChatRoomId = ChatDTO.Id,
+                ClientId = NetworkSession.ClientProfile.Id
+            };
+
+            var session = NetworkSession.Session;
+            await session.SendAsync(request, RequestType.JoimInChatGroup);
+        }
+
+        private void onAddMemberInChatRoom(AddMemberInChatEvent @event)
+        {
+            JoinInChatRoomResultDTO result = @event.JoinInChatRoomResultDTO;
+            if (!result.IsSuccess)
+                return;
+
+            ChatDTO.IsMember = true;
+            JoinChatGroupButtonVisibility = Visibility.Hidden;
+        }
+
+        private void CheckButtonsVisiability()
+        {
+            _addContacntButtonVisibility = Visibility.Hidden;
+            _joinChatGroupButtonVisibility = Visibility.Hidden;
+
+            switch (ChatDTO.ChatType)
+            {
+                case ChatType.Group:
+                    {
+                        if(!ChatDTO.IsMember)
+                            _joinChatGroupButtonVisibility = Visibility.Visible;
+                    }
+                    break;
+                case ChatType.Private:
+                    {
+                        _addContacntButtonVisibility = Visibility.Visible;
+                    }
+                    break;
+                default:
+                    throw new Exception("Unknown chat type");
+            }
         }
 
         private void SetChatRoomType()
@@ -126,7 +206,6 @@ namespace ChatClient.ViewModels
             NewMessageText = string.Empty;
         }
 
-        private delegate MessageDTO CreatMessageDelegate(string text);
 
         private RoomMessageDTO CreatRoomMessageDTO(string text)
         {

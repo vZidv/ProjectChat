@@ -132,7 +132,14 @@ namespace ChatClient.Services
                                 var resultSearchChats = JsonConvert.DeserializeObject<ResponseDTO<SeachChatResultDTO>>(json).Data;
                                 _eventAggregator.Publish(new SearchChatsEvent(resultSearchChats));
                             }
+                            break;                        
+                        case ResponseType.JoinInChatRoomResult:
+                            {
+                                var resultJoinInChatRoom = JsonConvert.DeserializeObject<ResponseDTO<JoinInChatRoomResultDTO>>(json).Data;
+                                _eventAggregator.Publish(new AddMemberInChatEvent(resultJoinInChatRoom));
+                            }
                             break;
+                        
                     }
                 }
                 catch (Exception ex)

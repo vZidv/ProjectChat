@@ -96,7 +96,7 @@ namespace ChatServer.Handlers
                     break;
             }
 
-            if(messages.Length == 0)
+            if (messages.Length == 0)
                 return result;
 
             for (int i = 0; i < messages.Length; i++)
@@ -111,6 +111,34 @@ namespace ChatServer.Handlers
                     RoomId = chatRoomId
                 };
 
+            }
+
+            return result;
+        }
+
+        public async Task<JoinInChatRoomResultDTO> AddNewMemberInChatRoomAsync(int clientId, int chatRoomId)
+        {
+            ChatRoomMember chatRoomMember = new()
+            {
+                ClientId = clientId,
+                RoomId = chatRoomId,
+                RoleId = 1 //<- - Default role, should be changed later
+            };
+
+            JoinInChatRoomResultDTO result = new()
+            {
+                IsSuccess = true,
+            };
+
+            try
+            {
+                _context.ChatRoomMembers.Add(chatRoomMember);
+                await _context.SaveChangesAsync();
+            }
+            catch (Exception ex)
+            {
+                result.IsSuccess = false;
+                throw new Exception($"Error adding member to chat room: {ex.Message}");
             }
 
             return result;

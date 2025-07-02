@@ -14,10 +14,12 @@ namespace ChatShared.DTO.Enums
         SendMessage,
         GetHistoryChat,
 
+        SearchChats,
+
         CreatRoom,
         GetChats,
-        SearchChats,
         UpdateCurrentChatRoom,
+        JoimInChatGroup
         //..
     }
 }

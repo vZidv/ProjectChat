@@ -235,6 +235,21 @@ namespace ChatServer.Services
                                 Console.WriteLine($"Пользователю: {client.Client.RemoteEndPoint} отправлено {result.TotalCount} чатов, результат по поиска: \"{result.SearchText}\"");
                             }
                             break;
+                        case RequestType.JoimInChatGroup:
+                            {
+                                var requestDTO = JsonConvert.DeserializeObject<RequestDTO<JoinInChatRoomDTO>>(request);
+                                if (_handlerClient.TryGetSession(requestDTO.Token) == null)
+                                    break;
+
+                                JoinInChatRoomDTO joinInChatRoomDTO = requestDTO.Data;
+
+                                var handlerChatRoom = new HandlerChatRoom(new Data.ProjectChatContext());
+                                JoinInChatRoomResultDTO result = await handlerChatRoom.AddNewMemberInChatRoomAsync(joinInChatRoomDTO.ClientId,joinInChatRoomDTO.ChatRoomId);
+
+                                await SendResponseAsync(stream, result, ResponseType.JoinInChatRoomResult);
+                                Console.WriteLine($"Пользователю: {client.Client.RemoteEndPoint} был добавлен в комнтау {joinInChatRoomDTO.ChatRoomId}");
+                            }
+                            break;
                         default:
                             Console.WriteLine("Неизвестный тип запроса");
                             break;

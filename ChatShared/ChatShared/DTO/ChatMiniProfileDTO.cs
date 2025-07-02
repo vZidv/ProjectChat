@@ -14,5 +14,6 @@ namespace ChatShared.DTO
         public ChatType ChatType { get; set; }
         public string LastMessaget { get; set; }
         public DateTime LastActivity { get; set; }
+        public bool IsMember { get; set; }
     }
 }

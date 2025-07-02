@@ -6,7 +6,7 @@
       xmlns:ui="http://schemas.modernwpf.com/2019" 
       xmlns:local="clr-namespace:ChatClient.View"
       xmlns:vm="clr-namespace:ChatClient.ViewModels"
-      xmlns:dto="clr-namespace:ChatShared.DTO;assembly=ChatShared"
+      xmlns:dtoM="clr-namespace:ChatShared.DTO.Messages;assembly=ChatShared"
       mc:Ignorable="d" 
       d:DesignHeight="450" d:DesignWidth="800"
       Title="ChatView"
@@ -48,13 +48,13 @@
                     HorizontalAlignment="Left"/>
             </StackPanel>
             <Button  
-HorizontalAlignment="Stretch"  
-VerticalAlignment="Stretch"  
-Background="Transparent"  
-BorderThickness="0"
-Cursor="Hand"
-Command="{Binding OpenChatRoomPageCommand}"
->
+                HorizontalAlignment="Stretch"  
+                VerticalAlignment="Stretch"  
+                Background="Transparent"  
+                BorderThickness="0"
+                Cursor="Hand"
+                Command="{Binding OpenChatRoomPageCommand}"
+                >
                 <Button.Template>
                     <ControlTemplate TargetType="Button">
                         <Border Background="{TemplateBinding Background}">
@@ -68,6 +68,8 @@ Command="{Binding OpenChatRoomPageCommand}"
         </Grid>
         <Grid
             Grid.Row="1">
+            
+            <!--List box for chats messages--> 
             <ListBox
                 Background="Transparent"
                 ScrollViewer.VerticalScrollBarVisibility="Auto"
@@ -110,16 +112,39 @@ Command="{Binding OpenChatRoomPageCommand}"
                 </ListBox.ItemTemplate>
 
                 <d:ListBox.ItemsSource>
-                    <x:Array Type="{x:Type dto:MessageDTO}">
-                        <dto:RoomMessageDTO  
+                    <x:Array Type="{x:Type dtoM:MessageDTO}">
+                        <dtoM:RoomMessageDTO  
                             Text="Hello wordl !"
                             Sender="Oleg"/>
-                        <dto:RoomMessageDTO 
+                        <dtoM:RoomMessageDTO 
                             Text="Hi"
                             Sender="Anton"/>
                     </x:Array>
                 </d:ListBox.ItemsSource>
             </ListBox>
+
+            <!--Button under the chats head-->
+            <Button
+                d:Visibility="Visible"
+                Cursor="Hand"
+                Visibility="{Binding AddContacntButtonVisibility}"
+                Margin="0,0.5"
+                VerticalAlignment="Top"
+                HorizontalAlignment="Stretch"
+                Height="55"
+                Background="{StaticResource BgColor3}"
+                ui:ControlHelper.CornerRadius="0"
+                Foreground="{StaticResource Primary}"
+                FontWeight="DemiBold"
+                d:Content="ДОБАВИТЬ Oleg Ivanov В КОНТАКТЫ">
+                <Button.Content>
+                    <TextBlock >
+                        <Run Text="ДОБАВИТЬ"/>
+                        <Run Text="{Binding ChatDTO.Name}"/>
+                        <Run Text="В КОНТАКТЫ"/>
+                    </TextBlock>
+                </Button.Content>
+            </Button>            
         </Grid>
 
         <Grid
@@ -143,6 +168,22 @@ Command="{Binding OpenChatRoomPageCommand}"
             Width="0" Height="0"
             Command="{Binding SendMessageCommand}"
             IsDefault="True"/>
+
+            <Button
+                Command="{Binding JoinInChatGroupCommand}"
+                d:Visibility="Visible"
+                Cursor="Hand"
+                Visibility="{Binding JoinChatGroupButtonVisibility, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}"
+                Margin="0,0.5"
+                VerticalAlignment="Top"
+                HorizontalAlignment="Stretch"
+                Height="55"
+                Background="{StaticResource BgColor3}"
+                ui:ControlHelper.CornerRadius="0"
+                Foreground="{StaticResource Primary}"
+                FontWeight="DemiBold"
+                Content="ПРИСОЕДИНИТЬСЯ К ГРУППЕ">
+            </Button>
         </Grid>
 
     </Grid>
