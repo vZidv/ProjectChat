@@ -26,15 +26,15 @@ namespace ChatServer.Handlers
 
 
             Client[] contacts = (await _context.Clients.Where(c => c.Id == clientId).Include(c => c.Contacts).FirstOrDefaultAsync() as Client).Contacts.ToArray();
-            ChatRoom[] rooms = await _context.ChatRooms.Where(r => r.IsPrivate == false || r.OwnerId == clientId).ToArrayAsync();
+            ChatRoom[] rooms = await _context.ChatRoomMembers.Where(c => c.ClientId == clientId).Select(c => c.Room).ToArrayAsync();
 
-            result.AddRange(ClientToChatMiniProfileDTO(contacts));
-            result.AddRange(ChatRoomsToChatMiniProfileDTO(rooms));
+            result.AddRange(ClientToChatMiniProfileDTO(contacts, true));
+            result.AddRange(ChatRoomsToChatMiniProfileDTO(rooms, true));
 
             return result;
         }
 
-        private List<ChatMiniProfileDTO> ClientToChatMiniProfileDTO(Client[] clients)
+        private List<ChatMiniProfileDTO> ClientToChatMiniProfileDTO(Client[] clients, bool isMember)
         {
             List<ChatMiniProfileDTO> result = new();
             foreach (var client in clients)
@@ -44,6 +44,7 @@ namespace ChatServer.Handlers
                     Id = client.Id,
                     Name = string.Format($"{client.LastName} {client.Name}"),
                     ChatType = ChatType.Private,
+                    IsMember = isMember,
                     LastMessaget = string.Empty, // <- - Replace with actual last message
                     LastActivity = client.LastLogin // <- - Replace with actual last activity
                 };
@@ -52,7 +53,7 @@ namespace ChatServer.Handlers
             return result;
         }
 
-        private List<ChatMiniProfileDTO> ChatRoomsToChatMiniProfileDTO(ChatRoom[] rooms)
+        private List<ChatMiniProfileDTO> ChatRoomsToChatMiniProfileDTO(ChatRoom[] rooms, bool isMember)
         {
             List<ChatMiniProfileDTO> result = new();
             foreach (var room in rooms)
@@ -62,6 +63,7 @@ namespace ChatServer.Handlers
                     Id = room.Id,
                     Name = room.Name,
                     ChatType = ChatType.Group,
+                    IsMember = isMember,
                     LastMessaget = string.Empty, // <- - Replace with actual last message
                     LastActivity = DateTime.Now // <- - Replace with actual last activity
                 };
