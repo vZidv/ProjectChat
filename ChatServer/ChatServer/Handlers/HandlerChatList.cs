@@ -110,8 +110,14 @@ namespace ChatServer.Handlers
         public async Task<List<ChatMiniProfileDTO>> SearchNewChatForClientByName(string seachName, int clientId)
         {
             List<ChatMiniProfileDTO> result = await SeachChatsByNameAsync(seachName);
+
+            int[] chatRoomMember = await _context.ChatRoomMembers.Where(c => c.ClientId == clientId)
+                .Select(c => c.RoomId)
+                .ToArrayAsync();
+
             result = result.Where(c =>
-            (c.Id != clientId || c.ChatType != ChatType.Private)).ToList();
+            (c.Id != clientId || c.ChatType != ChatType.Private) &&
+            (c.ChatType != ChatType.Group || !chatRoomMember.Contains(c.Id))).ToList();
             return result;
         }
     }

@@ -9,5 +9,7 @@ namespace ChatShared.DTO
     public class JoinInChatRoomResultDTO
     {
         public bool IsSuccess { get; set; }
+
+        public ChatMiniProfileDTO? ChatMiniProfileDTO { get; set; }
     }
 }

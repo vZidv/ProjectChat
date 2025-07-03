@@ -161,6 +161,7 @@ namespace ChatClient.ViewModels
 
             App.EventAggregator.Subscribe<CreatRoomEvent>(AddCreatedChatRoom);
             App.EventAggregator.Subscribe<SearchChatsEvent>(onSearchChatGlobal);
+            App.EventAggregator.Subscribe<AddMemberInChatEvent>(onJoinInChatRoom);
 
             _debounceTimer = new Timer(500);
             _debounceTimer.AutoReset = false;
@@ -293,6 +294,11 @@ namespace ChatClient.ViewModels
             };
         }
 
+        private void onJoinInChatRoom(AddMemberInChatEvent @event)
+        {
+            if(@event.JoinInChatRoomResultDTO == null) return;
+            Chats.Add(@event.JoinInChatRoomResultDTO.ChatMiniProfileDTO);
+        }
 
     }
 }

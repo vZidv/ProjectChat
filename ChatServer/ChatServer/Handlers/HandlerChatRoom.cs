@@ -125,6 +125,17 @@ namespace ChatServer.Handlers
                 RoleId = 1 //<- - Default role, should be changed later
             };
 
+            ChatMiniProfileDTO room = _context.ChatRooms.Where(r => r.Id == chatRoomId).
+                Select( r => new ChatMiniProfileDTO()
+                {
+                    Id = r.Id,
+                    Name = r.Name,
+                    IsMember = true,
+                    ChatType = ChatType.Group,
+                    LastMessaget = string.Empty, // <- - Replace with actual last message
+                    LastActivity = DateTime.Now // <- - Replace with actual last activity
+                }).FirstOrDefault();
+        
             JoinInChatRoomResultDTO result = new()
             {
                 IsSuccess = true,
@@ -140,7 +151,7 @@ namespace ChatServer.Handlers
                 result.IsSuccess = false;
                 throw new Exception($"Error adding member to chat room: {ex.Message}");
             }
-
+            result.ChatMiniProfileDTO = room;
             return result;
         }
 
