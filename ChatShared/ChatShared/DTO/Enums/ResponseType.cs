@@ -17,7 +17,9 @@ namespace ChatShared.DTO.Enums
         Message,
         GetHistoryChatRoom,
         SearchChatsResult,
-        JoinInChatRoomResult
+
+        JoinInChatRoomResult,
+        AddContactResult
         //..
     }
 }

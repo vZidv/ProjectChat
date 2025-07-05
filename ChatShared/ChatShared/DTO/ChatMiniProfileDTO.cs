@@ -12,8 +12,11 @@ namespace ChatShared.DTO
         public int Id { get; set; }
         public string Name { get; set; }
         public ChatType ChatType { get; set; }
+
         public string LastMessaget { get; set; }
         public DateTime LastActivity { get; set; }
+
         public bool IsMember { get; set; }
+        public bool? IsContact { get; set; }
     }
 }

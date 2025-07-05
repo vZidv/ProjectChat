@@ -80,7 +80,9 @@ namespace ChatClient.ViewModels
         public ICommand SendMessageCommand { get; }
         public ICommand GetMessageCommand { get; }
         public ICommand OpenChatRoomPageCommand { get; }
-        public ICommand JoinInChatGroupCommand { get;  }
+
+        public ICommand JoinInChatGroupCommand { get; }
+        public ICommand AddContactCommand { get; }
 
         public ChatViewModel() { }
 
@@ -92,17 +94,42 @@ namespace ChatClient.ViewModels
             GetMessageCommand = new ViewModelCommand(ExecuteGetMessageCommand);
             //OpenChatRoomPageCommand = new ViewModelCommand(ExecuteOpenChatRoomPageCommand);
             JoinInChatGroupCommand = new ViewModelCommand(ExecuteJoinInChatGroupCommand);
+            AddContactCommand = new ViewModelCommand(ExecuteAddContactCommand);
 
             App.EventAggregator.Subscribe<ChatMessageEvent>(OnNewMessageReceived);
             App.EventAggregator.Subscribe<ChatHistoryEvent>(onChatRoomHistoryReceived);
             App.EventAggregator.Subscribe<AddMemberInChatEvent>(onAddMemberInChatRoom);
+            App.EventAggregator.Subscribe<AddContactEvent>(onAddContact);
 
             ChatInit();
         }
 
+
         // Delegates
 
         private delegate MessageDTO CreatMessageDelegate(string text);
+
+        private void onAddContact(AddContactEvent @event)
+        {
+            AddContactResultDTO result = @event.AddContactResultDTO;
+
+            if (!result.IsSuccess)
+                return;
+
+            AddContacntButtonVisibility = Visibility.Hidden;
+        }
+
+        private void ExecuteAddContactCommand(object? obj)
+        {
+            var request = new AddContactDTO()
+            {
+                SenderClientId = NetworkSession.ClientProfile.Id,
+                ReceiverClientId = ChatDTO.Id
+            };
+
+            var session = NetworkSession.Session;
+            session.SendAsync(request, RequestType.AddContact);
+        }
 
         private void ChatInit()
         {   CheckButtonsVisiability();
@@ -147,7 +174,8 @@ namespace ChatClient.ViewModels
                     break;
                 case ChatType.Private:
                     {
-                        _addContacntButtonVisibility = Visibility.Visible;
+                        if(ChatDTO.IsContact != null && ChatDTO.IsContact == false)
+                            _addContacntButtonVisibility = Visibility.Visible;
                     }
                     break;
                 default:

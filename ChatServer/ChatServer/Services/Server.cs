@@ -250,6 +250,21 @@ namespace ChatServer.Services
                                 Console.WriteLine($"Пользователю: {client.Client.RemoteEndPoint} был добавлен в комнтау {joinInChatRoomDTO.ChatRoomId}");
                             }
                             break;
+                        case RequestType.AddContact:
+                            {
+                                var requestDTO = JsonConvert.DeserializeObject<RequestDTO<AddContactDTO>>(request);
+                                if (_handlerClient.TryGetSession(requestDTO.Token) == null)
+                                    break;
+
+                                AddContactDTO addContactDTO = requestDTO.Data;
+
+                                var handelerContact = new HandlerContact(new Data.ProjectChatContext());
+                                AddContactResultDTO result = await handelerContact.AddContactToClientAsync(addContactDTO.SenderClientId, addContactDTO.ReceiverClientId);
+
+                                await SendResponseAsync(stream, result, ResponseType.AddContactResult);
+                                Console.WriteLine($"Пользователю: {client.Client.RemoteEndPoint} был добавлен контакт: {addContactDTO.ReceiverClientId}");
+                            }
+                            break;
                         default:
                             Console.WriteLine("Неизвестный тип запроса");
                             break;

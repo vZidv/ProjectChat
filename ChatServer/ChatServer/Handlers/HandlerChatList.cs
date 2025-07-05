@@ -44,7 +44,10 @@ namespace ChatServer.Handlers
                     Id = client.Id,
                     Name = string.Format($"{client.LastName} {client.Name}"),
                     ChatType = ChatType.Private,
+
                     IsMember = isMember,
+
+
                     LastMessaget = string.Empty, // <- - Replace with actual last message
                     LastActivity = client.LastLogin // <- - Replace with actual last activity
                 };
@@ -96,6 +99,7 @@ namespace ChatServer.Handlers
                 Id = c.Id,
                 Name = string.Format($"{c.LastName} {c.Name}"),
                 ChatType = ChatType.Private,
+                IsContact = false,
                 LastMessaget = string.Empty, // <- - Replace with actual last message
                 LastActivity = DateTime.Now // <- - Replace with actual last activity
             })
@@ -111,13 +115,17 @@ namespace ChatServer.Handlers
         {
             List<ChatMiniProfileDTO> result = await SeachChatsByNameAsync(seachName);
 
+            int[] contactsMember = await _context.Clients.Where(c => c.Id == clientId)
+                .SelectMany(c => c.Contacts.Select(c => c.Id)).ToArrayAsync();
+
             int[] chatRoomMember = await _context.ChatRoomMembers.Where(c => c.ClientId == clientId)
                 .Select(c => c.RoomId)
                 .ToArrayAsync();
 
             result = result.Where(c =>
             (c.Id != clientId || c.ChatType != ChatType.Private) &&
-            (c.ChatType != ChatType.Group || !chatRoomMember.Contains(c.Id))).ToList();
+            (c.ChatType != ChatType.Group || !chatRoomMember.Contains(c.Id)) &&
+            (c.ChatType != ChatType.Private || !contactsMember.Contains(c.Id))).ToList();
             return result;
         }
     }

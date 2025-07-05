@@ -139,7 +139,13 @@ namespace ChatClient.Services
                                 _eventAggregator.Publish(new AddMemberInChatEvent(resultJoinInChatRoom));
                             }
                             break;
-                        
+                        case ResponseType.AddContactResult:
+                            {
+                                var resultAddContact = JsonConvert.DeserializeObject<ResponseDTO<AddContactResultDTO>>(json).Data;
+                                _eventAggregator.Publish(new AddContactEvent(resultAddContact));
+                            }
+                            break;
+
                     }
                 }
                 catch (Exception ex)

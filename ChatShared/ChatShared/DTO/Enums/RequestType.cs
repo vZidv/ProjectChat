@@ -19,7 +19,9 @@ namespace ChatShared.DTO.Enums
         CreatRoom,
         GetChats,
         UpdateCurrentChatRoom,
-        JoimInChatGroup
+
+        JoimInChatGroup,
+        AddContact,
         //..
     }
 }

@@ -125,6 +125,7 @@
 
             <!--Button under the chats head-->
             <Button
+                Command="{Binding AddContactCommand}"
                 d:Visibility="Visible"
                 Cursor="Hand"
                 Visibility="{Binding AddContacntButtonVisibility}"
