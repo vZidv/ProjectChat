@@ -64,7 +64,9 @@ namespace ChatClient.ViewModels
             ChatRoomDTO newRoom = new()
             {
                 Name = RoomName,
-                OwnerId = NetworkSession.ClientProfile.Id
+                ChatType = ChatType.Group,
+                OwnerId = NetworkSession.ClientProfile.Id,
+                IsPrivate = false
             };
 
             NetworkSession.Session.SendAsync(newRoom, RequestType.CreatRoom);

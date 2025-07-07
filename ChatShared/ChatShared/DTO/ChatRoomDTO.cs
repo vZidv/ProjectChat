@@ -1,4 +1,5 @@
-﻿using System;
+﻿using ChatShared.DTO.Enums;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -9,7 +10,9 @@ namespace ChatShared.DTO
     public class ChatRoomDTO
     {
         public int Id { get; set; }
-        public string Name { get; set; } = null!;
-        public int OwnerId { get; set; }
+        public string? Name { get; set; } = null!;
+        public ChatType ChatType { get; set; }
+        public int? OwnerId { get; set; } = null!;
+        public bool IsPrivate { get; set; }
     }
 }

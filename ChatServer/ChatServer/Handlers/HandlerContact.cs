@@ -41,5 +41,5 @@ namespace ChatServer.Handlers
                 return result;
             }
         }
-        }
     }
+}

@@ -29,16 +29,19 @@ namespace ChatServer.Handlers
             {
                 result.Success = false;
                 result.ErrorMessage = "Room data is null.";
+                Console.WriteLine($"Не удалось создать комнату : {result.ErrorMessage}");
+
                 return result;
             }
 
             int ChatRoomTypeId = _context.ChatRoomTypes.Where(t => t.Name == "Group").Select(t => t.Id).FirstOrDefault();
-            var chatRoom = new ChatRoom()
+
+            ChatRoom chatRoom = new()
             {
                 Name = roomDTO.Name,
-                IsPrivate = false,
                 ChatRoomTypeId = ChatRoomTypeId,
-                OwnerId = roomDTO.OwnerId
+                OwnerId = roomDTO.OwnerId,
+                IsPrivate = roomDTO.IsPrivate,
             };
             _context.ChatRooms.Add(chatRoom);
             try
@@ -54,6 +57,46 @@ namespace ChatServer.Handlers
             result.ChatRoomDTO.Id = chatRoom.Id;
 
             return result;
+        }
+
+        public async Task<CreatChatRoomResultDTO> CreatPrivateRoomAsync(int[] membersId)
+        {
+            CreatChatRoomResultDTO result = new(true, null, null);
+
+            int ChatRoomTypeId = await _context.ChatRoomTypes.Where(t => t.Name == "Private").Select(t => t.Id).FirstOrDefaultAsync();
+
+            ChatRoom chatRoom = new()
+            {
+                Name = null,
+                ChatRoomTypeId = ChatRoomTypeId,
+                OwnerId = null,
+                IsPrivate = true,
+            };
+            _context.ChatRooms.Add(chatRoom);
+
+            try
+            {
+                await _context.SaveChangesAsync();
+
+                foreach (var client in membersId)
+                    AddNewMemberInChatRoomAsync(client, chatRoom.Id);
+
+                result.ChatRoomDTO = new ChatRoomDTO()
+                {
+                    Id = chatRoom.Id,
+                    ChatType = ChatType.Private,
+                    IsPrivate = true
+                };
+                return result;
+            }
+            catch (Exception ex)
+            {
+                result.Success = false;
+                result.ErrorMessage = ex.Message;
+
+                Console.WriteLine($"Не удалось создать комнату : {result.ErrorMessage}");
+                return result;
+            }
         }
 
         public async Task<ChatRoomDTO[]> GetRoomsForClientAsync(int clientId)
@@ -74,27 +117,10 @@ namespace ChatServer.Handlers
 
         public async Task<RoomMessageDTO[]> GetHistoryChatRoomAsync(int chatRoomId, ChatType chatType, int senderId)
         {
-            RoomMessageDTO[] result = null!;
-            Message[] messages = null!;
-            switch (chatType)
-            {
-                case ChatType.Private:
-                    {
+            ChatRoom room = await _context.ChatRooms.Where(r => r.Id == chatRoomId).Include(r => r.Messages).ThenInclude(m => m.Client).FirstOrDefaultAsync();
 
-
-                    }
-                    break;
-
-                case ChatType.Group:
-                    {
-                        ChatRoom room = await _context.ChatRooms.Where(r => r.Id == chatRoomId).Include(r => r.Messages).ThenInclude(m => m.Client).FirstOrDefaultAsync();
-
-                        messages = room.Messages.ToArray();
-                        result = new RoomMessageDTO[messages.Length];
-
-                    }
-                    break;
-            }
+            Message[] messages = room.Messages.ToArray();
+            var result = new RoomMessageDTO[messages.Length];
 
             if (messages.Length == 0)
                 return result;
@@ -126,7 +152,7 @@ namespace ChatServer.Handlers
             };
 
             ChatMiniProfileDTO room = _context.ChatRooms.Where(r => r.Id == chatRoomId).
-                Select( r => new ChatMiniProfileDTO()
+                Select(r => new ChatMiniProfileDTO()
                 {
                     Id = r.Id,
                     Name = r.Name,
@@ -135,7 +161,7 @@ namespace ChatServer.Handlers
                     LastMessaget = string.Empty, // <- - Replace with actual last message
                     LastActivity = DateTime.Now // <- - Replace with actual last activity
                 }).FirstOrDefault();
-        
+
             JoinInChatRoomResultDTO result = new()
             {
                 IsSuccess = true,

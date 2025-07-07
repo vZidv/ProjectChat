@@ -135,7 +135,7 @@ namespace ChatClient.ViewModels
         {   CheckButtonsVisiability();
             SetChatRoomType();
             ChatMessageDTOs = new();
-            //GetMessageCommand.Execute(null);
+            GetMessageCommand.Execute(null);
         }
         private async void ExecuteJoinInChatGroupCommand(object? obj)
         {

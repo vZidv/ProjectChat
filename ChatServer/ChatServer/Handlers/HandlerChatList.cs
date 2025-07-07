@@ -25,11 +25,9 @@ namespace ChatServer.Handlers
             List<ChatMiniProfileDTO> result = new();
 
 
-            Client[] contacts = (await _context.Clients.Where(c => c.Id == clientId).Include(c => c.Contacts).FirstOrDefaultAsync() as Client).Contacts.ToArray();
             ChatRoom[] rooms = await _context.ChatRoomMembers.Where(c => c.ClientId == clientId).Select(c => c.Room).ToArrayAsync();
 
-            result.AddRange(ClientToChatMiniProfileDTO(contacts, true));
-            result.AddRange(ChatRoomsToChatMiniProfileDTO(rooms, true));
+            result.AddRange(ChatRoomsToChatMiniProfileDTO(rooms, true, clientId));
 
             return result;
         }
@@ -56,20 +54,38 @@ namespace ChatServer.Handlers
             return result;
         }
 
-        private List<ChatMiniProfileDTO> ChatRoomsToChatMiniProfileDTO(ChatRoom[] rooms, bool isMember)
+        private List<ChatMiniProfileDTO> ChatRoomsToChatMiniProfileDTO(ChatRoom[] rooms, bool isMember, int clientId)
         {
             List<ChatMiniProfileDTO> result = new();
             foreach (var room in rooms)
             {
+
                 ChatMiniProfileDTO chatMiniProfile = new()
                 {
                     Id = room.Id,
                     Name = room.Name,
-                    ChatType = ChatType.Group,
                     IsMember = isMember,
                     LastMessaget = string.Empty, // <- - Replace with actual last message
                     LastActivity = DateTime.Now // <- - Replace with actual last activity
                 };
+
+                switch (room.ChatRoomTypeId)
+                {
+                    case 1: // Group chat
+                        chatMiniProfile.ChatType = ChatType.Group;
+                        break;
+                    case 2: // Private chat
+                        chatMiniProfile.ChatType = ChatType.Private;
+
+                        Client client = _context.ChatRoomMembers.
+                            Where(c => c.RoomId == room.Id && c.ClientId != clientId).
+                            Select(c => c.Client).FirstOrDefault();
+
+                        chatMiniProfile.Name = string.Format($"{client!.LastName} {client!.Name}");
+                        break;
+                    default:
+                        break;
+                }
                 result.Add(chatMiniProfile);
             }
             return result;

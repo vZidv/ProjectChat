@@ -258,8 +258,13 @@ namespace ChatServer.Services
 
                                 AddContactDTO addContactDTO = requestDTO.Data;
 
-                                var handelerContact = new HandlerContact(new Data.ProjectChatContext());
+                                var context = new Data.ProjectChatContext();
+
+                                var handelerContact = new HandlerContact(context);
                                 AddContactResultDTO result = await handelerContact.AddContactToClientAsync(addContactDTO.SenderClientId, addContactDTO.ReceiverClientId);
+
+                                var handelerChatRoom = new HandlerChatRoom(context);
+                                var chatRoomResult = await handelerChatRoom.CreatPrivateRoomAsync(new int[] { addContactDTO.SenderClientId, addContactDTO.ReceiverClientId });
 
                                 await SendResponseAsync(stream, result, ResponseType.AddContactResult);
                                 Console.WriteLine($"Пользователю: {client.Client.RemoteEndPoint} был добавлен контакт: {addContactDTO.ReceiverClientId}");
