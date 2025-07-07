@@ -12,6 +12,6 @@ namespace ChatShared.DTO
     {
         public int ChatId { get; set; }
         public ChatType ChatType { get; set; }
-        public RoomMessageDTO[] MessageDTOs { get; set; }
+        public MessageDTO[] MessageDTOs { get; set; }
     }
 }

@@ -12,12 +12,9 @@ namespace ChatShared.Events
     {
         public MessageDTO Message { get;}
 
-        public ChatType ChatType { get; }
-
-        public ChatMessageEvent(MessageDTO message, ChatType chatType) : base(ResponseType.Message)
+        public ChatMessageEvent(MessageDTO message) : base(ResponseType.Message)
         {
             Message = message;
-            ChatType = chatType;
         }
     }
 }

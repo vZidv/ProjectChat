@@ -22,7 +22,6 @@ namespace ChatClient.ViewModels
 
         private ObservableCollection<MessageDTO> _chatMessageDTOs;
         private string _newMessageText;
-        private CreatMessageDelegate creatMessage;
 
         //Button visibility
         private Visibility _joinChatGroupButtonVisibility = Visibility.Hidden;
@@ -104,11 +103,6 @@ namespace ChatClient.ViewModels
             ChatInit();
         }
 
-
-        // Delegates
-
-        private delegate MessageDTO CreatMessageDelegate(string text);
-
         private void onAddContact(AddContactEvent @event)
         {
             AddContactResultDTO result = @event.AddContactResultDTO;
@@ -133,7 +127,6 @@ namespace ChatClient.ViewModels
 
         private void ChatInit()
         {   CheckButtonsVisiability();
-            SetChatRoomType();
             ChatMessageDTOs = new();
             GetMessageCommand.Execute(null);
         }
@@ -183,20 +176,6 @@ namespace ChatClient.ViewModels
             }
         }
 
-        private void SetChatRoomType()
-        {
-            switch (ChatDTO.ChatType)
-            {
-                case ChatType.Group:
-                    creatMessage = CreatRoomMessageDTO;
-                    break;
-                case ChatType.Private:
-                    creatMessage = CreatPrivateMessageDTO;
-                    break;
-                default:
-                    throw new Exception("Unknown chat type");
-            }
-        }
 
         //private void ExecuteOpenChatRoomPageCommand(object? obj)
         //{
@@ -225,39 +204,18 @@ namespace ChatClient.ViewModels
 
         private async void ExecuteSendMessageCommand(object? obj)
         {
-            MessageDTO message = creatMessage(NewMessageText);
+            MessageDTO message = new()
+            {
+                Text = NewMessageText,
+                Sender = NetworkSession.ClientProfile.Name,
+                RoomId = ChatDTO.Id
+            };
 
             var session = NetworkSession.Session;
             await session.SendAsync(message, RequestType.SendMessage);
 
             ChatMessageDTOs.Add(message);
             NewMessageText = string.Empty;
-        }
-
-
-        private RoomMessageDTO CreatRoomMessageDTO(string text)
-        {
-            if (ChatDTO.ChatType != ChatType.Group)
-                throw new Exception("Unavailable type");
-
-            return new RoomMessageDTO
-            {
-                Text = text,
-                RoomId = ChatDTO.Id,
-                Sender = NetworkSession.ClientProfile.Login
-            };
-        }
-
-        private PrivateMessageDTO CreatPrivateMessageDTO(string text)
-        {
-            if (ChatDTO.ChatType != ChatType.Private)
-                throw new Exception("Unavailable type");
-            return new PrivateMessageDTO
-            {
-                Text = text,
-                ClientId = ChatDTO.Id,
-                Sender = NetworkSession.ClientProfile.Login
-            };
         }
 
         private void onChatRoomHistoryReceived(ChatHistoryEvent chatRoomHistoryEvent)
@@ -272,22 +230,8 @@ namespace ChatClient.ViewModels
 
         private void OnNewMessageReceived(ChatMessageEvent chatEvent)
         {
-            if (chatEvent.ChatType != ChatDTO.ChatType)
+            if (chatEvent.Message.RoomId != ChatDTO.Id)
                 return;
-
-            switch (chatEvent.ChatType)
-            {
-                case ChatType.Group:
-                    {
-                        if ((chatEvent.Message as RoomMessageDTO).RoomId != ChatDTO.Id) return;
-                    }
-                    break;
-                case ChatType.Private:
-                    {
-                        if ((chatEvent.Message as PrivateMessageDTO).ClientId != ChatDTO.Id) return;
-                    }
-                    break;
-            }
 
             ChatMessageDTOs.Add(chatEvent.Message);
         }

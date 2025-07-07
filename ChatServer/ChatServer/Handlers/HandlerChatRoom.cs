@@ -115,22 +115,22 @@ namespace ChatServer.Handlers
             return roomDTOs;
         }
 
-        public async Task<RoomMessageDTO[]> GetHistoryChatRoomAsync(int chatRoomId, ChatType chatType, int senderId)
+        public async Task<MessageDTO[]> GetHistoryChatRoomAsync(int chatRoomId, ChatType chatType, int senderId)
         {
             ChatRoom room = await _context.ChatRooms.Where(r => r.Id == chatRoomId).Include(r => r.Messages).ThenInclude(m => m.Client).FirstOrDefaultAsync();
 
             Message[] messages = room.Messages.ToArray();
-            var result = new RoomMessageDTO[messages.Length];
+            var result = new MessageDTO[messages.Length];
 
             if (messages.Length == 0)
                 return result;
 
             for (int i = 0; i < messages.Length; i++)
             {
-                result[i] = new RoomMessageDTO()
+                result[i] = new MessageDTO()
                 {
                     Text = messages[i].Text,
-                    Sender = messages[i].Client.Login,
+                    Sender = messages[i].Client.Name,
                     SentAt = messages[i].SentAt,
                     isEdit = messages[i].IsEdited,
 

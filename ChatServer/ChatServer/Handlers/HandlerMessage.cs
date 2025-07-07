@@ -15,12 +15,10 @@ namespace ChatServer.Handlers
     public class HandlerMessage
     {
         private readonly ProjectChatContext _context;
-        private readonly HandlerClient _handlerClient;
 
-        public HandlerMessage(ProjectChatContext context, HandlerClient handlerClient)
+        public HandlerMessage(ProjectChatContext context)
         {
             _context = context;
-            this._handlerClient = handlerClient;
         }
 
         public async Task<MessageDTO> WritingMessageAsync(MessageDTO newMessageDTO, int clientId)
@@ -36,29 +34,10 @@ namespace ChatServer.Handlers
             _context.Messages.Add(newMessage);
             await _context.SaveChangesAsync();
 
+            var roomMessageDTO = newMessageDTO as MessageDTO;
 
-
-            switch (newMessageDTO.MessageType)
-            {
-                case MessageType.RoomMessage:
-                    {
-                        var roomMessageDTO = newMessageDTO as RoomMessageDTO;
-
-                        if ((await _context.ChatRooms.FirstOrDefaultAsync(r => r.Id == roomMessageDTO.RoomId) is ChatRoom room))
-                            newMessage.ChatRooms.Add(room);
-                        
-                    }
-                    break;
-                case MessageType.PrivateMessage:
-                    {
-                        //var message = newMessageDTO as PrivateMessageDTO;
-                        
-                        //if((await _context.Clients.FirstOrDefaultAsync(c => c.Id == message.ClientId) is Client client))
-                        //    newMessage.Clients.Add(client);
-
-                    }
-                    break;
-            }
+            if ((await _context.ChatRooms.FirstOrDefaultAsync(r => r.Id == roomMessageDTO.RoomId) is ChatRoom room))
+                newMessage.ChatRooms.Add(room);
 
             await _context.SaveChangesAsync();
             return newMessageDTO;

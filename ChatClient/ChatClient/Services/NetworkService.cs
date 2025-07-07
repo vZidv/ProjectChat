@@ -96,23 +96,8 @@ namespace ChatClient.Services
                     {
                         case ResponseType.Message:
                             {
-                                MessageType messageType = JObject.Parse(json)["Data"]["MessageType"].ToObject<MessageType>();
-                                switch (messageType)
-                                {
-                                    case MessageType.RoomMessage:
-                                        {
-                                            var roomMessageDTO = JsonConvert.DeserializeObject<ResponseDTO<RoomMessageDTO>>(json).Data;
-                                            _eventAggregator.Publish(new ChatMessageEvent(roomMessageDTO, ChatType.Group));
-                                        }
-                                        break;
-                                    case MessageType.PrivateMessage:
-                                        {
-                                            var privateMessageDTO = JsonConvert.DeserializeObject<ResponseDTO<PrivateMessageDTO>>(json).Data;
-                                            _eventAggregator.Publish(new ChatMessageEvent(privateMessageDTO, ChatType.Private));
-                                        }
-                                        break;
-
-                                }
+                                var messageDTO = JsonConvert.DeserializeObject<ResponseDTO<MessageDTO>>(json).Data;
+                                _eventAggregator.Publish(new ChatMessageEvent(messageDTO));
                             }
                             break;
                         case ResponseType.GetHistoryChatRoom:
