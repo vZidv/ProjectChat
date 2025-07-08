@@ -134,7 +134,8 @@ namespace ChatServer.Handlers
                     SentAt = messages[i].SentAt,
                     isEdit = messages[i].IsEdited,
 
-                    RoomId = chatRoomId
+                    RoomId = chatRoomId,
+                    IsOwner = messages[i].Client.Id == senderId,
                 };
 
             }

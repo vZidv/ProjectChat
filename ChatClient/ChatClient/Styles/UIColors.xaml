@@ -9,6 +9,7 @@
     
     <!--Main Colors-->
     <SolidColorBrush x:Key="Primary">#6ab3f3</SolidColorBrush>
+    <SolidColorBrush x:Key="PrimaryDark">#2b5278</SolidColorBrush>
     <SolidColorBrush x:Key="Second">#768c9e</SolidColorBrush>
     <SolidColorBrush x:Key="ClearWhite">#f5f5f5</SolidColorBrush>
 

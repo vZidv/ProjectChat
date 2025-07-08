@@ -79,8 +79,17 @@
                     <DataTemplate>
                         <Border
                             MinWidth="80"
-                            CornerRadius="5,5,5,0"
-                            Background="{StaticResource BgColor4}">
+                            CornerRadius="5,5,5,0">
+                            <Border.Style>
+                                <Style TargetType="Border">
+                                    <Setter Property="Background" Value="{StaticResource BgColor4}"/>
+                                    <Style.Triggers>
+                                        <DataTrigger Binding="{Binding IsOwner}" Value="True">
+                                            <Setter Property="Background" Value="{StaticResource PrimaryDark }"/>
+                                        </DataTrigger>
+                                    </Style.Triggers>
+                                </Style>
+                            </Border.Style>
                             <StackPanel>
                                 
                                 <TextBlock 
@@ -113,12 +122,14 @@
 
                 <d:ListBox.ItemsSource>
                     <x:Array Type="{x:Type dtoM:MessageDTO}">
-                        <dtoM:RoomMessageDTO  
+                        <dtoM:MessageDTO  
                             Text="Hello wordl !"
                             Sender="Oleg"/>
-                        <dtoM:RoomMessageDTO 
+                        <dtoM:MessageDTO 
+                            IsOwner="True"
                             Text="Hi"
-                            Sender="Anton"/>
+                            Sender="Anton"
+                            />
                     </x:Array>
                 </d:ListBox.ItemsSource>
             </ListBox>
@@ -126,7 +137,7 @@
             <!--Button under the chats head-->
             <Button
                 Command="{Binding AddContactCommand}"
-                d:Visibility="Visible"
+                d:Visibility="Hidden"
                 Cursor="Hand"
                 Visibility="{Binding AddContacntButtonVisibility}"
                 Margin="0,0.5"

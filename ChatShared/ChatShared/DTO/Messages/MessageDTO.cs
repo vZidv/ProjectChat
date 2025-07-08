@@ -18,5 +18,6 @@ namespace ChatShared.DTO.Messages
         public DateTime? SentAt { get; set; } = null;
         public bool isEdit { get; set; } = false;
 
+        public bool IsOwner { get; set; } = false;
     }
 }
