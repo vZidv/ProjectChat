@@ -63,27 +63,50 @@
 
                            <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" Margin="0,10">  
                                <!-- Login and password -->  
-                               <StackPanel Margin="10" Orientation="Vertical">  
-                                   <TextBox Text="{Binding Login, UpdateSourceTrigger=PropertyChanged}"  
-                                            ui:ControlHelper.PlaceholderText="Login"  
+                               <StackPanel Margin="10" Orientation="Vertical">
+                                    <Border
+                                        Height="100"
+                                        Width="100"
+                                        CornerRadius="50">
+                                        <Border.Background>
+                                            <ImageBrush 
+                                                d:ImageSource="/Images/-t1080x1080.jpg"
+                                                ImageSource="{Binding AvatarImage, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}"/>
+                                        </Border.Background>
+                                    </Border>
+                                    <Button 
+                                           Command="{Binding ChooseAvatarCommand}"
+                                           Content="Choose Avatar"  
+                                           Style="{StaticResource DefaultButtonStyle}"  
+                                           Margin="0,5"  
+                                           MinWidth="150"/>
+
+                                    <TextBox Text="{Binding Name, UpdateSourceTrigger=PropertyChanged}"  
+                                            ui:ControlHelper.PlaceholderText="Name"  
                                             Margin="0,5"  
-                                            MinWidth="150"/>  
-                                   <customcontrols:BindablePasswordBox  
-                                       Password="{Binding Password, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"  
-                                       Margin="0,5"  
-                                       MinWidth="150"/>  
-                               </StackPanel>  
+                                            MinWidth="150"/>
+                                    <TextBox Text="{Binding LastName, UpdateSourceTrigger=PropertyChanged}"  
+                                            ui:ControlHelper.PlaceholderText="Last name"  
+                                            Margin="0,5"  
+                                            MinWidth="150"/>
+                                </StackPanel>  
 
                                <!-- Email and avatar -->  
-                               <StackPanel Margin="10" Orientation="Vertical">  
-                                   <TextBox Text="{Binding Email, UpdateSourceTrigger=PropertyChanged}"  
+                               <StackPanel Margin="10" Orientation="Vertical">
+                                    <TextBox Text="{Binding Login, UpdateSourceTrigger=PropertyChanged}"  
+                                            ui:ControlHelper.PlaceholderText="Login"  
+                                            Margin="0,5"  
+                                            MinWidth="150"/>
+                                    <customcontrols:BindablePasswordBox  
+                                       Password="{Binding Password, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"  
+                                       Margin="0,5"  
+                                       MinWidth="150"/>
+                                   
+                                    <TextBox Text="{Binding Email, UpdateSourceTrigger=PropertyChanged}"  
                                             ui:ControlHelper.PlaceholderText="Email"  
                                             Margin="0,5"  
                                             MinWidth="150"/>  
-                                   <Button Content="Choose Avatar"  
-                                           Style="{StaticResource DefaultButtonStyle}"  
-                                           Margin="0,5"  
-                                           MinWidth="150"/>  
+
                                </StackPanel>  
                            </StackPanel>  
 

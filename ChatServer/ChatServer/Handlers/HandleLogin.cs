@@ -23,24 +23,31 @@ namespace ChatServer.Handlers
             var user = await _context.Clients.Where(p => p.Login == loginDTO.Login).FirstOrDefaultAsync();
 
             if (user != null && HandlerPassword.VerifyPassword(loginDTO.PasswordHash, user.PasswordHash))
+            {
+                string? avatarBase64 = null;
+                if (!string.IsNullOrWhiteSpace(user.AvatarPath))
+                    avatarBase64 = new HandlerAvatar(_context).GetClientAvatarAync(user.Id).Result;
+
                 return new LoginResultDTO()
                 {
                     Success = true,
 
-                    ClientProfileDTO = new() 
-                    { 
+                    ClientProfileDTO = new()
+                    {
                         Id = user.Id,
                         Login = user.Login,
                         Name = user.Name,
                         LastName = user.LastName,
                         Email = user.Email,
                         Status = user.Status,
+                        AvatarBase64 = avatarBase64,
                     },
 
 
                     Token = Guid.NewGuid().ToString(),
                     ErrorMessage = null,
                 };
+            }
 
             return new LoginResultDTO()
             {

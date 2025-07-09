@@ -12,6 +12,7 @@ using ChatClient.CustomControls;
 
 using MessageBox = ChatClient.CustomControls.MessageBox;
 using MessageBoxButton = ChatClient.CustomControls.MessageBoxButton;
+using System.Windows.Media.Imaging;
 
 namespace ChatClient.ViewModels
 {
@@ -19,6 +20,7 @@ namespace ChatClient.ViewModels
     {
         //Fields
         private ClientProfileDTO _clientProfileDTO;
+        private BitmapImage? _avatarBitMap;
         //Property
         public ClientProfileDTO ClientProfileDTO
         {
@@ -29,6 +31,15 @@ namespace ChatClient.ViewModels
                 OnPropertyChanged(nameof(_clientProfileDTO));
             }
         }
+        public BitmapImage? AvatarBitMap
+        {
+            get => _avatarBitMap;
+            set
+            {
+                _avatarBitMap = value;
+                OnPropertyChanged(nameof(_avatarBitMap));
+            }
+        }
         //Commands
 
         public ICommand ClosePageCommand { get; }
@@ -37,6 +48,7 @@ namespace ChatClient.ViewModels
         public ClientProfileViewModel() 
         {
             ClientProfileDTO = NetworkSession.ClientProfile;
+            AvatarBitMap = AvatarService.Base64ToBitmapImage(NetworkSession.ClientProfile.AvatarBase64);
 
             ClosePageCommand = new ViewModelCommand(ExecuteClosePageCommand);
             CopyLoginToBufferCommand = new ViewModelCommand(ExecuteCopyLoginToBufferCommand);

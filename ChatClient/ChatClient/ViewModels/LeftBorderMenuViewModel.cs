@@ -9,6 +9,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Input;
+using System.Windows.Media.Imaging;
 
 namespace ChatClient.ViewModels
 {
@@ -16,6 +17,8 @@ namespace ChatClient.ViewModels
     {
         //Fields
         private ClientProfileDTO _clientProfileDTO;
+
+        private BitmapImage? _avatarBitMap;
         //Property
 
         public ClientProfileDTO ClientProfileDTO
@@ -25,6 +28,16 @@ namespace ChatClient.ViewModels
             {
                 _clientProfileDTO = value;
                 OnPropertyChanged(nameof(_clientProfileDTO));
+            }
+        }
+
+        public BitmapImage? AvatarBitMap
+        {
+            get => _avatarBitMap;
+            set
+            {
+                _avatarBitMap = value;
+                OnPropertyChanged(nameof(_avatarBitMap));
             }
         }
         //Commands
@@ -41,6 +54,7 @@ namespace ChatClient.ViewModels
         public LeftBorderMenuViewModel()
         {
             ClientProfileDTO = NetworkSession.ClientProfile;
+            AvatarBitMap = AvatarService.Base64ToBitmapImage(NetworkSession.ClientProfile.AvatarBase64);
 
             ClosePageCommand = new ViewModelCommand(ExecuteClosePageCommand);
 
@@ -56,9 +70,8 @@ namespace ChatClient.ViewModels
         private void ExecuteOpenClietnProfilePageCommand(object? obj)
         {
             ClientProfileView view = new();
-            //CreatRoomViewModel viewModel = new();
-            //view.DataContext = viewModel;
-
+            ClientProfileViewModel viewModel = new();
+            view.DataContext = viewModel;
             Services.NavigationService.TopFrame.Content = view;
         }
 

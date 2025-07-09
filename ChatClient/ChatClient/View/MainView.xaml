@@ -6,6 +6,7 @@
       xmlns:local="clr-namespace:ChatClient.View"
       xmlns:dto="clr-namespace:ChatShared.DTO;assembly=ChatShared"
       xmlns:vm="clr-namespace:ChatClient.ViewModels"
+      xmlns:cn="clr-namespace:ChatClient.Converters"
       xmlns:ui="http://schemas.modernwpf.com/2019"
       mc:Ignorable="d" 
       d:DesignHeight="750" d:DesignWidth="1100"
@@ -17,17 +18,22 @@
     </Page.DataContext>
     
     <Page.Resources>
+        <cn:Base64ToImageConverter x:Key="Base64ToImageConverter"/>
         <DataTemplate x:Key="listboxItemTemplate">
             <StackPanel 
                                     Background="Transparent" 
                                     Orientation="Horizontal">
 
                 <Border
-                                    Background="SkyBlue"
+                                    d:Background="SkyBlue"
                                     MinHeight="50"
                                     MinWidth="50"
                                     CornerRadius="40"
-                                    Margin="0,0,10,0"/>
+                                    Margin="0,0,10,0">
+                    <Border.Background>
+                        <ImageBrush ImageSource="{Binding AvatarBase64, Converter={StaticResource Base64ToImageConverter}}"/>
+                    </Border.Background>
+                </Border>
 
                 <TextBlock
                                         FontSize="22"
@@ -101,7 +107,8 @@
                     Grid.Row="1">
                     
                     <!--All client chats-->
-                    <StackPanel
+                    <StackPanel 
+                    d:Visibility="Hidden"
                     Visibility="{Binding AllChatsVisibility}"
                     HorizontalAlignment="Stretch"
                     >
@@ -184,8 +191,6 @@
 
                     </StackPanel>
                 </Grid>
-                
-                
 
             </Grid>
         </Border>

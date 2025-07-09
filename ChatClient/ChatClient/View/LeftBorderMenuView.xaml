@@ -78,7 +78,11 @@
                     Width="70"
                     Height="70"
                     CornerRadius="50"
-                    Background="{StaticResource Primary}"/>
+                    d:Background="{StaticResource Primary}">
+                        <Border.Background>
+                            <ImageBrush ImageSource="{Binding AvatarBitMap, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}"/>
+                        </Border.Background>
+                    </Border>
                     <TextBlock
                         Margin="20,0,0,10"
                         FontSize="20"

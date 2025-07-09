@@ -24,7 +24,6 @@ namespace ChatServer.Handlers
         {
             List<ChatMiniProfileDTO> result = new();
 
-
             ChatRoom[] rooms = await _context.ChatRoomMembers.Where(c => c.ClientId == clientId).Select(c => c.Room).ToArrayAsync();
 
             result.AddRange(ChatRoomsToChatMiniProfileDTO(rooms, true, clientId));
@@ -57,6 +56,7 @@ namespace ChatServer.Handlers
         private List<ChatMiniProfileDTO> ChatRoomsToChatMiniProfileDTO(ChatRoom[] rooms, bool isMember, int clientId)
         {
             List<ChatMiniProfileDTO> result = new();
+            var avatarHandler = new HandlerAvatar(_context);
             foreach (var room in rooms)
             {
 
@@ -72,20 +72,25 @@ namespace ChatServer.Handlers
                 switch (room.ChatRoomTypeId)
                 {
                     case 1: // Group chat
-                        chatMiniProfile.ChatType = ChatType.Group;
+                        { chatMiniProfile.ChatType = ChatType.Group; }
                         break;
                     case 2: // Private chat
-                        chatMiniProfile.ChatType = ChatType.Private;
+                        {
+                            chatMiniProfile.ChatType = ChatType.Private;
 
-                        Client client = _context.ChatRoomMembers.
-                            Where(c => c.RoomId == room.Id && c.ClientId != clientId).
-                            Select(c => c.Client).FirstOrDefault();
+                            Client client = _context.ChatRoomMembers.
+                                Where(c => c.RoomId == room.Id && c.ClientId != clientId).
+                                Select(c => c.Client).FirstOrDefault();
 
-                        chatMiniProfile.Name = string.Format($"{client!.LastName} {client!.Name}");
+                            chatMiniProfile.Name = string.Format($"{client!.LastName} {client!.Name}");
+                            chatMiniProfile.AvatarBase64 = avatarHandler.GetClientAvatarAync(client.Id).Result;
+                        }
                         break;
                     default:
                         break;
                 }
+
+
                 result.Add(chatMiniProfile);
             }
             return result;
@@ -94,6 +99,7 @@ namespace ChatServer.Handlers
         public async Task<List<ChatMiniProfileDTO>> SeachChatsByNameAsync(string seachName)
         {
             List<ChatMiniProfileDTO> result = new();
+            HandlerAvatar handlerAvatar = new(_context);
 
             ChatMiniProfileDTO[] rooms = await _context.ChatRooms.Where(c => c.Name.Contains(seachName)).
             Select(c => new ChatMiniProfileDTO
@@ -106,7 +112,7 @@ namespace ChatServer.Handlers
             })
             .ToArrayAsync();
 
-            ChatMiniProfileDTO[] contacts = await _context.Clients.Where(c => 
+            ChatMiniProfileDTO[] contacts = await _context.Clients.Where(c =>
             ((c.LastName ?? "") + "" + (c.Name ?? "")).Contains(seachName) ||
             (c.Name ?? "").Contains(seachName) ||
             (c.LastName ?? "").Contains(seachName)).
@@ -117,9 +123,15 @@ namespace ChatServer.Handlers
                 ChatType = ChatType.Private,
                 IsContact = false,
                 LastMessaget = string.Empty, // <- - Replace with actual last message
-                LastActivity = DateTime.Now // <- - Replace with actual last activity
+                LastActivity = DateTime.Now, // <- - Replace with actual last activity
+
             })
             .ToArrayAsync();
+
+            foreach (ChatMiniProfileDTO contact in contacts)
+            {
+                contact.AvatarBase64 = await handlerAvatar.GetClientAvatarAync(contact.Id);
+            }
 
             result.AddRange(rooms);
             result.AddRange(contacts);

@@ -11,6 +11,7 @@
     <Page.DataContext>
         <vm:ClientProfileViewModel/>
     </Page.DataContext>
+    
     <Grid>
         <Border
             Grid.ColumnSpan="2"
@@ -94,7 +95,11 @@ Command="{Binding ClosePageCommand}">
                         Height="90"
                         Margin="7"
                         CornerRadius="50"
-                        Background="{StaticResource Primary}"/>
+                        d:Background="{StaticResource Primary}">
+                        <Border.Background>
+                            <ImageBrush ImageSource="{Binding AvatarBitMap, UpdateSourceTrigger=PropertyChanged, Mode=OneWay}"/>
+                        </Border.Background>
+                    </Border>
 
                     <StackPanel
                         VerticalAlignment="Center"

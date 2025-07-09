@@ -7,6 +7,10 @@ using System.Threading.Tasks;
 using System.Windows.Input;
 using ChatShared.DTO;
 using ChatShared.DTO.Enums;
+using Microsoft.Win32;
+using System.Windows.Media.Imaging;
+using System.IO;
+using ChatClient.CustomControls;
 
 namespace ChatClient.ViewModels
 {
@@ -15,7 +19,13 @@ namespace ChatClient.ViewModels
         //Fields
         private string _login;
         private string _password;
-        private string email;
+
+        private string _email;
+        private string _name;
+        private string _lastName;
+
+        private BitmapImage _avatarImage;
+        private string _avatarExtension;
 
         //Properties
         public string Login
@@ -38,11 +48,38 @@ namespace ChatClient.ViewModels
         }
         public string Email
         {
-            get { return email; }
+            get { return _email; }
             set
             {
-                email = value;
+                _email = value;
                 OnPropertyChanged(nameof(Email));
+            }
+        }
+        public string Name
+        {
+            get { return _name; }
+            set
+            {
+                _name = value;
+                OnPropertyChanged(nameof(Name));
+            }
+        }
+        public string LastName
+        {
+            get { return _lastName; }
+            set
+            {
+                _lastName = value;
+                OnPropertyChanged(nameof(LastName));
+            }
+        }
+        public BitmapImage AvatarImage
+        {
+            get { return _avatarImage; }
+            set
+            {
+                _avatarImage = value;
+                OnPropertyChanged(nameof(AvatarImage));
             }
         }
 
@@ -50,10 +87,38 @@ namespace ChatClient.ViewModels
         public ICommand GoBackCommand { get; }
         public ICommand SignUpCommand { get; }
 
+        public ICommand ChooseAvatarCommand { get; }
+
         public SignUpViewModel()
         {
             GoBackCommand = new ViewModelCommand(ExcuteGoBackCommand);
             SignUpCommand = new ViewModelCommand(ExecuteSignUpCommand, CanExecuteSignUpCommand);
+            ChooseAvatarCommand = new ViewModelCommand(ExecuteChooseAvatarCommand);
+        }
+
+        private void ExecuteChooseAvatarCommand(object? obj)
+        {
+            OpenFileDialog dialog = new()
+            {
+                Title = "Выбор аватарки",
+                Filter = "Image files (*.png;*.jpg;*.jpeg)|*.png;*.jpg;*.jpeg|All files (*.*)|*.*",
+                Multiselect = false
+            };
+
+            Nullable<bool> result = dialog.ShowDialog();
+
+            var maxSize = 200 * 1024;
+            var size = new FileInfo(dialog.FileName).Length;
+
+            if(size > maxSize)
+            {
+                MessageBox.Show("Размер файла не должен привышать 200 Кб!", "Ошибка", MessageBoxButton.OK, MessageBoxType.Error);
+                return;
+            }
+
+            if (result.HasValue)
+            AvatarImage = new BitmapImage(new Uri(dialog.FileName));
+            _avatarExtension = Path.GetExtension(dialog.FileName);
         }
 
         private async void ExecuteSignUpCommand(object? obj)
@@ -62,28 +127,42 @@ namespace ChatClient.ViewModels
             {
                 Login = Login,
                 PasswordHash = Password,
-                Email = Email
+
+                Email = Email,
             };
+            if (!string.IsNullOrWhiteSpace(Name) || !string.IsNullOrWhiteSpace(LastName))
+            {
+                newClient.Name = Name;
+                newClient.LastName = LastName;
+            }
+            if (AvatarImage != null)
+            {
+                newClient.AvatarBase64 = AvatarService.BitmapImageToBase64(AvatarImage);
+                newClient.AvatarExtension = _avatarExtension;
+            }
+
+
             var session = NetworkSession.Session;
             await session.SendAsync<ClientSignUpDTO>(newClient, RequestType.Register);
             bool result = await session.ResponseAsync<bool>();
-            
+
             if (result)
                 GoBackCommand.Execute(null);
 
         }
 
+
         private bool CanExecuteSignUpCommand(object? obj)
         {
-           if(Login == null || Login.Length < 3 ||
-                Password == null || Password.Length < 3 ||
-              Email == null || Email.Length < 5)
+            if (Login == null || Login.Length < 3 ||
+                 Password == null || Password.Length < 3 ||
+               Email == null || Email.Length < 5)
                 return false;
             return true;
         }
 
         private void ExcuteGoBackCommand(object? obj) => Services.NavigationService.MainFrame.GoBack();
-        
+
 
 
     }

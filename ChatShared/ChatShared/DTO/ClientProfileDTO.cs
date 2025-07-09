@@ -14,5 +14,7 @@ namespace ChatShared.DTO
         public string Login { get; set; }
         public string Email { get; set; }
         public string Status { get; set; }
+
+        public string? AvatarBase64 { get; set; }
     }
 }

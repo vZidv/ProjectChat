@@ -27,15 +27,27 @@ namespace ChatServer.Handlers
             if (findUser != null)
                 return false;
 
-            
+            string? filePath = null;
+            if (clientSignUpDTO.AvatarBase64 != null)
+            {
+                 filePath = new HandlerAvatar(_context)
+                    .SaveAvatarAsync($"{clientSignUpDTO.Login}{clientSignUpDTO.AvatarExtension}", clientSignUpDTO.AvatarBase64)
+                    .Result;
+            }
             var newClient = new Client()
             {
                 Login = clientSignUpDTO.Login,
                 PasswordHash = HandlerPassword.HashPassword(clientSignUpDTO.PasswordHash),
+
                 Email = clientSignUpDTO.Email,
+                Name = clientSignUpDTO.Name,
+                LastName = clientSignUpDTO.LastName,
+
                 CreatedAt = DateTime.Now,
                 LastLogin = DateTime.Now,
-                AvatarPath = null,
+
+                AvatarPath = filePath,
+
                 Status = null,
                 IsBanned = false
             };
