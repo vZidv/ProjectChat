@@ -13,6 +13,8 @@ public partial class ChatRoom
 
     public int? OwnerId { get; set; }
 
+    public string? AvatarPath { get; set; }
+
     public bool IsPrivate { get; set; }
 
     public virtual ICollection<ChatRoomMember> ChatRoomMembers { get; set; } = new List<ChatRoomMember>();

@@ -41,8 +41,20 @@ namespace ChatServer.Handlers
             return result;
         }
 
-        private string ImageToBase64(string filePath)
+        public async Task<string> GetRoomAvatarAync(int roomId)
         {
+            string? result = null;
+
+            string? filePath = await _context.ChatRooms.Where(c => c.Id == roomId).Select(c => c.AvatarPath).FirstOrDefaultAsync();
+            if (filePath != null)
+                result = ImageToBase64(filePath);
+            return result;
+        }
+
+        public string? ImageToBase64(string filePath)
+        {
+            if (filePath == null)
+                return null;
             byte[] fileBytes = File.ReadAllBytes(filePath);
             return Convert.ToBase64String(fileBytes);
         }

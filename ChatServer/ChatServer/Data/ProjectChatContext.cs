@@ -42,6 +42,7 @@ public partial class ProjectChatContext : DbContext
 
             entity.HasIndex(e => e.OwnerId, "IX_ChatRoom_OwnerId");
 
+            entity.Property(e => e.AvatarPath).HasMaxLength(256);
             entity.Property(e => e.Name).HasMaxLength(100);
 
             entity.HasOne(d => d.ChatRoomType).WithMany(p => p.ChatRooms)

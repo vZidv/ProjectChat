@@ -72,7 +72,10 @@ namespace ChatServer.Handlers
                 switch (room.ChatRoomTypeId)
                 {
                     case 1: // Group chat
-                        { chatMiniProfile.ChatType = ChatType.Group; }
+                        { 
+                            chatMiniProfile.ChatType = ChatType.Group;
+                            chatMiniProfile.AvatarBase64 = avatarHandler.ImageToBase64(room.AvatarPath);
+                        }
                         break;
                     case 2: // Private chat
                         {
@@ -82,8 +85,8 @@ namespace ChatServer.Handlers
                                 Where(c => c.RoomId == room.Id && c.ClientId != clientId).
                                 Select(c => c.Client).FirstOrDefault();
 
-                            chatMiniProfile.Name = string.Format($"{client!.LastName} {client!.Name}");
                             chatMiniProfile.AvatarBase64 = avatarHandler.GetClientAvatarAync(client.Id).Result;
+                            chatMiniProfile.Name = string.Format($"{client!.LastName} {client!.Name}");
                         }
                         break;
                     default:
@@ -128,10 +131,11 @@ namespace ChatServer.Handlers
             })
             .ToArrayAsync();
 
+
+            foreach (ChatMiniProfileDTO room in rooms)
+                room.AvatarBase64 = await handlerAvatar.GetRoomAvatarAync(room.Id);
             foreach (ChatMiniProfileDTO contact in contacts)
-            {
                 contact.AvatarBase64 = await handlerAvatar.GetClientAvatarAync(contact.Id);
-            }
 
             result.AddRange(rooms);
             result.AddRange(contacts);

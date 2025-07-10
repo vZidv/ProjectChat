@@ -36,6 +36,9 @@ namespace ChatServer.Handlers
 
             int ChatRoomTypeId = _context.ChatRoomTypes.Where(t => t.Name == "Group").Select(t => t.Id).FirstOrDefault();
 
+
+
+
             ChatRoom chatRoom = new()
             {
                 Name = roomDTO.Name,
@@ -43,7 +46,11 @@ namespace ChatServer.Handlers
                 OwnerId = roomDTO.OwnerId,
                 IsPrivate = roomDTO.IsPrivate,
             };
-            _context.ChatRooms.Add(chatRoom);
+            if (roomDTO.AvotarBase64 != null)
+                chatRoom.AvatarPath = await new HandlerAvatar(_context).SaveAvatarAsync($"{chatRoom.Name}{roomDTO.AvatarExtension}", roomDTO.AvotarBase64);
+
+
+                _context.ChatRooms.Add(chatRoom);
             try
             {
                 await _context.SaveChangesAsync();

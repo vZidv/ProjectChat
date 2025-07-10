@@ -3,6 +3,7 @@
       xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
       xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
       xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+      xmlns:ui="http://schemas.modernwpf.com/2019" 
       xmlns:vm="clr-namespace:ChatClient.ViewModels"
       xmlns:local="clr-namespace:ChatClient.View"
       mc:Ignorable="d" 
@@ -52,12 +53,43 @@ Command="{Binding ClosePageCommand}">
                         <ColumnDefinition Width="100"/>
                         <ColumnDefinition Width="*"/>
                     </Grid.ColumnDefinitions>
-                    <Border 
+                    <Grid>
+                        <Border
                         VerticalAlignment="Center"
                         CornerRadius="50"
                         Width="80"
                         Height="80"
-                        Background="{StaticResource Primary}"/>
+                        Background="{StaticResource Primary}"
+                        />
+                        <Border 
+                        VerticalAlignment="Center"
+                        CornerRadius="50"
+                        Width="80"
+                        Height="80"
+                        >
+                            <Border.Background>
+                                <ImageBrush ImageSource="{Binding AvatarBitMap, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}" />
+                            </Border.Background>
+                        </Border>
+                        <Button
+                         Style="{StaticResource AccentButtonStyle}"
+                         HorizontalAlignment="Right"   
+                         VerticalAlignment="Bottom"
+                         Margin="5,24"
+                         Width="40"
+                         Height="40"
+                         FontWeight="Bold"
+                         Command="{Binding ChooseAvatarCommand}"
+                         Background="{StaticResource PrimaryDark}"
+                         Foreground="{StaticResource ClearWhite}"
+                         BorderThickness="0.8"
+                         BorderBrush="Black"
+                         Content="&#xE722;"
+                         FontSize="20"
+                         FontFamily="Segoe MDL2 Assets"
+                         ui:ControlHelper.CornerRadius="20"
+                        />
+                    </Grid>
 
                     <StackPanel
                         VerticalAlignment="Center"
