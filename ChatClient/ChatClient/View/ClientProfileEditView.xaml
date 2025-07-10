@@ -1,0 +1,233 @@
+﻿<Page x:Class="ChatClient.View.ClientProfileEditView"
+      xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+      xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+      xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+      xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+      xmlns:local="clr-namespace:ChatClient.View"
+      xmlns:vm="clr-namespace:ChatClient.ViewModels"
+      xmlns:ui="http://schemas.modernwpf.com/2019"
+      mc:Ignorable="d" 
+      d:DesignHeight="600" d:DesignWidth="1000"
+      Title="ClientProfileEditView">
+    <Page.DataContext>
+        <vm:ClientProfileEditViewModel/>
+    </Page.DataContext>
+    
+    <Grid>
+        <Border
+            Grid.ColumnSpan="2"
+            Background="Black"
+            Opacity="0.4"
+            />
+        <Button
+HorizontalAlignment="Stretch"
+VerticalAlignment="Stretch"
+Background="Transparent"
+BorderThickness="0"
+Command="{Binding ClosePageCommand}">
+            <Button.Template>
+                <ControlTemplate TargetType="Button">
+                    <Border Background="{TemplateBinding Background}">
+                        <ContentPresenter
+                            HorizontalAlignment="Center"
+                            VerticalAlignment="Center"/>
+                    </Border>
+                </ControlTemplate>
+            </Button.Template>
+        </Button>
+        <Border
+            Width="400"
+            Height="550"
+            Background="{StaticResource BgColor3}"
+            CornerRadius="12">
+
+            <Grid>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="60"/>
+                    <RowDefinition/>
+                    <RowDefinition Height="10"/>
+                    <RowDefinition/>
+                    <RowDefinition/>
+                </Grid.RowDefinitions>
+                <Grid
+                    Grid.Row="0">
+                    <TextBlock
+                        Text="Обновить профиль"
+                        Style="{StaticResource BaseTextBlockStyle}"
+                        Foreground="{StaticResource ClearWhite}"
+                        FontSize="20"
+                        VerticalAlignment="Center"
+                        Margin="15,0,0,0"/>
+                    <StackPanel 
+                        Orientation="Horizontal"
+                        HorizontalAlignment="Right">
+                        <Button
+                            Command="{Binding UpdateCientProfileCommand}"
+                            FontWeight="Bold"
+                            FontSize="18"
+                            Width="40"
+                            Height="40"
+                            Background="Transparent"
+                            Content="&#xE8FB;"
+                            FontFamily="Segoe MDL2 Assets"
+                            Foreground="{StaticResource Second}"
+                            >
+
+                        </Button>
+                        <Button
+                         Width="40"
+                         Height="40"
+                         FontWeight="Bold"
+                         Command="{Binding ClosePageCommand}"
+                         Background="Transparent"
+                         Foreground="{StaticResource Second}"
+                         Content="&#xE8BB;" 
+                         FontFamily="Segoe MDL2 Assets"
+                        />
+                    </StackPanel>
+                </Grid>
+                <Grid
+                    Grid.Row="1"
+                    >
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="110"/>
+                        <ColumnDefinition/>
+                    </Grid.ColumnDefinitions>
+                    <Grid>
+                        <Border
+                        Width="90"
+                        Height="90"
+                        Margin="7"
+                        CornerRadius="50"
+                        d:Background="{StaticResource Primary}">
+                            <Border.Background>
+                                <ImageBrush ImageSource="{Binding AvatarBitMap, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}"/>
+                            </Border.Background>
+                        </Border>
+                        <Button
+                         Style="{StaticResource AccentButtonStyle}"
+                         HorizontalAlignment="Right"   
+                         VerticalAlignment="Bottom"
+                         Margin="10,35"
+                         Width="40"
+                         Height="40"
+                         FontWeight="Bold"
+                         Command="{Binding ChooseAvatarCommand}"
+                         Background="{StaticResource PrimaryDark}"
+                         Foreground="{StaticResource ClearWhite}"
+                         BorderThickness="0.8"
+                         BorderBrush="Black"
+                         Content="&#xE722;"
+                         FontSize="20"
+                         FontFamily="Segoe MDL2 Assets"
+                         ui:ControlHelper.CornerRadius="20"
+                        />
+                    </Grid>
+                    <StackPanel
+                        VerticalAlignment="Center"
+                        Grid.Column="1"
+                        Orientation="Vertical">
+                        <StackPanel
+                            VerticalAlignment="Center"
+                            Grid.Column="1">
+                               <TextBlock
+                                Margin="10,0"
+                                Foreground="{StaticResource Primary}"
+                                Style="{StaticResource BaseTextBlockStyle}"
+                                Text="Имя"/>
+                            <Border
+                                Margin="10,0"
+                                BorderThickness="0,0,0,2"
+                                BorderBrush="{StaticResource Primary}">
+                               <TextBox
+                                Text="{Binding ClientProfileDTO.Name, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                                BorderThickness="0"
+                                Background="Transparent"
+                                FontSize="17"
+                                Foreground="{StaticResource ClearWhite}"
+                                d:Text="Олег"
+                                HorizontalAlignment="Stretch"
+                                />
+                            </Border>
+                        </StackPanel>
+                        <StackPanel
+                            VerticalAlignment="Center"
+                            Grid.Column="1">
+                            <TextBlock
+                                Margin="10,0"
+                                Foreground="{StaticResource Primary}"
+                                Style="{StaticResource BaseTextBlockStyle}"
+                                Text="Фамилия"/>
+                            <Border
+                                Margin="10,0"
+                                BorderThickness="0,0,0,2"
+                                BorderBrush="{StaticResource Primary}">
+                                <TextBox
+                                Text="{Binding ClientProfileDTO.LastName, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                                BorderThickness="0"
+                                Background="Transparent"
+                                FontSize="17"
+                                Foreground="{StaticResource ClearWhite}"
+                                d:Text="Мировец"
+                                HorizontalAlignment="Stretch"
+                                />
+                            </Border>
+                        </StackPanel>
+                    </StackPanel>
+                </Grid>
+                <Border 
+                        Grid.Row="2"
+                        Background="{StaticResource BgColor4}"/>
+                <Grid
+                    Grid.Row="3">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="90"/>
+                        <ColumnDefinition/>
+                    </Grid.ColumnDefinitions>
+                    <Grid
+                        VerticalAlignment="Center"
+                        Grid.Column="0">
+                        <TextBlock
+                            Margin="18"
+                            FontSize="45"
+                            HorizontalAlignment="Center"
+                            VerticalAlignment="Top"
+                            Foreground="{StaticResource ClearWhite}"
+                            Text="&#xE946;"
+                            FontFamily="Segoe MDL2 Assets"/>
+                    </Grid>
+                    <Grid
+                        Grid.Column="1">
+                        <StackPanel VerticalAlignment="Center">
+                            <StackPanel
+                            VerticalAlignment="Center"
+                            Grid.Column="1">
+                                <TextBlock
+                                Margin="10,0"
+                                Foreground="{StaticResource Primary}"
+                                Style="{StaticResource BaseTextBlockStyle}"
+                                Text="Почта"/>
+                                <Border
+                                Margin="10,0"
+                                BorderThickness="0,0,0,2"
+                                BorderBrush="{StaticResource Primary}">
+                                    <TextBox
+                                Text="{Binding ClientProfileDTO.Email, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                                BorderThickness="0"
+                                Background="Transparent"
+                                FontSize="17"
+                                Foreground="{StaticResource ClearWhite}"
+                                d:Text="oleg12@gmail.com"
+                                HorizontalAlignment="Stretch"
+                                />
+                                </Border>
+                            </StackPanel>
+
+                        </StackPanel>
+
+                    </Grid>
+                </Grid>
+            </Grid>
+        </Border>
+    </Grid>
+</Page>

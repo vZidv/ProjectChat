@@ -10,6 +10,7 @@ namespace ChatShared.DTO.Enums
     {
         Login,
         Register,
+        ClientProfileUpdate,
 
         SendMessage,
         GetHistoryChat,

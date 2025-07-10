@@ -16,5 +16,6 @@ namespace ChatShared.DTO
         public string Status { get; set; }
 
         public string? AvatarBase64 { get; set; }
+        public string? AvatarExtension { get; set; } = null!;
     }
 }

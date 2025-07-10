@@ -61,6 +61,7 @@ Command="{Binding ClosePageCommand}">
                         Orientation="Horizontal"
                         HorizontalAlignment="Right">
                         <Button
+                            Command="{Binding OpenEditProfilePageCommand}"
                             FontWeight="Bold"
                             Width="40"
                             Height="40"
@@ -97,7 +98,7 @@ Command="{Binding ClosePageCommand}">
                         CornerRadius="50"
                         d:Background="{StaticResource Primary}">
                         <Border.Background>
-                            <ImageBrush ImageSource="{Binding AvatarBitMap, UpdateSourceTrigger=PropertyChanged, Mode=OneWay}"/>
+                            <ImageBrush ImageSource="{Binding AvatarBitMap, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}"/>
                         </Border.Background>
                     </Border>
 

@@ -12,7 +12,7 @@ using System.Threading.Tasks;
 
 namespace ChatServer.Handlers
 {
-    public class HandlerClient
+    public class HandlerClientSession
     {
         private static readonly ConcurrentDictionary<string, ClientSession> _sessions = new();
         private static readonly ConcurrentDictionary<int, List<ClientSession>> _roomClients = new();

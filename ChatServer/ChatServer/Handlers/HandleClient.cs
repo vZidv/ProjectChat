@@ -1,4 +1,5 @@
 ﻿using ChatServer.Data;
+using ChatServer.Models;
 using ChatShared.DTO;
 using Microsoft.EntityFrameworkCore;
 using System;
@@ -9,16 +10,16 @@ using System.Threading.Tasks;
 
 namespace ChatServer.Handlers
 {
-    public class HandleLogin
+    public class HandleClient
     {
         private readonly ProjectChatContext _context;
 
-        public HandleLogin(ProjectChatContext context)
+        public HandleClient(ProjectChatContext context)
         {
             _context = context;
         }
 
-        public async Task<LoginResultDTO> HandleLoginAsync(ClientLoginDTO loginDTO)
+        public async Task<LoginResultDTO> ClientLoginAsync(ClientLoginDTO loginDTO)
         {
             var user = await _context.Clients.Where(p => p.Login == loginDTO.Login).FirstOrDefaultAsync();
 
@@ -56,6 +57,30 @@ namespace ChatServer.Handlers
                 Token = null,
                 ErrorMessage = "Неверный логин или пароль",
             };
+        }
+
+        public async Task<bool> ClientProfileUpdateAsync(ClientProfileDTO clientProfileDTO)
+        {
+            Client client = await _context.Clients.Where(c => c.Id == clientProfileDTO.Id).FirstOrDefaultAsync();
+
+            client.Name = clientProfileDTO.Name;
+            client.LastName = clientProfileDTO.LastName;
+            client.Email = clientProfileDTO.Email;
+
+            if (clientProfileDTO.AvatarBase64 != null)
+                client.AvatarPath = await new HandlerAvatar(_context).SaveAvatarAsync($"{client.Login}{clientProfileDTO.AvatarExtension}", clientProfileDTO.AvatarBase64);
+
+            _context.Clients.Update(client);
+            try
+            {
+                await _context.SaveChangesAsync();
+                return true;
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Не удалось сохранить изменения. Ошибка: {ex.Message}");
+            }
+            return false;
         }
     }
 }

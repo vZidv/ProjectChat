@@ -13,6 +13,7 @@ using ChatClient.CustomControls;
 using MessageBox = ChatClient.CustomControls.MessageBox;
 using MessageBoxButton = ChatClient.CustomControls.MessageBoxButton;
 using System.Windows.Media.Imaging;
+using ChatClient.View;
 
 namespace ChatClient.ViewModels
 {
@@ -44,6 +45,7 @@ namespace ChatClient.ViewModels
 
         public ICommand ClosePageCommand { get; }
         public ICommand CopyLoginToBufferCommand { get; }
+        public ICommand OpenEditProfilePageCommand { get; }
 
         public ClientProfileViewModel() 
         {
@@ -52,6 +54,14 @@ namespace ChatClient.ViewModels
 
             ClosePageCommand = new ViewModelCommand(ExecuteClosePageCommand);
             CopyLoginToBufferCommand = new ViewModelCommand(ExecuteCopyLoginToBufferCommand);
+            OpenEditProfilePageCommand = new ViewModelCommand(ExecuteOpenEditProfilePageCommand);
+        }
+
+        private void ExecuteOpenEditProfilePageCommand(object? obj)
+        {
+            var view = new ClientProfileEditView();
+            view.DataContext = new ClientProfileEditViewModel();
+            NavigationService.TopFrame.Content = view;
         }
 
         private void ExecuteCopyLoginToBufferCommand(object? obj)

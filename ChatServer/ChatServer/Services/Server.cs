@@ -22,7 +22,7 @@ namespace ChatServer.Services
     public class Server
     {
         private readonly TcpListener _listener;
-        private HandlerClient _handlerClient = new();
+        private HandlerClientSession _handlerClient = new();
 
         public Server(int port)
         {
@@ -72,8 +72,8 @@ namespace ChatServer.Services
                             {
                                 var loginDTO = JsonConvert.DeserializeObject<RequestDTO<ClientLoginDTO>>(request).Data;
 
-                                HandleLogin handleLogin = new HandleLogin(new Data.ProjectChatContext());
-                                LoginResultDTO result = await handleLogin.HandleLoginAsync(loginDTO);
+                                var handleLogin = new HandleClient(new Data.ProjectChatContext());
+                                LoginResultDTO result = await handleLogin.ClientLoginAsync(loginDTO);
 
                                 if (result.Success)
                                     _handlerClient.AddClient(result, stream);
@@ -243,6 +243,20 @@ namespace ChatServer.Services
 
                                 await SendResponseAsync(stream, result, ResponseType.AddContactResult);
                                 Console.WriteLine($"Пользователю: {client.Client.RemoteEndPoint} был добавлен контакт: {addContactDTO.ReceiverClientId}");
+                            }
+                            break;
+                        case RequestType.ClientProfileUpdate:
+                            {
+                                var requestDTO = JsonConvert.DeserializeObject<RequestDTO<ClientProfileDTO>>(request);
+                                if (_handlerClient.TryGetSession(requestDTO.Token) == null)
+                                    break;
+
+                                ClientProfileDTO clientProfileDTO = requestDTO.Data;
+
+                                var handelerContact = new HandleClient(new Data.ProjectChatContext());
+                                bool result = await handelerContact.ClientProfileUpdateAsync(clientProfileDTO);
+
+                                Console.WriteLine($"Данные пользователя id: {clientProfileDTO.Id} обновлены, результат {result}");
                             }
                             break;
                         default:
