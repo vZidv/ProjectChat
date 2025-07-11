@@ -91,7 +91,7 @@ namespace ChatClient.ViewModels
 
             SendMessageCommand = new ViewModelCommand(ExecuteSendMessageCommand, CanExecuteSendMessageCommand);
             GetMessageCommand = new ViewModelCommand(ExecuteGetMessageCommand);
-            //OpenChatRoomPageCommand = new ViewModelCommand(ExecuteOpenChatRoomPageCommand);
+            OpenChatRoomPageCommand = new ViewModelCommand(ExecuteOpenChatRoomPageCommand);
             JoinInChatGroupCommand = new ViewModelCommand(ExecuteJoinInChatGroupCommand);
             AddContactCommand = new ViewModelCommand(ExecuteAddContactCommand);
 
@@ -177,14 +177,14 @@ namespace ChatClient.ViewModels
         }
 
 
-        //private void ExecuteOpenChatRoomPageCommand(object? obj)
-        //{
-        //    ChatRoomProfileView view = new();
-        //    ChatRoomProfileViewModel viewModel = new(ChatRoomDTO);
-        //    view.DataContext = viewModel;
+        private void ExecuteOpenChatRoomPageCommand(object? obj)
+        {
+            ChatRoomProfileView view = new();
+            ChatRoomProfileViewModel viewModel = new(ChatDTO);
+            view.DataContext = viewModel;
 
-        //    Services.NavigationService.TopFrame.Content = view;
-        //}
+            Services.NavigationService.TopFrame.Content = view;
+        }
 
         private async void ExecuteGetMessageCommand(object? obj)
         {

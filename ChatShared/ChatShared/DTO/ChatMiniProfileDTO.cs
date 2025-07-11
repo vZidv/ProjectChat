@@ -20,5 +20,6 @@ namespace ChatShared.DTO
         public bool? IsContact { get; set; }
 
         public string? AvatarBase64 { get; set; }
+        public string? AvatarExtension { get; set; } = null!;
     }
 }

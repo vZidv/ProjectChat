@@ -253,10 +253,24 @@ namespace ChatServer.Services
 
                                 ClientProfileDTO clientProfileDTO = requestDTO.Data;
 
-                                var handelerContact = new HandleClient(new Data.ProjectChatContext());
-                                bool result = await handelerContact.ClientProfileUpdateAsync(clientProfileDTO);
+                                var handelerClient = new HandleClient(new Data.ProjectChatContext());
+                                bool result = await handelerClient.ClientProfileUpdateAsync(clientProfileDTO);
 
                                 Console.WriteLine($"Данные пользователя id: {clientProfileDTO.Id} обновлены, результат {result}");
+                            }
+                            break;
+                        case RequestType.UpdateRoomProfile:
+                            {
+                                var requestDTO = JsonConvert.DeserializeObject<RequestDTO<ChatMiniProfileDTO>>(request);
+                                if (_handlerClient.TryGetSession(requestDTO.Token) == null)
+                                    break;
+
+                                ChatMiniProfileDTO chatMiniProfileDTO = requestDTO.Data;
+
+                                var handlerRoom = new HandlerChatRoom(new Data.ProjectChatContext());
+                                bool result = await handlerRoom.UpdateProfileRoomAsync(chatMiniProfileDTO);
+
+                                Console.WriteLine($"Профиль комнаты id: {chatMiniProfileDTO.Id} обновлен, результат {result}");
                             }
                             break;
                         default:

@@ -162,6 +162,7 @@ namespace ChatClient.ViewModels
             App.EventAggregator.Subscribe<CreatRoomEvent>(AddCreatedChatRoom);
             App.EventAggregator.Subscribe<SearchChatsEvent>(onSearchChatGlobal);
             App.EventAggregator.Subscribe<AddMemberInChatEvent>(onJoinInChatRoom);
+            App.EventAggregator.Subscribe<UpdateChatRoomProfileEvent>(onUpdateChatRoomProfile);
 
             _debounceTimer = new Timer(500);
             _debounceTimer.AutoReset = false;
@@ -300,5 +301,15 @@ namespace ChatClient.ViewModels
             Chats.Add(@event.JoinInChatRoomResultDTO.ChatMiniProfileDTO);
         }
 
+        private void onUpdateChatRoomProfile(UpdateChatRoomProfileEvent @event)
+        {
+            var data = @event.ChatMiniProfileDTO;
+            if (data == null) return;
+
+            var oldProfile = Chats.Where(c => c.Id == data.Id).FirstOrDefault();
+
+            Chats.Remove(oldProfile);
+            Chats.Add(data);
+        }
     }
 }

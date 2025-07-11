@@ -61,26 +61,18 @@ Command="{Binding ClosePageCommand}">
                    <StackPanel   
                        Orientation="Horizontal"  
                        HorizontalAlignment="Right">
+                        <Button
+                            Command="{Binding OpenEditPageCommand}"
+                            FontWeight="Bold"
+                            Width="40"
+                            Height="40"
+                            Background="Transparent"
+                            Content="&#xE104;"
+                            FontFamily="Segoe MDL2 Assets"
+                            Foreground="{StaticResource Second}"
+                            >
+                        </Button>
                         <Button  
-                           FontSize="20"  
-                           FontWeight="Bold"  
-                           Width="40"  
-                           Height="40"  
-                           Background="Transparent"  
-                           Content="&#xE712;"  
-                           FontFamily="Segoe MDL2 Assets"  
-                           Foreground="{StaticResource Second}" Click="Button_Click" 
-                           >
-                            <Button.ContextMenu>
-                                <ContextMenu 
-                                    Foreground="{StaticResource ClearWhite}"
-                                    Background="{StaticResource BgColor2}">
-                                    <MenuItem Header="Редактировать группу" Foreground="{StaticResource ClearWhite}"></MenuItem>
-                                    <MenuItem Header="Добавить участников" Foreground="{StaticResource ClearWhite}"/>
-                                </ContextMenu>
-                            </Button.ContextMenu>
-                        </Button>  
-                       <Button  
                         Width="40"  
                         Height="40"  
                         FontWeight="Bold"  
@@ -98,15 +90,26 @@ Command="{Binding ClosePageCommand}">
                    <Grid.ColumnDefinitions>  
                        <ColumnDefinition Width="110"/>  
                        <ColumnDefinition/>  
-                   </Grid.ColumnDefinitions>  
-                   <Border  
+                   </Grid.ColumnDefinitions>
+                    <Border  
                        Width="90"  
                        Height="90"  
                        Margin="7"  
                        CornerRadius="50"  
-                       Background="{StaticResource Primary}"/>  
+                       Background="{StaticResource Primary}"
+                        />
+                    <Border  
+                       Width="90"  
+                       Height="90"  
+                       Margin="7"  
+                       CornerRadius="50"  
+                        >
+                        <Border.Background>
+                            <ImageBrush ImageSource="{Binding AvatarBitMap, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
+                        </Border.Background>
+                    </Border>
 
-                   <StackPanel  
+                    <StackPanel  
                        VerticalAlignment="Center"  
                        Grid.Column="1"  
                        Orientation="Vertical">  
@@ -115,7 +118,7 @@ Command="{Binding ClosePageCommand}">
                            FontWeight="DemiBold"  
                            FontSize="24"  
                            Margin="10,0,10,0">  
-                           <Run d:Text="Group name" Text="{Binding ChatRoomDTO.Name, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>  
+                           <Run d:Text="Group name" Text="{Binding ChatDTO.Name, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>  
                        </TextBlock>  
                        <TextBlock  
                            FontWeight="DemiBold"  

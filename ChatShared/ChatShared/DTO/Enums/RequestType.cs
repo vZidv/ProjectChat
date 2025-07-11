@@ -18,6 +18,7 @@ namespace ChatShared.DTO.Enums
         SearchChats,
 
         CreatRoom,
+        UpdateRoomProfile,
         GetChats,
         UpdateCurrentChatRoom,
 

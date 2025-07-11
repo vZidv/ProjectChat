@@ -66,6 +66,27 @@ namespace ChatServer.Handlers
             return result;
         }
 
+        public async Task<bool> UpdateProfileRoomAsync(ChatMiniProfileDTO chatMiniProfileDTO)
+        {
+            ChatRoom chatRoom = await _context.ChatRooms.Where(c => c.Id == chatMiniProfileDTO.Id).FirstOrDefaultAsync();
+
+            chatRoom.Name = chatMiniProfileDTO.Name;
+
+            if (chatMiniProfileDTO.AvatarBase64 != null)
+                chatRoom.AvatarPath = await new HandlerAvatar(_context).SaveAvatarAsync($"{chatMiniProfileDTO.Name}{chatMiniProfileDTO.AvatarExtension}",chatMiniProfileDTO.AvatarBase64);
+            try
+            {
+                _context.ChatRooms.Update(chatRoom);
+                await _context.SaveChangesAsync();
+                return true;
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Не удалось обновить профиль комнаты id: {chatMiniProfileDTO.Id} Error:{ex.Message}");
+                return false;
+            }
+        }
+
         public async Task<CreatChatRoomResultDTO> CreatPrivateRoomAsync(int[] membersId)
         {
             CreatChatRoomResultDTO result = new(true, null, null);
