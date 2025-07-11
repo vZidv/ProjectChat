@@ -143,7 +143,7 @@
                         </Button.Content>
                     </Button>
                     <Button
-                        Command="{Binding OpenCreatRoomPageCommand}"
+                        Command="{Binding OpenContactsPageCommand}"
                         Style="{StaticResource menu_button}">
                         <Button.Content>
                             <StackPanel
@@ -177,25 +177,6 @@
 
                         </Button.Content>
                     </Button>
-
-                    <StackPanel Margin="0,10,0,0"
-                                HorizontalAlignment="Left"
-                                Orientation="Horizontal">
-                        <TextBlock
-                                 Margin="18,0,0,0"
-                                Style="{StaticResource menuButtonIcon_textBlock}"
-                                FontFamily="Segoe MDL2 Assets"
-                                Text="&#xE708;"/>
-                        <TextBlock
-                                Style="{StaticResource menuButtonText_textBlock}"
-                                Text="Ночной режим"/>
-                        <ToggleButton
-                            VerticalAlignment="Center"
-                            Style="{StaticResource DefaultToggleButtonStyle}"
-                            Margin="15,0"
-                            Width="20"
-                            Height="20"/>
-                    </StackPanel>
 
                 </StackPanel>
 

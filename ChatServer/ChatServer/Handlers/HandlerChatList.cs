@@ -30,27 +30,12 @@ namespace ChatServer.Handlers
 
             return result;
         }
-
-        private List<ChatMiniProfileDTO> ClientToChatMiniProfileDTO(Client[] clients, bool isMember)
+        
+        public async Task<ChatMiniProfileDTO[]> GetPrivatChatListForClientAsync(int clientId)
         {
-            List<ChatMiniProfileDTO> result = new();
-            foreach (var client in clients)
-            {
-                ChatMiniProfileDTO chatMiniProfile = new()
-                {
-                    Id = client.Id,
-                    Name = string.Format($"{client.LastName} {client.Name}"),
-                    ChatType = ChatType.Private,
-
-                    IsMember = isMember,
-
-
-                    LastMessaget = string.Empty, // <- - Replace with actual last message
-                    LastActivity = client.LastLogin // <- - Replace with actual last activity
-                };
-                result.Add(chatMiniProfile);
-            }
+            var result =  GetChatListForClientAsync(clientId).Result.Where(c => c.ChatType == ChatType.Private).ToArray();
             return result;
+            
         }
 
         private List<ChatMiniProfileDTO> ChatRoomsToChatMiniProfileDTO(ChatRoom[] rooms, bool isMember, int clientId)

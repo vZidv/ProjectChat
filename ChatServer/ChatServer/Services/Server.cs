@@ -273,6 +273,21 @@ namespace ChatServer.Services
                                 Console.WriteLine($"Профиль комнаты id: {chatMiniProfileDTO.Id} обновлен, результат {result}");
                             }
                             break;
+                        case RequestType.GetContacts:
+                            {
+                                var requestDTO = JsonConvert.DeserializeObject<RequestDTO<GetChatsDTO>>(request);
+                                if (_handlerClient.TryGetSession(requestDTO.Token) == null)
+                                    break;
+
+                                var getContactsDTO = requestDTO.Data;
+                                var handlerChat = new HandlerChatList(new Data.ProjectChatContext());
+                                ChatMiniProfileDTO[] chatMiniProfileDTOs = await handlerChat.GetPrivatChatListForClientAsync(getContactsDTO.ClientId);
+
+                                await SendResponseAsync(stream, chatMiniProfileDTOs, ResponseType.GetContactsResult);
+
+                                Console.WriteLine($"Результат на список контактов отправлен пользователю: {client.Client.RemoteEndPoint}");
+                            }
+                            break;
                         default:
                             Console.WriteLine("Неизвестный тип запроса");
                             break;

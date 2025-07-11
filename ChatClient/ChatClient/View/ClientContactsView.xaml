@@ -1,0 +1,151 @@
+﻿<Page x:Class="ChatClient.View.ClientContactsView"
+      xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+      xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+      xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+      xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+      xmlns:ui="http://schemas.modernwpf.com/2019" 
+      xmlns:dto="clr-namespace:ChatShared.DTO;assembly=ChatShared"
+      xmlns:local="clr-namespace:ChatClient.View"
+      xmlns:vm="clr-namespace:ChatClient.ViewModels"
+      xmlns:cn="clr-namespace:ChatClient.Converters"
+      mc:Ignorable="d" 
+      d:DesignHeight="600" d:DesignWidth="1000"  
+      Title="ClientContactsView">
+    <Page.DataContext>
+        <vm:ClientContactsViewModel/>
+    </Page.DataContext>
+    <Page.Resources>
+        <cn:Base64ToImageConverter x:Key="Base64ToImageConverter"/>
+        <DataTemplate x:Key="listboxItemTemplate">
+            <StackPanel 
+                                Background="Transparent" 
+                                Orientation="Horizontal">
+
+                <Border
+                                d:Background="SkyBlue"
+                                MinHeight="50"
+                                MinWidth="50"
+                                CornerRadius="40"
+                                Margin="0,0,10,0">
+                    <Border.Background>
+                        <ImageBrush ImageSource="{Binding AvatarBase64, Converter={StaticResource Base64ToImageConverter}}"/>
+                    </Border.Background>
+                </Border>
+
+                <TextBlock
+                                    FontSize="22"
+                                    Foreground="{StaticResource ClearWhite}"
+                                    VerticalAlignment="Center"
+                                    Text="{Binding Name}"
+                                    Style="{StaticResource BaseTextBlockStyle}"/>
+            </StackPanel>
+        </DataTemplate>
+    </Page.Resources>
+    
+    <Grid>
+        <Border  
+           Grid.ColumnSpan="2"  
+           Background="Black"  
+           Opacity="0.4"  
+           />
+        <Button  
+            HorizontalAlignment="Stretch"  
+            VerticalAlignment="Stretch"  
+            Background="Transparent"  
+            BorderThickness="0"  
+            Command="{Binding ClosePageCommand}">
+            <Button.Template>
+                <ControlTemplate TargetType="Button">
+                    <Border Background="{TemplateBinding Background}">
+                        <ContentPresenter  
+                           HorizontalAlignment="Center"  
+                           VerticalAlignment="Center"/>
+                    </Border>
+                </ControlTemplate>
+            </Button.Template>
+        </Button>
+        <Border  
+           Width="400"  
+           Height="550"  
+           Background="{StaticResource BgColor3}"  
+           CornerRadius="12">
+
+            <Grid>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="60"/>
+                    <RowDefinition Height="60"/>
+                    <RowDefinition Height="10"/>
+                    <RowDefinition Height="*"/>
+                </Grid.RowDefinitions>
+                <Grid  
+                   Grid.Row="0">
+                    <TextBlock  
+                       Text="Контакты"  
+                       Style="{StaticResource BaseTextBlockStyle}"  
+                       Foreground="{StaticResource ClearWhite}"  
+                       FontSize="20"  
+                       VerticalAlignment="Center"  
+                       Margin="15,0,0,0"/>
+                    <StackPanel   
+                       Orientation="Horizontal"  
+                       HorizontalAlignment="Right">
+
+                        <Button  
+                        Width="40"  
+                        Height="40"  
+                        FontWeight="Bold"  
+                        Command="{Binding ClosePageCommand}"  
+                        Background="Transparent"  
+                        Foreground="{StaticResource Second}"  
+                        Content="&#xE8BB;"   
+                        FontFamily="Segoe MDL2 Assets"  
+                       />
+                    </StackPanel>
+                </Grid>
+                <Grid
+                    Grid.Row="1">
+                    <TextBox 
+                        Text="{Binding SearchText, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}"
+                        Style="{StaticResource DefaultTextBoxStyle}"
+                        Margin="20,11"
+                        ui:ControlHelper.CornerRadius="15"
+                        ui:ControlHelper.PlaceholderText="Поиск"
+                        ui:ControlHelper.PlaceholderForeground="{StaticResource Second}"
+                        
+                        BorderThickness="0"
+                        FontSize="18"
+                        Foreground="{StaticResource ClearWhite}"
+                        VerticalContentAlignment="Center"
+                        Background="{StaticResource BgColor4}"
+                        />
+                </Grid>
+                <Grid
+                    Grid.Row="2">
+                    <Border
+                        Height="1"
+                        CornerRadius="4"
+                        Background="{StaticResource BgColor4}"
+                        Margin="10,0"/>
+                </Grid>
+                <Grid 
+                    Grid.Row="3">
+                    <ListBox 
+                        ScrollViewer.VerticalScrollBarVisibility="Auto"
+                        Background="Transparent"
+                        Margin="5,15"
+                        ItemsSource="{Binding LocalSearchResults, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}"
+                        SelectionChanged="ListBox_SelectionChanged"
+                        Cursor="Hand"
+                        ItemTemplate="{StaticResource listboxItemTemplate}">
+
+                        <d:ListBox.ItemsSource>
+                            <x:Array Type="{x:Type dto:ChatMiniProfileDTO}">
+                                <dto:ChatMiniProfileDTO Name="Name"/>
+                            </x:Array>
+                        </d:ListBox.ItemsSource>
+                    </ListBox>
+                </Grid>
+            </Grid>
+        </Border>
+    </Grid>
+</Page>

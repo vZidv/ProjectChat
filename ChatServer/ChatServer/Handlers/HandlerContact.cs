@@ -41,5 +41,11 @@ namespace ChatServer.Handlers
                 return result;
             }
         }
+
+        public async Task<List<Client>> GetContactsForClientAync(int clientId)
+        {
+            var result = await _context.Clients.Where(c => c.Id == clientId).Select(c => c.Clients).FirstOrDefaultAsync();
+            return result.ToList();
+        }
     }
 }

@@ -46,6 +46,7 @@ namespace ChatClient.ViewModels
 
         public ICommand OpenCreatRoomPageCommand { get; }
         public ICommand OpenClietnProfilePageCommand { get; }
+        public ICommand OpenContactsPageCommand { get; }
 
         public ICommand OpenProjectLinkCommand { get; }
         public ICommand OpenProjectVersionLinkCommand { get; }
@@ -60,11 +61,17 @@ namespace ChatClient.ViewModels
 
             OpenCreatRoomPageCommand = new ViewModelCommand(ExecuteOpenCreatRoomPageCommand);
             OpenClietnProfilePageCommand = new ViewModelCommand(ExecuteOpenClietnProfilePageCommand);
+            OpenContactsPageCommand = new ViewModelCommand(ExecuteOpenContactsPageCommand);
 
             OpenProjectLinkCommand = new ViewModelCommand(ExecuteOpenProjectLinkCommand);
             OpenProjectVersionLinkCommand = new ViewModelCommand(ExecuteOpenProjectVersionLinkCommand);
             OpenAboutProgramCommand = new ViewModelCommand(ExecuteOpenAboutProgramCommand);
 
+        }
+
+        private void ExecuteOpenContactsPageCommand(object? obj)
+        {
+            Services.NavigationService.TopFrame.Content = new ClientContactsView() { DataContext = new ClientContactsViewModel()};
         }
 
         private void ExecuteOpenClietnProfilePageCommand(object? obj)

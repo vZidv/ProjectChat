@@ -48,7 +48,7 @@
         <Grid Background="{StaticResource WindowBorder}">
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="88"/>
-            <ColumnDefinition Width="0.2*" MinWidth="200"/>
+            <ColumnDefinition Width="0.24*" MinWidth="200"/>
             <ColumnDefinition Width="3"/>
             <ColumnDefinition />
         </Grid.ColumnDefinitions>
@@ -104,16 +104,19 @@
                 </Grid>
 
                 <Grid
+                    ScrollViewer.VerticalScrollBarVisibility="Auto"
                     Grid.Row="1">
                     
                     <!--All client chats-->
                     <StackPanel 
+
                     d:Visibility="Hidden"
                     Visibility="{Binding AllChatsVisibility}"
                     HorizontalAlignment="Stretch"
                     >
 
                         <ListBox 
+                        ScrollViewer.VerticalScrollBarVisibility="Auto"
                         Background="Transparent"
                         Margin="0,15"
                         ItemsSource="{Binding Chats, UpdateSourceTrigger=PropertyChanged}"
@@ -148,6 +151,7 @@
                         </Border>
 
                         <ListBox 
+                        ScrollViewer.VerticalScrollBarVisibility="Auto"
                         Background="Transparent"
                         Margin="0,15"
                         ItemsSource="{Binding LocalSearchResults, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}"
@@ -174,6 +178,7 @@
                         </Border>
 
                         <ListBox 
+                        ScrollViewer.VerticalScrollBarVisibility="Auto"
                         Background="Transparent"
                         Margin="0,15"
                         ItemsSource="{Binding GlobalSearchResults, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}"

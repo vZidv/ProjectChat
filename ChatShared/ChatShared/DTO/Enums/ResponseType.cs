@@ -14,6 +14,7 @@ namespace ChatShared.DTO.Enums
         CreatRoomResult,
         UpdateChatRoomProfileResult,
         GetChats,
+        GetContactsResult,
         Error,
         Message,
         GetHistoryChatRoom,

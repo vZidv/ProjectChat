@@ -130,6 +130,12 @@ namespace ChatClient.Services
                                 _eventAggregator.Publish(new AddContactEvent(resultAddContact));
                             }
                             break;
+                        case ResponseType.GetContactsResult:
+                            {
+                                var resultContacts = JsonConvert.DeserializeObject<ResponseDTO<ChatMiniProfileDTO[]>>(json).Data;
+                                _eventAggregator.Publish(new GetContactsEvent(resultContacts));
+                            }
+                            break;
 
                     }
                 }
