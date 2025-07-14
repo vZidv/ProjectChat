@@ -21,7 +21,8 @@ namespace ChatShared.DTO.Enums
         SearchChatsResult,
 
         JoinInChatRoomResult,
-        AddContactResult
+        AddContactResult,
+        OpenChat,
         //..
     }
 }

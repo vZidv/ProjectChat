@@ -163,6 +163,7 @@ namespace ChatClient.ViewModels
             App.EventAggregator.Subscribe<SearchChatsEvent>(onSearchChatGlobal);
             App.EventAggregator.Subscribe<AddMemberInChatEvent>(onJoinInChatRoom);
             App.EventAggregator.Subscribe<UpdateChatRoomProfileEvent>(onUpdateChatRoomProfile);
+            App.EventAggregator.Subscribe<OpenChatEvent>(onOpenSelectedChatRoom);
 
             _debounceTimer = new Timer(500);
             _debounceTimer.AutoReset = false;
@@ -261,6 +262,11 @@ namespace ChatClient.ViewModels
                 NavigationService.MainFrame.Content = new LoginView();
 
             NetworkSession.Dispose();
+        }
+        private async void onOpenSelectedChatRoom(OpenChatEvent @event)
+        {
+            SelectedChat = @event.ChatMiniProfileDTO;
+            OpenSelectedChatRoom();
         }
 
         private async void OpenSelectedChatRoom()

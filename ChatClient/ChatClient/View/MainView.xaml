@@ -119,7 +119,7 @@
                         ScrollViewer.VerticalScrollBarVisibility="Auto"
                         Background="Transparent"
                         Margin="0,15"
-                        ItemsSource="{Binding Chats, UpdateSourceTrigger=PropertyChanged}"
+                        ItemsSource="{Binding Chats, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}"
                         SelectionChanged="ListBox_SelectionChanged"
                         Cursor="Hand"
                         ItemTemplate="{StaticResource listboxItemTemplate}">

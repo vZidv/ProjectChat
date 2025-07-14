@@ -108,5 +108,11 @@ namespace ChatClient.ViewModels
             LocalSearchResults = Contacts = new ObservableCollection<ChatMiniProfileDTO>(data);
 
         }
+
+        private void OpenSelectedChatRoom()
+        {
+            App.EventAggregator.Publish(new OpenChatEvent(SelectedChat));
+            NavigationService.TopFrame.Content = null;
+        }
     }
 }
