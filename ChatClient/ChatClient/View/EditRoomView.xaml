@@ -81,7 +81,7 @@ Command="{Binding ClosePageCommand}">
                          FontWeight="Bold"
                          Command="{Binding ChooseAvatarCommand}"
                          Background="{StaticResource PrimaryDark}"
-                         Foreground="{StaticResource ClearWhite}"
+                         Foreground="{StaticResource Contrast}"
                          BorderThickness="0.8"
                          BorderBrush="Black"
                          Content="&#xE722;"
@@ -108,7 +108,7 @@ Command="{Binding ClosePageCommand}">
                             BorderThickness="0"
                             Background="Transparent"
                             FontSize="17"
-                            Foreground="{StaticResource ClearWhite}"
+                            Foreground="{StaticResource Contrast}"
                             d:Text="Название комнаты"
                             HorizontalAlignment="Stretch"
                             />

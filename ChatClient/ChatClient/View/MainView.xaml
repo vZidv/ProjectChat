@@ -37,7 +37,7 @@
 
                 <TextBlock
                                         FontSize="22"
-                                        Foreground="{StaticResource ClearWhite}"
+                                        Foreground="{DynamicResource Contrast}"
                                         VerticalAlignment="Center"
                                         Text="{Binding Name}"
                                         Style="{StaticResource BaseTextBlockStyle}"/>
@@ -54,7 +54,7 @@
         </Grid.ColumnDefinitions>
 
         <Grid 
-            Background="{StaticResource BgColor1}">
+            Background="{DynamicResource BgColor1}">
             <Grid.RowDefinitions>
                 <RowDefinition Height="60"/>
                 <RowDefinition Height="*"/>
@@ -67,7 +67,7 @@
                 FontFamily="Segoe MDL2 Assets"
                 Content="&#xE700;"
                 FontSize="30"
-                Foreground="{StaticResource Second}"
+                Foreground="{DynamicResource Second}"
                 Cursor="Hand"
                 Command="{Binding OpenLeftBoarMenuCommand}"/>
         </Grid>
@@ -76,7 +76,7 @@
                Grid.Column="1"
                Width="Auto" 
                Height="Auto" 
-               Background="{StaticResource BgColor3}"
+               Background="{DynamicResource BgColor3}"
                CornerRadius="0,0,0,0"
               >
             <Grid>
@@ -93,13 +93,13 @@
                         Margin="10,11"
                         ui:ControlHelper.CornerRadius="15"
                         ui:ControlHelper.PlaceholderText="Поиск"
-                        ui:ControlHelper.PlaceholderForeground="{StaticResource Second}"
+                        ui:ControlHelper.PlaceholderForeground="{DynamicResource Second}"
                         
                         BorderThickness="0"
                         FontSize="18"
-                        Foreground="{StaticResource ClearWhite}"
+                        Foreground="{DynamicResource Contrast}"
                         VerticalContentAlignment="Center"
-                        Background="{StaticResource BgColor4}"
+                        Background="{DynamicResource BgColor4}"
                         />
                 </Grid>
 
@@ -142,11 +142,11 @@
                     >
                         <!--Local search chats-->
                         <Border
-                            Background="{StaticResource BgColor2}">
+                            Background="{DynamicResource BgColor2}">
                             <TextBlock
                                 Text="Ваши чаты"
                             Style="{StaticResource BaseTextBlockStyle}"
-                            Foreground="{StaticResource ClearWhite}"
+                            Foreground="{DynamicResource Contrast}"
                             Margin="5,0"/>
                         </Border>
 
@@ -169,11 +169,11 @@
 
                         <!--Global search chats-->
                         <Border
-                            Background="{StaticResource BgColor2}">
+                            Background="{DynamicResource BgColor2}">
                             <TextBlock
                                 Text="Глобальный поиск"
                             Style="{StaticResource BaseTextBlockStyle}"
-                            Foreground="{StaticResource ClearWhite}"
+                            Foreground="{DynamicResource Contrast}"
                             Margin="5,0"/>
                         </Border>
 
@@ -206,7 +206,7 @@
             HorizontalAlignment="Center"
             />
         <Grid 
-            Background="{StaticResource BgColor1}"
+            Background="{DynamicResource BgColor1}"
             Grid.Column="3">
             <Frame 
             Content="{Binding CurrentPage}"

@@ -1,0 +1,124 @@
+﻿<Page x:Class="ChatClient.View.SettingsView"
+      xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+      xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+      xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+      xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+      xmlns:local="clr-namespace:ChatClient.View"
+      xmlns:vm="clr-namespace:ChatClient.ViewModels"
+      mc:Ignorable="d" 
+      d:DesignHeight="600" d:DesignWidth="1000"
+      Title="SettingsView">
+    <Page.DataContext>
+        <vm:SettingsViewModel/>
+    </Page.DataContext>
+    
+    
+  <Grid>
+    <Border  
+       Grid.ColumnSpan="2"  
+       Background="Black"  
+       Opacity="0.4"  
+       />
+    <Button  
+        HorizontalAlignment="Stretch"  
+        VerticalAlignment="Stretch"  
+        Background="Transparent"  
+        BorderThickness="0"  
+        Command="{Binding ClosePageCommand}">
+        <Button.Template>
+            <ControlTemplate TargetType="Button">
+                <Border Background="{TemplateBinding Background}">
+                    <ContentPresenter  
+                       HorizontalAlignment="Center"  
+                       VerticalAlignment="Center"/>
+                </Border>
+            </ControlTemplate>
+        </Button.Template>
+    </Button>
+    <Border  
+       Width="400"  
+       Height="550"  
+       Background="{DynamicResource BgColor3}"  
+       CornerRadius="12">
+
+        <Grid>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="60"/>
+                <RowDefinition Height="60"/>
+                <RowDefinition Height="100"/>
+                <RowDefinition Height="120"/>
+            </Grid.RowDefinitions>
+                <Grid  
+               Grid.Row="0">
+                    <TextBlock  
+                   Text="Настройки"  
+                   Style="{StaticResource BaseTextBlockStyle}"  
+                   Foreground="{DynamicResource Contrast}"  
+                   FontSize="20"  
+                   VerticalAlignment="Center"  
+                   Margin="15,0,0,0"/>
+                    <StackPanel   
+                   Orientation="Horizontal"  
+                   HorizontalAlignment="Right">
+
+                        <Button  
+                    Width="40"  
+                    Height="40"  
+                    FontWeight="Bold"  
+                    Command="{Binding ClosePageCommand}"  
+                    Background="Transparent"  
+                    Foreground="{DynamicResource Second}"  
+                    Content="&#xE8BB;"   
+                    FontFamily="Segoe MDL2 Assets"  
+                   />
+                    </StackPanel>
+                </Grid>
+                <Grid
+                    Margin="15,0"
+                    VerticalAlignment="Center"
+                    Grid.Row="1">
+                    <StackPanel
+                        Orientation="Horizontal">
+                    <TextBlock Margin="12,0"
+                        Text="Размер шрифта в сообщениях" 
+                        Style="{StaticResource BaseTextBlockStyle}"  
+                        Foreground="{DynamicResource Contrast}"  
+                        />
+                        <ComboBox
+                            SelectedValue="{Binding SettingsDTO.FontSize}"
+                            SelectedValuePath="Content"
+                            FontSize="10"
+                            Height="23">
+                            <ComboBoxItem Content="18"/>
+                            <ComboBoxItem Content="20"/>
+                            <ComboBoxItem Content="22"/>
+                            <ComboBoxItem Content="24"/>
+                        </ComboBox>
+                    </StackPanel>
+                </Grid>
+                <Grid
+                    Margin="15,0"
+                    Grid.Row="2">
+                    <StackPanel
+                        Orientation="Horizontal">
+                        <TextBlock Margin="12,0"
+                        Text="Тема приложения" 
+                        Style="{StaticResource BaseTextBlockStyle}"  
+                        Foreground="{DynamicResource Contrast}"  
+                        />
+                    <ComboBox
+                            x:Name="Theme_combobox"
+                            FontSize="10"
+                            Height="23"
+                            SelectionChanged="Theme_combobox_SelectionChanged"
+                            SelectedValue="{Binding SettingsDTO.Theme, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}"
+                            SelectedValuePath="Tag">
+                        <ComboBoxItem Content="Светлая" Tag="White" />
+                        <ComboBoxItem Content="Тёмная" Tag="Black"/>
+                    </ComboBox>
+                    </StackPanel>
+                </Grid>
+            </Grid>
+    </Border>
+</Grid>
+</Page>

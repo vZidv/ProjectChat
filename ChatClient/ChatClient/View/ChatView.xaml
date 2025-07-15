@@ -24,7 +24,7 @@
         </Grid.RowDefinitions>
 
         <Grid
-            Background="{StaticResource BgColor3}"
+            Background="{DynamicResource BgColor3}"
             Grid.Row="0">
             <StackPanel
                 Orientation="Vertical"
@@ -32,7 +32,7 @@
                 >
                 
                 <TextBlock 
-                    Foreground="{StaticResource ClearWhite}"
+                    Foreground="{DynamicResource Contrast}"
                     Text="{Binding ChatDTO.Name}"
                     Margin="20,0"
                     FontSize="20"
@@ -40,7 +40,7 @@
                     Style="{StaticResource BaseTextBlockStyle}"
                     HorizontalAlignment="Left"/>
                 <TextBlock 
-                    Foreground="{StaticResource Second}"
+                    Foreground="{DynamicResource Second}"
                     Text="{Binding ChatRoomDTO.Name}"
                     Margin="20,0"
                     FontSize="14"
@@ -83,10 +83,10 @@
                             CornerRadius="5,5,5,0">
                             <Border.Style>
                                 <Style TargetType="Border">
-                                    <Setter Property="Background" Value="{StaticResource BgColor4}"/>
+                                    <Setter Property="Background" Value="{DynamicResource BgColor4}"/>
                                     <Style.Triggers>
                                         <DataTrigger Binding="{Binding IsOwner}" Value="True">
-                                            <Setter Property="Background" Value="{StaticResource PrimaryDark }"/>
+                                            <Setter Property="Background" Value="{DynamicResource PrimaryDark }"/>
                                         </DataTrigger>
                                     </Style.Triggers>
                                 </Style>
@@ -99,15 +99,15 @@
                                     TextWrapping="Wrap"
                                     FontSize="12"
                                     Margin="5,2,5,0"
-                                    Foreground="{StaticResource Primary}"
+                                    Foreground="{DynamicResource Primary}"
                                 />
                                 <TextBlock 
                                     Text="{Binding Text}"
                                     FontWeight="DemiBold"
                                     TextWrapping="Wrap"
-                                    FontSize="20"
+                                    FontSize="{Binding DataContext.SettingsDTO.FontSize ,RelativeSource={RelativeSource AncestorType=ListBox}}"
                                     Margin="5,0,5,2"
-                                    Foreground="{StaticResource ClearWhite}"/>
+                                    Foreground="{DynamicResource Contrast}"/>
                                 <TextBlock 
                                     HorizontalAlignment="Right"
                                     Text="{Binding SentAt, StringFormat={}{0:HH:mm}}"
@@ -115,7 +115,7 @@
                                     TextWrapping="Wrap"
                                     FontSize="10"
                                     Margin="5,0,5,2"
-                                    Foreground="{StaticResource Second}"/>
+                                    Foreground="{DynamicResource Second}"/>
                             </StackPanel>
                         </Border>
                     </DataTemplate>
@@ -145,9 +145,9 @@
                 VerticalAlignment="Top"
                 HorizontalAlignment="Stretch"
                 Height="55"
-                Background="{StaticResource BgColor3}"
+                Background="{DynamicResource BgColor3}"
                 ui:ControlHelper.CornerRadius="0"
-                Foreground="{StaticResource Primary}"
+                Foreground="{DynamicResource Primary}"
                 FontWeight="DemiBold"
                 d:Content="ДОБАВИТЬ Oleg Ivanov В КОНТАКТЫ">
                 <Button.Content>
@@ -162,13 +162,13 @@
 
         <Grid
         Grid.Row="2"
-        Background="{StaticResource BgColor3}"
+        Background="{DynamicResource BgColor3}"
         >
                 <TextBox  
                    x:Name="MessageTextBox"  
                    ui:ControlHelper.PlaceholderText="Сообщение..."  
-                   ui:ControlHelper.PlaceholderForeground="{StaticResource Second}"
-                   Foreground="{StaticResource ClearWhite}"
+                   ui:ControlHelper.PlaceholderForeground="{DynamicResource Second}"
+                   Foreground="{DynamicResource Contrast}"
                    Text="{Binding NewMessageText, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"  
                    Background="Transparent"  
                    BorderThickness="0"
@@ -191,9 +191,9 @@
                 VerticalAlignment="Top"
                 HorizontalAlignment="Stretch"
                 Height="55"
-                Background="{StaticResource BgColor3}"
+                Background="{DynamicResource BgColor3}"
                 ui:ControlHelper.CornerRadius="0"
-                Foreground="{StaticResource Primary}"
+                Foreground="{DynamicResource Primary}"
                 FontWeight="DemiBold"
                 Content="ПРИСОЕДИНИТЬСЯ К ГРУППЕ">
             </Button>

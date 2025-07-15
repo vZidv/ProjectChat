@@ -53,7 +53,7 @@ Command="{Binding ClosePageCommand}">
                     <TextBlock
                         Text="Мой профиль"
                         Style="{StaticResource BaseTextBlockStyle}"
-                        Foreground="{StaticResource ClearWhite}"
+                        Foreground="{StaticResource Contrast}"
                         FontSize="20"
                         VerticalAlignment="Center"
                         Margin="15,0,0,0"/>
@@ -107,7 +107,7 @@ Command="{Binding ClosePageCommand}">
                         Grid.Column="1"
                         Orientation="Vertical">
                         <TextBlock 
-                            Foreground="{StaticResource ClearWhite}"
+                            Foreground="{StaticResource Contrast}"
                             FontWeight="DemiBold"
                             FontSize="24"
                             Margin="10,0,10,0">
@@ -138,7 +138,7 @@ Command="{Binding ClosePageCommand}">
                             FontSize="45"
                             HorizontalAlignment="Center"
                             VerticalAlignment="Top"
-                            Foreground="{StaticResource ClearWhite}"
+                            Foreground="{StaticResource Contrast}"
                             Text="&#xE946;"
                             FontFamily="Segoe MDL2 Assets"/>
                     </Grid>
@@ -149,7 +149,7 @@ Command="{Binding ClosePageCommand}">
                                 <TextBlock
                                 FontSize="20"
                                 Text="{Binding ClientProfileDTO.Email}"
-                                Foreground="{StaticResource ClearWhite}"
+                                Foreground="{StaticResource Contrast}"
                                 d:Text="6qe0x@punkproof.com"/>
                                 <TextBlock
                                 FontSize="15"

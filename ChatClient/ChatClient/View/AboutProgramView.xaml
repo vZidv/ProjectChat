@@ -11,7 +11,7 @@
 
     <Page.Resources>
         <Style TargetType="TextBlock">
-            <Setter Property="Foreground" Value="{StaticResource ClearWhite}"/>
+            <Setter Property="Foreground" Value="{StaticResource Contrast}"/>
             <Setter Property="FontWeight" Value="Medium"/>
             <Setter Property="FontSize" Value="18"/>
         </Style>

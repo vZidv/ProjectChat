@@ -13,14 +13,14 @@
             Width="415"
             Height="40"
             CornerRadius="14"
-            Background="{StaticResource BgColor4}">
+            Background="{DynamicResource BgColor4}">
             <TextBlock
                 FontSize="22"
                 FontWeight="DemiBold"
                 HorizontalAlignment="Center"
                 VerticalAlignment="Center"
                 Text="Выберите, кому хотели бы написать"
-                Foreground="{StaticResource ClearWhite}"/>
+                Foreground="{DynamicResource Contrast}"/>
         </Border>
     </Grid>
 </Page>

@@ -66,7 +66,6 @@ namespace ChatClient.ViewModels
         public ICommand RecoverPasswordCommand { get; }
         public ICommand ShowPasswordCommand { get; }
         public ICommand RememberPasswordCommand { get; }
-        public ICommand TestCommand { get; }
 
         //Constructor
         public LoginViewModel()
@@ -74,12 +73,18 @@ namespace ChatClient.ViewModels
             LoginCommand = new ViewModelCommand(ExecuteLoginCommand, CanExecuteLoginCommand);
             RecoverPasswordCommand = new ViewModelCommand(p => ExecuteRecoverPasswordCommand(""));
             SignUpCommand = new ViewModelCommand(p => ExecuteSignUpCommand());
-            TestCommand = new ViewModelCommand(p => ExecuteTestCommand());
+
+            ApplyTheme();
         }
 
-        private void ExecuteTestCommand()
+        private void ApplyTheme()
         {
+            NetworkSession.Settings = new SettingsService();
+            SettingsDTO settings = NetworkSession.Settings.GetSettingsAsync();
 
+            Uri url = new Uri($@"Styles\{settings.Theme}Theme.xaml", UriKind.Relative);
+            var app = (App)System.Windows.Application.Current;
+            app.ChangeTheme(url);
         }
 
         private void ExecuteSignUpCommand()

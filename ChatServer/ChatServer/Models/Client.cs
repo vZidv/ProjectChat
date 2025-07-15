@@ -31,6 +31,8 @@ public partial class Client
 
     public virtual ICollection<ChatRoom> ChatRooms { get; set; } = new List<ChatRoom>();
 
+    public virtual ClientSetting? ClientSetting { get; set; }
+
     public virtual ICollection<Message> Messages { get; set; } = new List<Message>();
 
     public virtual ICollection<Client> Clients { get; set; } = new List<Client>();

@@ -6,6 +6,7 @@ using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
+using System.Runtime.Serialization.DataContracts;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Input;
@@ -47,6 +48,7 @@ namespace ChatClient.ViewModels
         public ICommand OpenCreatRoomPageCommand { get; }
         public ICommand OpenClietnProfilePageCommand { get; }
         public ICommand OpenContactsPageCommand { get; }
+        public ICommand OpenSettingsPageCommand { get; }
 
         public ICommand OpenProjectLinkCommand { get; }
         public ICommand OpenProjectVersionLinkCommand { get; }
@@ -62,6 +64,7 @@ namespace ChatClient.ViewModels
             OpenCreatRoomPageCommand = new ViewModelCommand(ExecuteOpenCreatRoomPageCommand);
             OpenClietnProfilePageCommand = new ViewModelCommand(ExecuteOpenClietnProfilePageCommand);
             OpenContactsPageCommand = new ViewModelCommand(ExecuteOpenContactsPageCommand);
+            OpenSettingsPageCommand = new ViewModelCommand(ExecuteOpenSettingsPageCommand);
 
             OpenProjectLinkCommand = new ViewModelCommand(ExecuteOpenProjectLinkCommand);
             OpenProjectVersionLinkCommand = new ViewModelCommand(ExecuteOpenProjectVersionLinkCommand);
@@ -69,36 +72,12 @@ namespace ChatClient.ViewModels
 
         }
 
-        private void ExecuteOpenContactsPageCommand(object? obj)
-        {
-            Services.NavigationService.TopFrame.Content = new ClientContactsView() { DataContext = new ClientContactsViewModel()};
-        }
+        private void ExecuteOpenContactsPageCommand(object? obj) => Services.NavigationService.TopFrame.Content = new ClientContactsView() { DataContext = new ClientContactsViewModel()};
+        private void ExecuteOpenClietnProfilePageCommand(object? obj)  => Services.NavigationService.TopFrame.Content = new ClientProfileView() { DataContext = new ClientProfileViewModel()};
+        private void ExecuteOpenCreatRoomPageCommand(object? obj) => Services.NavigationService.TopFrame.Content = new CreatRoomView() { DataContext = new CreatRoomViewModel() };
+        private void ExecuteOpenAboutProgramCommand(object? obj) => Services.NavigationService.TopFrame.Content = new AboutProgramView() { DataContext = new AboutProgramViewModel()};
+        private void ExecuteOpenSettingsPageCommand(object? obj) => Services.NavigationService.TopFrame.Content = new SettingsView() { DataContext = new SettingsViewModel()};
 
-        private void ExecuteOpenClietnProfilePageCommand(object? obj)
-        {
-            ClientProfileView view = new();
-            ClientProfileViewModel viewModel = new();
-            view.DataContext = viewModel;
-            Services.NavigationService.TopFrame.Content = view;
-        }
-
-        private void ExecuteOpenCreatRoomPageCommand(object? obj)
-        {
-            CreatRoomView view = new();
-            CreatRoomViewModel viewModel = new();
-            view.DataContext = viewModel;
-
-            Services.NavigationService.TopFrame.Content = view;
-        }
-
-        private void ExecuteOpenAboutProgramCommand(object? obj)
-        {
-            AboutProgramView view = new();
-            AboutProgramViewModel viewModel = new();
-            view.DataContext = viewModel;
-
-            Services.NavigationService.TopFrame.Content = view;
-        }
 
         private void ExecuteClosePageCommand(object? obj) => Services.NavigationService.TopFrame.Content = null;
 

@@ -25,6 +25,9 @@ namespace ChatShared.DTO.Enums
 
         JoimInChatGroup,
         AddContact,
+
+        UpdateClientSetting,
+        GetClientSetting
         //..
     }
 }

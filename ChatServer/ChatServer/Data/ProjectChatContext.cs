@@ -24,6 +24,8 @@ public partial class ProjectChatContext : DbContext
 
     public virtual DbSet<Client> Clients { get; set; }
 
+    public virtual DbSet<ClientSetting> ClientSettings { get; set; }
+
     public virtual DbSet<Message> Messages { get; set; }
 
     public virtual DbSet<Role> Roles { get; set; }
@@ -163,6 +165,19 @@ public partial class ProjectChatContext : DbContext
                         j.ToTable("ClientContact");
                         j.HasIndex(new[] { "ContactId" }, "IX_ClientContact_ContactId");
                     });
+        });
+
+        modelBuilder.Entity<ClientSetting>(entity =>
+        {
+            entity.HasKey(e => e.ClientId);
+
+            entity.Property(e => e.ClientId).ValueGeneratedNever();
+            entity.Property(e => e.Path).HasMaxLength(255);
+
+            entity.HasOne(d => d.Client).WithOne(p => p.ClientSetting)
+                .HasForeignKey<ClientSetting>(d => d.ClientId)
+                .OnDelete(DeleteBehavior.ClientSetNull)
+                .HasConstraintName("FK_ClientSettings_Client");
         });
 
         modelBuilder.Entity<Message>(entity =>

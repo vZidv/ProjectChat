@@ -110,14 +110,14 @@ namespace ChatClient.ViewModels
             var maxSize = 200 * 1024;
             var size = new FileInfo(dialog.FileName).Length;
 
-            if(size > maxSize)
+            if (size > maxSize)
             {
                 MessageBox.Show("Размер файла не должен привышать 200 Кб!", "Ошибка", MessageBoxButton.OK, MessageBoxType.Error);
                 return;
             }
 
             if (result.HasValue)
-            AvatarImage = new BitmapImage(new Uri(dialog.FileName));
+                AvatarImage = new BitmapImage(new Uri(dialog.FileName));
             _avatarExtension = Path.GetExtension(dialog.FileName);
         }
 
@@ -141,13 +141,23 @@ namespace ChatClient.ViewModels
                 newClient.AvatarExtension = _avatarExtension;
             }
 
+            if(NetworkSession.Session == null)
+            {
+                NetworkSession.Session = new NetworkService(App.EventAggregator);
+                await NetworkSession.Session.ConnectAsync();
+            }
 
             var session = NetworkSession.Session;
             await session.SendAsync<ClientSignUpDTO>(newClient, RequestType.Register);
             bool result = await session.ResponseAsync<bool>();
 
             if (result)
+            {
                 GoBackCommand.Execute(null);
+
+                NetworkSession.Settings = new SettingsService();
+                NetworkSession.Settings.CreatNewSettingFileAsync();
+            }
 
         }
 

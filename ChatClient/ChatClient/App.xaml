@@ -7,9 +7,16 @@
     <Application.Resources>
         <ResourceDictionary>
             <ResourceDictionary.MergedDictionaries>
+                <ResourceDictionary x:Name="ThemeDictionary">
+                    <ResourceDictionary.MergedDictionaries>
+                        <ResourceDictionary Source="/Styles/BlackTheme.xaml"/>
+                        <!--<ResourceDictionary Source="/Styles/WhiteTheme.xaml"/>-->
+                    </ResourceDictionary.MergedDictionaries>
+                </ResourceDictionary>
+
                 <ui:ThemeResources />
                 <ui:XamlControlsResources />
-                <ui:IntellisenseResources Source="/ModernWpf;component/DesignTime/DesignTimeResources.xaml" />
+                <ui:IntellisenseResources Source="/ModernWpf;component/DesignTime/DesignTimeResources.xaml"/>
                 <ResourceDictionary Source="/Styles/UIColors.xaml"/>
             </ResourceDictionary.MergedDictionaries>
         </ResourceDictionary>

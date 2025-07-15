@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows.Input;
 
 namespace ChatClient.Services
 {
@@ -12,6 +13,7 @@ namespace ChatClient.Services
         public static ClientProfileDTO? ClientProfile { get; set; } = null!;
         public static NetworkService? Session { get; set; } = null!;
         public static string? Token { get; set; } = null!;
+        public static SettingsService? Settings { get; set; }
 
         public static void Dispose()
         {

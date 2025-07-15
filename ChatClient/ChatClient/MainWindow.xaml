@@ -17,14 +17,14 @@
         MouseDown="Window_MouseDown">
     <Window.Resources>
         <Style x:Key="CloseButtonStyle" TargetType="Button" BasedOn="{StaticResource {x:Type Button}}">
-            <Setter Property="Background" Value="{StaticResource BgColor4}"/>
-            <Setter Property="Foreground" Value="{StaticResource Second}"/>
+            <Setter Property="Background" Value="{DynamicResource BgColor4}"/>
+            <Setter Property="Foreground" Value="{DynamicResource Second}"/>
             <Setter Property="FontFamily" Value="Segoe MDL2 Assets"/>
             <Setter Property="BorderThickness" Value="0"/>
             <Style.Triggers>
                 <Trigger Property="IsMouseOver" Value="True">
-                    <Setter Property="Background" Value="{StaticResource RedLight}"/>
-                    <Setter Property="Foreground" Value="{StaticResource ClearWhite}"/>
+                    <Setter Property="Background" Value="{DynamicResource RedLight}"/>
+                    <Setter Property="Foreground" Value="{DynamicResource Contrast}"/>
                 </Trigger>
             </Style.Triggers>
         </Style>
@@ -33,12 +33,12 @@
     <Window.DataContext>
         <vm:MainWindowViewModel/>
     </Window.DataContext>
-    <Grid Background="{StaticResource BgColor1}">
+    <Grid Background="{DynamicResource BgColor1}">
         <Grid.RowDefinitions>
             <RowDefinition Height="30"/>
             <RowDefinition/>
         </Grid.RowDefinitions>
-        <Grid Background="{StaticResource BgColor4}">
+        <Grid Background="{DynamicResource BgColor4}">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition/>
                 <ColumnDefinition Width="45"/>
@@ -53,16 +53,16 @@
                     FontFamily="Segoe MDL2 Assets"
                     Click="btnMinimize_Click"
                    
-                    Foreground="{StaticResource Second}">
+                    Foreground="{DynamicResource Second}">
 
                 <Button.Style>
                     <Style TargetType="Button">
-                        <Setter Property="Background" Value="{StaticResource BgColor4}"/>
-                        <Setter Property="Foreground" Value="{StaticResource Second}"/>
+                        <Setter Property="Background" Value="{DynamicResource BgColor4}"/>
+                        <Setter Property="Foreground" Value="{DynamicResource Second}"/>
                         <Style.Triggers>
                             <Trigger Property="IsMouseOver" Value="True">
-                                <Setter Property="Background" Value="{StaticResource BgColor3}"/>
-                                <Setter Property="Foreground" Value="{StaticResource ClearWhite}"/>
+                                <Setter Property="Background" Value="{DynamicResource BgColor3}"/>
+                                <Setter Property="Foreground" Value="{DynamicResource Contrast}"/>
                             </Trigger>
                         </Style.Triggers>
                     </Style>
@@ -92,16 +92,16 @@
                     FontFamily="Segoe MDL2 Assets"
                     Click="btnMaximize_Click"
                    
-                    Foreground="{StaticResource Second}">
+                    Foreground="{DynamicResource Second}">
 
                 <Button.Style>
                     <Style TargetType="Button">
-                        <Setter Property="Background" Value="{StaticResource BgColor4}"/>
-                        <Setter Property="Foreground" Value="{StaticResource Second}"/>
+                        <Setter Property="Background" Value="{DynamicResource BgColor4}"/>
+                        <Setter Property="Foreground" Value="{DynamicResource Second}"/>
                         <Style.Triggers>
                             <Trigger Property="IsMouseOver" Value="True">
-                                <Setter Property="Background" Value="{StaticResource BgColor3}"/>
-                                <Setter Property="Foreground" Value="{StaticResource ClearWhite}"/>
+                                <Setter Property="Background" Value="{DynamicResource BgColor3}"/>
+                                <Setter Property="Foreground" Value="{DynamicResource Contrast}"/>
                             </Trigger>
                         </Style.Triggers>
                     </Style>
@@ -132,12 +132,12 @@
                     Click="btnClose_Click">
                 <Button.Style>
                     <Style TargetType="Button">
-                        <Setter Property="Background" Value="{StaticResource BgColor4}"/>
-                        <Setter Property="Foreground" Value="{StaticResource Second}"/>
+                        <Setter Property="Background" Value="{DynamicResource BgColor4}"/>
+                        <Setter Property="Foreground" Value="{DynamicResource Second}"/>
                         <Style.Triggers>
                             <Trigger Property="IsMouseOver" Value="True">
-                                <Setter Property="Background" Value="{StaticResource RedLight}"/>
-                                <Setter Property="Foreground" Value="{StaticResource ClearWhite}"/>
+                                <Setter Property="Background" Value="{DynamicResource RedLight}"/>
+                                <Setter Property="Foreground" Value="{DynamicResource Contrast}"/>
                             </Trigger>
                         </Style.Triggers>
                     </Style>

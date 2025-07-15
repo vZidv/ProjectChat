@@ -23,6 +23,8 @@ namespace ChatShared.DTO.Enums
         JoinInChatRoomResult,
         AddContactResult,
         OpenChat,
+
+        GetClientSettings,
         //..
     }
 }

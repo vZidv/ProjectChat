@@ -23,7 +23,7 @@
             </Style.Triggers>
         </Style>
         <Style TargetType="TextBlock" x:Key="menuButtonText_textBlock">
-            <Setter Property="Foreground" Value="{StaticResource ClearWhite}"/>
+            <Setter Property="Foreground" Value="{StaticResource Contrast}"/>
             <Setter Property="FontWeight" Value="DemiBold"/>
             <Setter Property="Margin" Value="25,0,0,0"/>
             <Setter Property="TextAlignment" Value="Center"/>
@@ -31,7 +31,7 @@
             <Setter Property="VerticalAlignment" Value="Center"/>
         </Style>
         <Style TargetType="TextBlock" x:Key="menuButtonIcon_textBlock">
-            <Setter Property="Foreground" Value="{StaticResource ClearWhite}"/>
+            <Setter Property="Foreground" Value="{StaticResource Contrast}"/>
             <Setter Property="FontWeight" Value="Normal"/>
             <Setter Property="FontSize" Value="28"/>
             <Setter Property="Margin" Value="10,0,0,0"/>
@@ -87,7 +87,7 @@
                         Margin="20,0,0,10"
                         FontSize="20"
                         FontWeight="Bold"
-                        Foreground="{StaticResource ClearWhite}">
+                        Foreground="{StaticResource Contrast}">
                         
                         <Run d:Text="Oleg"
                             Text="{Binding ClientProfileDTO.Name}"/>
@@ -161,6 +161,7 @@
                         </Button.Content>
                     </Button>
                     <Button
+                        Command="{Binding OpenSettingsPageCommand}"
                         Style="{StaticResource menu_button}">
                         <Button.Content>
                             <StackPanel

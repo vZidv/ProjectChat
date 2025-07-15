@@ -54,7 +54,7 @@ Command="{Binding ClosePageCommand}">
                    <TextBlock  
                        Text="Информация о группе"  
                        Style="{StaticResource BaseTextBlockStyle}"  
-                       Foreground="{StaticResource ClearWhite}"  
+                       Foreground="{StaticResource Contrast}"  
                        FontSize="20"  
                        VerticalAlignment="Center"  
                        Margin="15,0,0,0"/>  
@@ -114,7 +114,7 @@ Command="{Binding ClosePageCommand}">
                        Grid.Column="1"  
                        Orientation="Vertical">  
                        <TextBlock   
-                           Foreground="{StaticResource ClearWhite}"  
+                           Foreground="{StaticResource Contrast}"  
                            FontWeight="DemiBold"  
                            FontSize="24"  
                            Margin="10,0,10,0">  

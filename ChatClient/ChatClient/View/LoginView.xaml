@@ -48,16 +48,16 @@
 
                         <TextBlock Text="Welcome"
                                    HorizontalAlignment="Center"
-                               Foreground="{StaticResource ClearWhite}"
+                               Foreground="{StaticResource Contrast}"
                                Style="{StaticResource HeaderTextBlockStyle}"
                                FontSize="30" Margin="0,15"/>
                         
                         <TextBox 
-                            Foreground="{StaticResource ClearWhite}"
+                            Foreground="{StaticResource Contrast}"
                             Text="{Binding Username, UpdateSourceTrigger=PropertyChanged}" 
                             ui:ControlHelper.PlaceholderText="Login" Margin="0,3"/>
                         <customcontrols:BindablePasswordBox 
-                            Foreground="{StaticResource ClearWhite}"
+                            Foreground="{StaticResource Contrast}"
                             Password="{Binding Password,Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Margin="0,3"/>
                         <StackPanel 
                             Orientation="Horizontal">

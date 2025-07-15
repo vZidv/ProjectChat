@@ -19,6 +19,7 @@ namespace ChatClient.ViewModels
     public class ChatViewModel : BaseViewModel
     {
         private ChatMiniProfileDTO _chatDTO;
+        private SettingsDTO _settingsDTO;
 
         private ObservableCollection<MessageDTO> _chatMessageDTOs;
         private string _newMessageText;
@@ -30,6 +31,16 @@ namespace ChatClient.ViewModels
         public ChatMiniProfileDTO ChatDTO
         {
             get { return _chatDTO; }
+        }
+
+        public SettingsDTO SettingsDTO
+        {
+            get { return _settingsDTO; }
+            set
+            {
+                _settingsDTO = value;
+                OnPropertyChanged(nameof(SettingsDTO));
+            }
         }
 
         public ObservableCollection<MessageDTO> ChatMessageDTOs
@@ -99,6 +110,8 @@ namespace ChatClient.ViewModels
             App.EventAggregator.Subscribe<ChatHistoryEvent>(onChatRoomHistoryReceived);
             App.EventAggregator.Subscribe<AddMemberInChatEvent>(onAddMemberInChatRoom);
             App.EventAggregator.Subscribe<AddContactEvent>(onAddContact);
+
+            SettingsDTO = NetworkSession.Settings.GetSettingsAsync();
 
             ChatInit();
         }
