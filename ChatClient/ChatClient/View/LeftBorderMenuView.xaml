@@ -72,17 +72,28 @@
 
             <Grid>
                 <StackPanel>
+                    <Grid>
                     <Border
                     Margin="20,15"
                     HorizontalAlignment="Left"
                     Width="70"
                     Height="70"
                     CornerRadius="50"
+                    Background="{StaticResource Primary}">
+                        </Border>
+                        <Border
+                    Margin="20,15"
+                    HorizontalAlignment="Left"
+                    Width="70"
+                    Height="70"
+                    CornerRadius="50"
                     d:Background="{StaticResource Primary}">
-                        <Border.Background>
-                            <ImageBrush ImageSource="{Binding AvatarBitMap, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}"/>
-                        </Border.Background>
-                    </Border>
+                            <Border.Background>
+                                <ImageBrush ImageSource="{Binding AvatarBitMap, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}"/>
+                            </Border.Background>
+                        </Border>
+                    </Grid>
+
                     <TextBlock
                         Margin="20,0,0,10"
                         FontSize="20"

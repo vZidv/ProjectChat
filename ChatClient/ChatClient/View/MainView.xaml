@@ -21,15 +21,20 @@
         <cn:Base64ToImageConverter x:Key="Base64ToImageConverter"/>
         <DataTemplate x:Key="listboxItemTemplate">
             <StackPanel 
-                                    Background="Transparent" 
-                                    Orientation="Horizontal">
-
+             Background="Transparent" 
+             Orientation="Horizontal">
                 <Border
-                                    d:Background="SkyBlue"
-                                    MinHeight="50"
-                                    MinWidth="50"
-                                    CornerRadius="40"
-                                    Margin="0,0,10,0">
+                 Background="{StaticResource Primary}"
+                 MinHeight="50"
+                 MinWidth="50"
+                 CornerRadius="40"
+                 Margin="0,0,10,0">
+                </Border>
+                <Border
+                 MinHeight="50"
+                 MinWidth="50"
+                 CornerRadius="40"
+                 Margin="0,0,10,0">
                     <Border.Background>
                         <ImageBrush ImageSource="{Binding AvatarBase64, Converter={StaticResource Base64ToImageConverter}}"/>
                     </Border.Background>
@@ -108,7 +113,7 @@
                     Grid.Row="1">
                     
                     <!--All client chats-->
-                    <StackPanel 
+                    <Grid 
 
                     d:Visibility="Hidden"
                     Visibility="{Binding AllChatsVisibility}"
@@ -132,7 +137,7 @@
 
                         </ListBox>
 
-                    </StackPanel>
+                    </Grid>
 
 
                     <!--Search chats-->
@@ -149,8 +154,8 @@
                             Foreground="{DynamicResource Contrast}"
                             Margin="5,0"/>
                         </Border>
-
-                        <ListBox 
+                        <Grid>
+                            <ListBox 
                         ScrollViewer.VerticalScrollBarVisibility="Auto"
                         Background="Transparent"
                         Margin="0,15"
@@ -159,13 +164,15 @@
                         Cursor="Hand"
                         ItemTemplate="{StaticResource listboxItemTemplate}">
 
-                            <d:ListBox.ItemsSource>
-                                <x:Array Type="{x:Type dto:ChatMiniProfileDTO}">
-                                    <dto:ChatMiniProfileDTO Name="LocalTestRoom"/>
-                                </x:Array>
-                            </d:ListBox.ItemsSource>
+                                <d:ListBox.ItemsSource>
+                                    <x:Array Type="{x:Type dto:ChatMiniProfileDTO}">
+                                        <dto:ChatMiniProfileDTO Name="LocalTestRoom"/>
+                                    </x:Array>
+                                </d:ListBox.ItemsSource>
 
-                        </ListBox>
+                            </ListBox>
+                        </Grid>
+
 
                         <!--Global search chats-->
                         <Border

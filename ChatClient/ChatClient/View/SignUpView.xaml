@@ -32,17 +32,25 @@
             <Border.Effect>
                 <DropShadowEffect Direction="-90" Opacity="0.4" ShadowDepth="13" BlurRadius="10"/>
             </Border.Effect>
+            <Grid>
+                
+
+            <Button
+                ui:ControlHelper.CornerRadius="20"
+                Cursor="Hand"
+                HorizontalAlignment="Left"
+                VerticalAlignment="Top"
+                Command="{Binding GoBackCommand}"
+                Style="{StaticResource NavigationBackButtonSmallStyle}"
+                Margin="10"/>
+            
             <Viewbox Stretch="Uniform" StretchDirection="Both">
                 <Grid>
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition/>
                         <ColumnDefinition/>
                     </Grid.ColumnDefinitions>
-                    <Button 
-                        HorizontalAlignment="Left"
-                        VerticalAlignment="Top"
-                        Command="{Binding GoBackCommand}"
-                        Style="{StaticResource NavigationBackButtonSmallStyle}"/>
+
 
                     <ui:SimpleStackPanel
                     Grid.Column="0"
@@ -58,37 +66,39 @@
 
                            <TextBlock Text="Sign Up"  
                                       HorizontalAlignment="Center"  
-                                      Style="{StaticResource HeaderTextBlockStyle}"  
+                                      Style="{StaticResource HeaderTextBlockStyle}"
+                                      Foreground="{StaticResource Contrast}"
                                       FontSize="30" Margin="0,15"/>  
 
                            <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" Margin="0,10">  
                                <!-- Login and password -->  
                                <StackPanel Margin="10" Orientation="Vertical">
-                                    <Border
-                                        Height="100"
-                                        Width="100"
-                                        CornerRadius="50">
-                                        <Border.Background>
-                                            <ImageBrush 
-                                                d:ImageSource="/Images/-t1080x1080.jpg"
-                                                ImageSource="{Binding AvatarImage, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}"/>
-                                        </Border.Background>
-                                    </Border>
-                                    <Button 
+                                        <Grid>
+                                            <Border
+                                             Background="{StaticResource PrimaryDark}"
+                                             Height="100"
+                                             Width="100"
+                                             CornerRadius="50">
+                                            </Border>
+                                            <Border
+                                                 Height="100"
+                                                 Width="100"
+                                                 CornerRadius="50">
+                                                <Border.Background>
+                                                    <ImageBrush  ImageSource="{Binding AvatarImage, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}"/>
+                                                </Border.Background>
+                                            </Border>
+                                        </Grid>
+           
+                                        <Button 
                                            Command="{Binding ChooseAvatarCommand}"
                                            Content="Choose Avatar"  
-                                           Style="{StaticResource DefaultButtonStyle}"  
+                                           Style="{StaticResource DefaultButtonStyle}"
+                                        
                                            Margin="0,5"  
                                            MinWidth="150"/>
 
-                                    <TextBox Text="{Binding Name, UpdateSourceTrigger=PropertyChanged}"  
-                                            ui:ControlHelper.PlaceholderText="Name"  
-                                            Margin="0,5"  
-                                            MinWidth="150"/>
-                                    <TextBox Text="{Binding LastName, UpdateSourceTrigger=PropertyChanged}"  
-                                            ui:ControlHelper.PlaceholderText="Last name"  
-                                            Margin="0,5"  
-                                            MinWidth="150"/>
+
                                 </StackPanel>  
 
                                <!-- Email and avatar -->  
@@ -107,7 +117,17 @@
                                             Margin="0,5"  
                                             MinWidth="150"/>  
 
-                               </StackPanel>  
+                               </StackPanel>
+                                    <StackPanel Margin="10">
+                                        <TextBox Text="{Binding Name, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}"  
+                                            ui:ControlHelper.PlaceholderText="Name"  
+                                            Margin="0,5"  
+                                            MinWidth="150"/>
+                                        <TextBox Text="{Binding LastName, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}"  
+                                            ui:ControlHelper.PlaceholderText="Last name"  
+                                            Margin="0,5"  
+                                            MinWidth="150"/>
+                                    </StackPanel>
                            </StackPanel>  
 
                            <StackPanel HorizontalAlignment="Center" Orientation="Horizontal" Margin="0,20">  
@@ -124,6 +144,7 @@
                     </ui:SimpleStackPanel>
                 </Grid>
             </Viewbox>
+            </Grid>
         </Border>
     </Grid>
 </Page>

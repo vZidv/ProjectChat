@@ -94,7 +94,16 @@ Command="{Binding ClosePageCommand}">
                         <ColumnDefinition/>
                     </Grid.ColumnDefinitions>
                     <Grid>
+                        <Grid>
+                            
                         <Border
+                        Width="90"
+                        Height="90"
+                        Margin="7"
+                        CornerRadius="50"
+                        Background="{StaticResource Primary}">
+                        </Border>                        
+                            <Border
                         Width="90"
                         Height="90"
                         Margin="7"
@@ -104,6 +113,7 @@ Command="{Binding ClosePageCommand}">
                                 <ImageBrush ImageSource="{Binding AvatarBitMap, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}"/>
                             </Border.Background>
                         </Border>
+                        </Grid>
                         <Button
                          Style="{StaticResource AccentButtonStyle}"
                          HorizontalAlignment="Right"   

@@ -91,16 +91,26 @@ Command="{Binding ClosePageCommand}">
                         <ColumnDefinition Width="110"/>
                         <ColumnDefinition/>
                     </Grid.ColumnDefinitions>
-                    <Border
+                    <Grid>
+                        <Border
+                        Width="90"
+                        Height="90"
+                        Margin="7"
+                        CornerRadius="50"
+                        Background="{StaticResource Primary}">
+                        </Border>                        
+                        <Border
                         Width="90"
                         Height="90"
                         Margin="7"
                         CornerRadius="50"
                         d:Background="{StaticResource Primary}">
-                        <Border.Background>
-                            <ImageBrush ImageSource="{Binding AvatarBitMap, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}"/>
-                        </Border.Background>
-                    </Border>
+                            <Border.Background>
+                                <ImageBrush ImageSource="{Binding AvatarBitMap, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}"/>
+                            </Border.Background>
+                        </Border>
+                    </Grid>
+
 
                     <StackPanel
                         VerticalAlignment="Center"

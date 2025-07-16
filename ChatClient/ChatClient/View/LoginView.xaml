@@ -18,14 +18,15 @@
     <Grid>
         <Grid.ColumnDefinitions>
             <ColumnDefinition />
-            <ColumnDefinition Width="1.5*"/>
+            <ColumnDefinition Width="4.6*"/>
             <ColumnDefinition/>
         </Grid.ColumnDefinitions>
         <Grid.RowDefinitions>
             <RowDefinition/>
-            <RowDefinition Height="2.5*"/>
+            <RowDefinition Height="8*"/>
             <RowDefinition/>
         </Grid.RowDefinitions>
+
         <Border
             Grid.Column="1" Grid.Row="1"
             Background="{StaticResource BgColor4}"
@@ -33,19 +34,21 @@
             <Border.Effect>
                 <DropShadowEffect Direction="-90" Opacity="0.4" ShadowDepth="13" BlurRadius="10"/>
             </Border.Effect>
-            <Viewbox Stretch="Uniform" StretchDirection="Both">
                 <Grid>
                     <Grid.ColumnDefinitions>
-                        <ColumnDefinition/>
+                        <ColumnDefinition Width="0.7*"/>
                         <ColumnDefinition/>
                     </Grid.ColumnDefinitions>
-
+                
+                    <Viewbox 
+                        Stretch="Uniform" 
+                        StretchDirection="Both"
+                        Margin="25">
                     <ui:SimpleStackPanel
                     Grid.Column="0"
                     Orientation="Vertical"
                     HorizontalAlignment="Center"
                     VerticalAlignment="Center">
-
                         <TextBlock Text="Welcome"
                                    HorizontalAlignment="Center"
                                Foreground="{StaticResource Contrast}"
@@ -77,10 +80,18 @@
                                 MinWidth="40"
                                     Style="{StaticResource AccentButtonStyle}"/>
                         </StackPanel>
-
                     </ui:SimpleStackPanel>
+                    </Viewbox>
+                <Grid
+                    Grid.Column="1">
+                    <Border
+                        CornerRadius="10">
+                        <Border.Background>
+                            <ImageBrush ImageSource="/Images/LogoImage.jpg"/>
+                        </Border.Background>
+                    </Border>
                 </Grid>
-            </Viewbox>
+            </Grid>
         </Border>
     </Grid>
 </Page>

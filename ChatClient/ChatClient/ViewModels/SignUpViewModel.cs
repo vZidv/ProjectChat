@@ -129,11 +129,12 @@ namespace ChatClient.ViewModels
                 PasswordHash = Password,
 
                 Email = Email,
+                Name = Name,
+                LastName = LastName
             };
             if (!string.IsNullOrWhiteSpace(Name) || !string.IsNullOrWhiteSpace(LastName))
             {
-                newClient.Name = Name;
-                newClient.LastName = LastName;
+                
             }
             if (AvatarImage != null)
             {
@@ -164,9 +165,11 @@ namespace ChatClient.ViewModels
 
         private bool CanExecuteSignUpCommand(object? obj)
         {
-            if (Login == null || Login.Length < 3 ||
-                 Password == null || Password.Length < 3 ||
-               Email == null || Email.Length < 5)
+            if (String.IsNullOrWhiteSpace(Login) || Login.Length < 3 ||
+                 String.IsNullOrWhiteSpace(Password) || Password.Length < 3 ||
+               String.IsNullOrWhiteSpace(Email) || Email.Length < 5 ||
+               String.IsNullOrWhiteSpace(Name) ||
+               String.IsNullOrWhiteSpace(LastName))
                 return false;
             return true;
         }
