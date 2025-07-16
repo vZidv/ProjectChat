@@ -24,6 +24,15 @@ namespace ChatServer.Migrations
                     table.PrimaryKey("PK_ChatRoomType", x => x.Id);
                 });
 
+            migrationBuilder.InsertData(
+                table: "ChatRoomType",
+                column: "Name",
+                values: new object[]
+                {
+                   "Group",
+                   "Private"
+                });
+
             migrationBuilder.CreateTable(
                 name: "Client",
                 columns: table => new
@@ -65,9 +74,9 @@ namespace ChatServer.Migrations
                 columns: new[] { "Name", "Color" },
                 values: new object[,]
                 {
-                    { "Member", 1 },
-                    { "Admin", 2 },
-                    { "Owner", 3 }
+                    { "Member", "1" },
+                    { "Admin", "2" },
+                    { "Owner", "3" }
                 });
 
             migrationBuilder.CreateTable(
