@@ -1,6 +1,6 @@
-[![.NET 8.0](https://img.shields.io/badge/.NET-8.0-green?style=for-the-badge)]( https://dotnet.microsoft.com/download/dotnet/8.0 )  
-[![EF Core](https://img.shields.io/badge/EF_Core-8.0-purple?style=for-the-badge)]( https://learn.microsoft.com/en-us/ef/core/ )  
-[![MS SQL Server](https://img.shields.io/badge/MS_SQL-Server-yellow?style=for-the-badge)]( https://www.microsoft.com/en-us/sql-server )
+[![.NET](https://img.shields.io/badge/.NET_8.0-purple?logo=.net)](https://dotnet.microsoft.com/en-us/download/dotnet/8.0)
+[![EF Core](https://img.shields.io/badge/EF_Core-9.0-green)](https://learn.microsoft.com/ru-ru/ef/core/get-started/overview/install)
+[![MS_SQL Server](https://img.shields.io/badge/MS_SQL_Server-2019+-yellow)](https://www.microsoft.com/en-us/sql-server/sql-server-downloads)
 
 # ProjectChat 
 
