@@ -1,3 +1,7 @@
+[![.NET 8.0](https://img.shields.io/badge/.NET-8.0-green?style=for-the-badge)]( https://dotnet.microsoft.com/download/dotnet/8.0 )  
+[![EF Core](https://img.shields.io/badge/EF_Core-8.0-purple?style=for-the-badge)]( https://learn.microsoft.com/en-us/ef/core/ )  
+[![MS SQL Server](https://img.shields.io/badge/MS_SQL-Server-yellow?style=for-the-badge)]( https://www.microsoft.com/en-us/sql-server )
+
 # ProjectChat 
 
 ![ProjectChat Logo](assets/images/banner.png) 
