@@ -201,6 +201,9 @@ namespace ChatClient.ViewModels
 
         private async void ExecuteGetMessageCommand(object? obj)
         {
+            if (!ChatDTO.IsMember && ChatDTO.ChatType == ChatType.Private)
+                return;
+
             GetChatHistoryDTO historyDTO = new()
             {
                 ChatId = ChatDTO.Id,
@@ -221,12 +224,13 @@ namespace ChatClient.ViewModels
             {
                 Text = NewMessageText,
                 Sender = NetworkSession.ClientProfile.Name,
-                RoomId = ChatDTO.Id
+                RoomId = ChatDTO.Id,
             };
 
             var session = NetworkSession.Session;
             await session.SendAsync(message, RequestType.SendMessage);
 
+            message.IsOwner = true;
             ChatMessageDTOs.Add(message);
             NewMessageText = string.Empty;
         }

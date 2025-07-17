@@ -107,7 +107,7 @@ namespace ChatServer.Handlers
                 await _context.SaveChangesAsync();
 
                 foreach (var client in membersId)
-                    AddNewMemberInChatRoomAsync(client, chatRoom.Id);
+                    await AddNewMemberInChatRoomAsync(client, chatRoom.Id);
 
                 result.ChatRoomDTO = new ChatRoomDTO()
                 {
@@ -180,7 +180,7 @@ namespace ChatServer.Handlers
                 RoleId = 1 //<- - Default role, should be changed later
             };
 
-            ChatMiniProfileDTO room = _context.ChatRooms.Where(r => r.Id == chatRoomId).
+            ChatMiniProfileDTO room =  await _context.ChatRooms.Where(r => r.Id == chatRoomId).
                 Select(r => new ChatMiniProfileDTO()
                 {
                     Id = r.Id,
@@ -189,7 +189,7 @@ namespace ChatServer.Handlers
                     ChatType = ChatType.Group,
                     LastMessaget = string.Empty, // <- - Replace with actual last message
                     LastActivity = DateTime.Now // <- - Replace with actual last activity
-                }).FirstOrDefault();
+                }).FirstOrDefaultAsync();
 
             JoinInChatRoomResultDTO result = new()
             {

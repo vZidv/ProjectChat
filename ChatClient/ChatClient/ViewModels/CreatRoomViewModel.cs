@@ -3,6 +3,7 @@ using ChatClient.Services;
 using ChatShared.DTO;
 using ChatShared.DTO.Enums;
 using ChatShared.Events;
+using ControlzEx.Standard;
 using Microsoft.Win32;
 using System;
 using System.Collections.Generic;
@@ -60,7 +61,7 @@ namespace ChatClient.ViewModels
             App.EventAggregator.Subscribe<CreatRoomEvent>(onCreatRoomCheck);
         }
 
-        private void onCreatRoomCheck(CreatRoomEvent @event)
+        private async void onCreatRoomCheck(CreatRoomEvent @event)
         {
             CreatChatRoomResultDTO result = @event.CreatChatRoomResultDTO;
             if (!result.Success)
@@ -69,7 +70,20 @@ namespace ChatClient.ViewModels
                 return;
             }
 
+            await AddClientInChatGroupCommand(@event.CreatChatRoomResultDTO.ChatRoomDTO, NetworkSession.ClientProfile.Id);
             NavigationService.TopFrame.Content = null;
+        }
+
+        private async Task AddClientInChatGroupCommand(ChatRoomDTO chatRoomDTO, int clientId)
+        {
+            var request = new JoinInChatRoomDTO()
+            {
+                ChatRoomId = chatRoomDTO.Id,
+                ClientId = clientId
+            };
+
+            var session = NetworkSession.Session;
+            await session.SendAsync(request, RequestType.JoimInChatGroup);
         }
 
         private bool CanExecuteCreateRoomCommand(object? obj)

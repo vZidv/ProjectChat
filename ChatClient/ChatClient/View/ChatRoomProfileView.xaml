@@ -62,6 +62,7 @@ Command="{Binding ClosePageCommand}">
                        Orientation="Horizontal"  
                        HorizontalAlignment="Right">
                         <Button
+                            Visibility="{Binding EditButtonVisibility, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}"
                             Command="{Binding OpenEditPageCommand}"
                             FontWeight="Bold"
                             Width="40"

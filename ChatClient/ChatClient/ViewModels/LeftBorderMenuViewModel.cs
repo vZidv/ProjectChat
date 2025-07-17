@@ -74,7 +74,7 @@ namespace ChatClient.ViewModels
 
         private void ExecuteOpenContactsPageCommand(object? obj) => Services.NavigationService.TopFrame.Content = new ClientContactsView() { DataContext = new ClientContactsViewModel()};
         private void ExecuteOpenClietnProfilePageCommand(object? obj)  => Services.NavigationService.TopFrame.Content = new ClientProfileView() { DataContext = new ClientProfileViewModel()};
-        private void ExecuteOpenCreatRoomPageCommand(object? obj) => Services.NavigationService.TopFrame.Content = new CreatRoomView() { DataContext = new CreatRoomViewModel() };
+        private void ExecuteOpenCreatRoomPageCommand(object? obj) => Services.NavigationService.TopFrame.Content = new CreatRoomView() {  };
         private void ExecuteOpenAboutProgramCommand(object? obj) => Services.NavigationService.TopFrame.Content = new AboutProgramView() { DataContext = new AboutProgramViewModel()};
         private void ExecuteOpenSettingsPageCommand(object? obj) => Services.NavigationService.TopFrame.Content = new SettingsView() { DataContext = new SettingsViewModel()};
 

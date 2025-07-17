@@ -25,6 +25,7 @@ namespace ChatServer.Handlers
             Client reciver = await _context.Clients.FindAsync(reciverClientId);
 
             reciver.Clients.Add(sender);
+            //sender.Clients.Add(reciver);
             _context.Update(sender);
 
             var result = new AddContactResultDTO() { IsSuccess = true};

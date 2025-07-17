@@ -6,6 +6,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows;
 using System.Windows.Input;
 using System.Windows.Media.Imaging;
 
@@ -16,6 +17,8 @@ namespace ChatClient.ViewModels
         //Fields
         private ChatMiniProfileDTO _chatDTO;
         private BitmapImage? _avatarBitMap;
+
+        private Visibility _editButtonVisibility = Visibility.Visible;
 
         //Properties
 
@@ -38,6 +41,16 @@ namespace ChatClient.ViewModels
             }
         }
 
+        public Visibility EditButtonVisibility
+        {
+            get { return _editButtonVisibility; }
+            set
+            {
+                _editButtonVisibility = value;
+                OnPropertyChanged(nameof(EditButtonVisibility));
+            }
+        }
+
         //Commands
         public ICommand ClosePageCommand { get; }
 
@@ -51,7 +64,15 @@ namespace ChatClient.ViewModels
             AvatarBitMap = AvatarService.Base64ToBitmapImage(ChatDTO.AvatarBase64);
 
             ClosePageCommand = new ViewModelCommand(ExecuteClosePageCommand);
-            OpenEditPageCommand = new ViewModelCommand(ExecuteOpenEditPageCommand);
+            OpenEditPageCommand = new ViewModelCommand(ExecuteOpenEditPageCommand, CanExecuteOpenEditPageCommand);
+        }
+
+        private bool CanExecuteOpenEditPageCommand(object? obj)
+        {
+            var result = ChatDTO.ChatType != ChatShared.DTO.Enums.ChatType.Private;
+            if(!result)
+                EditButtonVisibility = Visibility.Hidden;
+            return result;
         }
 
         private void ExecuteOpenEditPageCommand(object? obj)
