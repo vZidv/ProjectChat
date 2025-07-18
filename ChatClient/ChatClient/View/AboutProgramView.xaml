@@ -76,19 +76,8 @@ Command="{Binding ClosePageCommand}">
                         TextWrapping="Wrap"
                         Text="Программа написана в интересах изучения работы приложений на сетевом протоколе TCP."
                         />
-                    <TextBlock
-                        Margin="0,10,0,0"
-                        TextAlignment="Justify"
-                        TextWrapping="Wrap">
-                        <Run Text="Программа распространяеться по лицензии"/>
-                            <Hyperlink
-                                Command="{Binding LicenseUrlCommand}"
-                                Style="{StaticResource Url_hyperLink}">
-                                MIT License
-                            </Hyperlink>
-                    </TextBlock>
 
-                    <TextBlock>
+                    <TextBlock Margin="0,10">
                             <Run Text="Исходный код доступен на "/>
                             <Hyperlink
                                 Command="{Binding GithubUrlCommand}"
