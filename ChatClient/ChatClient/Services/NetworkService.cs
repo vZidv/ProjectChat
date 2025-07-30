@@ -32,7 +32,7 @@ namespace ChatClient.Services
 
         //..
 
-        public NetworkService(IEventAggregator eventAggregator, string host = "192.168.0.100", int port = 8888)
+        public NetworkService(IEventAggregator eventAggregator, string host = "45.130.42.84", int port = 8888)
         {
             _host = host;
             _port = port;

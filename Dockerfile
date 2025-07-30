@@ -3,11 +3,13 @@ WORKDIR /app
 
 COPY . ./
 
+RUN dotnet restore "./ChatShared/ChatShared/ChatShared.csproj"
 RUN dotnet restore "./ChatServer/ChatServer/ChatServer.csproj"
 
 RUN dotnet tool install --global dotnet-ef
 ENV PATH="${PATH}:/root/.dotnet/tools"
 
+RUN dotnet build "./ChatShared/ChatShared/ChatShared.csproj"
 RUN dotnet publish "./ChatServer/ChatServer/ChatServer.csproj" -c Release -o out
 
 FROM mcr.microsoft.com/dotnet/sdk:8.0
