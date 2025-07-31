@@ -64,6 +64,29 @@
     <img src="assets/images/DarkTheme1.png" alt="ScreanShot3">
 </p>
 
+## 🐋 Развертывание сервера через Docker
+### Требования
+- [Docker Desktop](https://www.docker.com/products/docker-desktop/) (Windows/Mac) или `docker.io` (Linux)
+- [Docker Compose](https://docs.docker.com/compose/)
+#### Установка на Linux
+``` bash
+sudo apt install docker.io
+sudo apt install docker-compose
+```
+
+### Команды
+``` bash
+ git clone https://github.com/vZidv/ProjectChat.git
+ cd ProjectChat
+ docker-compose up --build
+```
+
+После запуска будут развернуты два **контейнера**:  
+- MS SQL Server (база данных)
+- Приложение сервера (ChatServer)
+
+По умолчанию сервер будет доступен на порту ``8888``.
+
 ## 💡 Особенности реализации
 1. **Сетевое взаимодействие**:
    - Обмен DTO через TCP в JSON-формате
