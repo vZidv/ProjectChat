@@ -47,13 +47,13 @@
 │ ├── 📂DTO                     # Data Transfer Objects
 │ └── 📂Events                  # Системные события
 │
-└── 📂ChatServer                # Серверная часть
-├── 📂Data                      # Доступ к данным
-├── 📂Handler                   # Обработчики запросов
-├── 📂Migrations                # Миграции БД
-├── 📂Models                    # Модели данных
-├── 📂Services                  # Бизнес-логика
-└── 📂Session                   # Управление сессиями
+├── 📂ChatServer                # Серверная часть
+  ├── 📂Data                    # Доступ к данным
+  ├── 📂Handler                 # Обработчики запросов
+  ├── 📂Migrations              # Миграции БД
+  ├── 📂Models                  # Модели данных
+  ├── 📂Services                # Бизнес-логика
+  └── 📂Session                 # Управление сессиями
 ```
 ## 🖼️ Скриншоты
 <p align="center">
@@ -65,7 +65,7 @@
 </p>
 
 ## 🐋 Развертывание сервера через Docker
-### Требования
+### ⚙️ Подготовка среды
 - [Docker Desktop](https://www.docker.com/products/docker-desktop/) (Windows/Mac) или `docker.io` (Linux)
 - [Docker Compose](https://docs.docker.com/compose/)
 #### Установка на Linux
